@@ -1,5 +1,7 @@
 # Architecture
 
+> See also: [Interactive Dashboard](dashboard.html) for a visual exploration of all detections, MITRE coverage, and kill chain mapping.
+
 This document describes the system architecture of the Splunk ES AI RBA Starter Pack, including data flow, component relationships, and design decisions.
 
 ## System Overview
@@ -18,194 +20,175 @@ The AI RBA Starter Pack is a Splunk ES content pack that detects unsanctioned AI
 
 ```mermaid
 flowchart TD
-    subgraph "Data Sources"
-        PROXY["Proxy / Web Gateway<br/>(pan:traffic, bluecoat, zscaler)"]
-        EDR["EDR / Sysmon<br/>(crowdstrike, sysmon, cb)"]
-        DNS["DNS Server<br/>(infoblox, umbrella, bind)"]
-        FW["Firewall / Network<br/>(pan:traffic, cisco:asa)"]
-        DLP["DLP System<br/>(symantec, forcepoint, mcafee)"]
-        IDENTITY["Identity Provider<br/>(AD, Okta, Azure AD)"]
+    subgraph "DATA SOURCES"
+        T1["Tier 1: Web + Endpoint<br/>(proxy, EDR, sysmon)"]
+        T2["Tier 2: DNS + Network<br/>(infoblox, firewall)"]
+        T3["Tier 3: DLP + Email<br/>(symantec, forcepoint)"]
     end
 
-    subgraph "CIM Data Models"
-        WEB["Web Data Model"]
-        PROC["Endpoint.Processes<br/>Data Model"]
-        NRES["Network_Resolution<br/>Data Model"]
-        NTRAF["Network_Traffic<br/>Data Model"]
-        DLPM["Data_Loss_Prevention<br/>Data Model"]
-        IDENT["identity_lookup_expanded"]
+    subgraph "CIM DATA MODELS"
+        WEB["Web"]
+        PROC["Endpoint.Processes"]
+        DNS["Network_Resolution"]
+        NET["Network_Traffic"]
+        DLP["Data_Loss_Prevention"]
+        EMAIL["Email"]
     end
 
-    subgraph "Enrichment Layer"
-        MACRO1["`ai_domains_filter` macro<br/>Domain -> Provider mapping"]
-        MACRO2["`ai_process_filter` macro<br/>Process -> Tool mapping"]
-        MACRO3["`ai_unsanctioned_filter` macro<br/>Allowlist evaluation"]
-        LKP1["ai_provider_domains.csv"]
-        LKP2["ai_tool_processes.csv"]
-        LKP3["ai_sanctioned_entities.csv"]
-        LKP4["ai_detection_config.csv"]
+    subgraph "ENRICHMENT"
+        MACROS["Shared Macros<br/>ai_domains_filter | ai_process_filter<br/>ai_unsanctioned_filter | ai_risk_multiplier"]
+        LOOKUPS["9 Lookup Tables<br/>domains, processes, allowlists,<br/>thresholds, MITRE, patterns"]
     end
 
-    subgraph "Detection Layer"
-        WEB_DET["Web Detections<br/>AI-006, AI-007, AI-009,<br/>AI-010, AI-015, AI-016,<br/>AI-017, AI-018, AI-020,<br/>AI-021, AI-022 thru AI-028,<br/>AI-031, AI-032, AI-036,<br/>AI-040 thru AI-044"]
-        PROC_DET["Process Detections<br/>AI-004, AI-005,<br/>AI-008, AI-011"]
-        DNS_DET["DNS Detection<br/>AI-012"]
-        NET_DET["Network Detections<br/>AI-014, AI-019"]
-        DLP_DET["DLP Detection<br/>AI-020"]
+    subgraph "DETECTION LAYER"
+        D1["Web Detections (21)"]
+        D2["Process Detections (10)"]
+        D3["DNS Detection (1)"]
+        D4["Network Detections (2)"]
+        D5["DLP Detections (4)"]
+        D6["Email Detection (1)"]
     end
 
-    subgraph "Risk Framework"
-        RISK["risk index<br/>(user + system scores)"]
-        AGG["Aggregate Correlation Rules<br/>AI-RISK-001 (medium, 60 pts)<br/>AI-RISK-002 (high, 90 pts)"]
-        NOTABLE["Notable Events<br/>(Incident Review queue)"]
+    subgraph "RISK OUTPUT"
+        RISK["risk index<br/>user + system scores"]
+        AGG["Correlation Rules<br/>AI-RISK-001 thru 005"]
+        NOTABLE["Notable Events<br/>Incident Review Queue"]
     end
 
-    PROXY --> WEB
-    EDR --> PROC
-    DNS --> NRES
-    FW --> NTRAF
-    DLP --> DLPM
-    IDENTITY --> IDENT
+    T1 --> WEB & PROC
+    T2 --> DNS & NET
+    T3 --> DLP & EMAIL
 
-    WEB --> MACRO1
-    PROC --> MACRO2
-    MACRO1 --> WEB_DET
-    MACRO2 --> PROC_DET
-    NRES --> DNS_DET
-    NTRAF --> NET_DET
-    DLPM --> DLP_DET
-    IDENT --> WEB_DET
+    LOOKUPS --> MACROS
 
-    LKP1 --> MACRO1
-    LKP2 --> MACRO2
-    LKP3 --> MACRO3
-    LKP4 --> WEB_DET
-    LKP4 --> PROC_DET
+    WEB --> MACROS --> D1
+    PROC --> MACROS --> D2
+    DNS --> D3
+    NET --> D4
+    DLP --> D5
+    EMAIL --> D6
 
-    MACRO3 --> WEB_DET
-    MACRO3 --> PROC_DET
-    MACRO3 --> DNS_DET
-    MACRO3 --> NET_DET
-    MACRO3 --> DLP_DET
-
-    WEB_DET --> RISK
-    PROC_DET --> RISK
-    DNS_DET --> RISK
-    NET_DET --> RISK
-    DLP_DET --> RISK
-
-    RISK --> AGG
-    AGG --> NOTABLE
+    D1 & D2 & D3 & D4 & D5 & D6 --> RISK
+    RISK --> AGG --> NOTABLE
 ```
+
+## Kill Chain Coverage
+
+```mermaid
+flowchart LR
+    R["Recon<br/>(4 detections)<br/>AI-009, AI-012,<br/>AI-028, AI-042"]
+    E["Execution<br/>(7 detections)<br/>AI-004, AI-005,<br/>AI-008, AI-011,<br/>AI-037, AI-039, AI-046"]
+    C["Collection<br/>(9 detections)<br/>AI-006, AI-010,<br/>AI-019, AI-022,<br/>AI-023, AI-025,<br/>AI-026, AI-035, AI-043"]
+    S["Staging<br/>(6 detections)<br/>AI-013, AI-030,<br/>AI-031, AI-033,<br/>AI-034, AI-045"]
+    X["Exfiltration<br/>(12 detections)<br/>AI-007, AI-015,<br/>AI-017, AI-018,<br/>AI-020, AI-024,<br/>AI-027, AI-032,<br/>AI-038, AI-040,<br/>AI-041, AI-044"]
+    P["Persistence<br/>(3 detections)<br/>AI-014, AI-021,<br/>AI-036"]
+
+    R --> E --> C --> S --> X --> P
+
+    subgraph "Cross-Phase Correlations"
+        KC["AI-RISK-003: Collection → Exfiltration"]
+        MV["AI-RISK-005: All Phases (3+ categories)"]
+    end
+```
+
+Every detection includes an `ai_kill_chain_phase` field. AI-RISK-003 specifically correlates across the collection-to-exfiltration boundary, detecting data staging followed by AI service upload within a configurable window (default: 4 hours).
 
 ## Risk Aggregation Pipeline
 
 ```mermaid
 flowchart LR
-    subgraph "Individual Detections (every 5 min)"
-        D1["AI-028: Web Access<br/>user: 15, system: 10"]
-        D2["AI-007: Upload Volume<br/>user: 20-80, system: 20"]
-        D3["AI-016: Privileged<br/>user: 40, system: 20"]
-        D4["AI-020: DLP<br/>user: 60, system: 30"]
-        DN["...other detections..."]
+    subgraph "Detection Fires"
+        D["Base Risk Score<br/>(e.g., AI-028: 15 pts)"]
     end
 
-    subgraph "Risk Index"
-        RI["Per-user risk accumulation<br/>over rolling 24-hour window"]
+    subgraph "Multipliers"
+        DEPT["Department Sensitivity<br/>executive: 2.5x | finance: 2.0x<br/>legal: 2.0x | hr: 1.8x<br/>engineering: 1.2x | general: 1.0x"]
+        PRIV["Privilege Level<br/>privileged/critical: 1.5x<br/>standard: 1.0x"]
     end
 
-    subgraph "Threshold Evaluation (every 15 min)"
-        T1["total_risk >= 60?<br/>-> Medium Notable"]
-        T2["total_risk >= 90?<br/>-> High Notable"]
+    subgraph "Accumulation"
+        RI["Risk Index<br/>24-hour rolling window<br/>per user + per system"]
     end
 
-    D1 --> RI
-    D2 --> RI
-    D3 --> RI
-    D4 --> RI
-    DN --> RI
-    RI --> T1
-    RI --> T2
+    subgraph "Threshold Evaluation"
+        T60["60 pts → Medium Notable"]
+        T90["90 pts → Critical Notable"]
+    end
+
+    D --> DEPT --> PRIV --> RI
+    RI --> T60
+    RI --> T90
 ```
+
+**Example:** Finance user (2.0x) with privileged account (1.5x) triggers AI-028 (base 15). Final score: 15 x 2.0 x 1.5 = **45 points**. Two more low-signal detections push them past the 60-point medium threshold.
 
 ## Lookup Relationship Diagram
 
 ```mermaid
 flowchart TD
-    subgraph "Lookup Files"
-        L1["ai_provider_domains.csv<br/>52 domains<br/>Fields: provider, domain, usage_type,<br/>severity_weight, enabled"]
-        L2["ai_tool_processes.csv<br/>80+ processes<br/>Fields: tool, provider, process_name_lc,<br/>platform, usage_type, enabled"]
-        L3["ai_sanctioned_entities.csv<br/>Fields: entity_type, entity, provider,<br/>scope, expires, enabled, allow_key"]
-        L4["ai_detection_config.csv<br/>25 controls<br/>Fields: control_name, value, notes"]
-        L5["ai_mitre_mapping.csv<br/>38 mappings<br/>Fields: detection_id, mitre_technique_id,<br/>mitre_technique_name, mitre_tactic"]
+    subgraph "Policy Lookups"
+        L1["ai_sanctioned_entities.csv<br/>Allowlist entries"]
+        L2["ai_detection_config.csv<br/>27 tunable thresholds"]
+        L3["ai_department_sensitivity.csv<br/>11 department multipliers"]
     end
 
-    subgraph "Macros"
-        M1["`ai_domains_filter`<br/>Domain enrichment"]
-        M2["`ai_process_filter`<br/>Process enrichment"]
-        M3["`ai_unsanctioned_filter(3)`<br/>Allowlist evaluation"]
+    subgraph "Intelligence Lookups"
+        L4["ai_provider_domains.csv<br/>113 domains, 71 providers"]
+        L5["ai_tool_processes.csv<br/>88 process signatures"]
+        L6["ai_mitre_mapping.csv<br/>44 technique mappings"]
     end
 
-    subgraph "Detection Categories"
-        WD["Web Detections"]
-        PD["Process Detections"]
-        DD["DNS Detections"]
-        ND["Network Detections"]
+    subgraph "Pattern Lookups"
+        L7["ai_prompt_injection_patterns.csv<br/>25 injection patterns"]
+        L8["ai_api_key_patterns.csv<br/>20 key regexes"]
+        L9["ai_deepfake_tools.csv<br/>30 tool signatures"]
     end
 
-    L1 --> M1
-    L2 --> M2
-    L3 --> M3
-    L4 --> WD
-    L4 --> PD
+    subgraph "Consuming Macros"
+        M1["ai_domains_filter"]
+        M2["ai_process_filter"]
+        M3["ai_unsanctioned_filter"]
+        M4["ai_risk_multiplier"]
+        M5["ai_risk_defaults"]
+        M6["ai_prompt_injection_patterns_enabled"]
+        M7["ai_api_key_patterns_enabled"]
+    end
 
-    M1 --> WD
-    M1 --> DD
-    M2 --> PD
-    M3 --> WD
-    M3 --> PD
-    M3 --> DD
-    M3 --> ND
+    L1 --> M3
+    L2 --> M5
+    L3 --> M4
+    L4 --> M1
+    L5 --> M2
+    L7 --> M6
+    L8 --> M7
 ```
 
 ## Allowlist Evaluation Flow
 
 ```mermaid
-flowchart TD
-    START["Detection fires with<br/>user, src, provider fields"]
+flowchart LR
+    START["Detection fires<br/>user, src, provider"]
 
-    U1["Lookup: user|provider<br/>e.g., alice@corp.com|openai"]
-    U2["Lookup: user|*<br/>e.g., alice@corp.com|*"]
-    S1["Lookup: system|provider<br/>e.g., 10.20.30.40|openai"]
-    S2["Lookup: system|*<br/>e.g., 10.20.30.40|*"]
-    G1["Lookup: group|provider<br/>e.g., engineering|openai"]
-    G2["Lookup: group|*<br/>e.g., engineering|*"]
+    subgraph "USER Lane"
+        U["user|provider<br/>user|*"]
+    end
 
-    CHECK_EN["Check: enabled=1?"]
-    CHECK_EXP["Check: not expired?<br/>(expires >= today OR empty)"]
+    subgraph "SYSTEM Lane"
+        S["system|provider<br/>system|*"]
+    end
 
-    ALLOW["ALLOWED<br/>Event is filtered out<br/>(no risk generated)"]
-    DENY["NOT ALLOWED<br/>Event proceeds to risk action"]
+    subgraph "GROUP Lane"
+        G["group|provider<br/>group|*"]
+    end
 
-    START --> U1
-    START --> U2
-    START --> S1
-    START --> S2
-    START --> G1
-    START --> G2
+    CHECK{"Any match<br/>active + not expired?"}
+    ALLOW["ALLOWED<br/>No risk generated"]
+    DENY["NOT ALLOWED<br/>Risk event created"]
 
-    U1 --> CHECK_EN
-    U2 --> CHECK_EN
-    S1 --> CHECK_EN
-    S2 --> CHECK_EN
-    G1 --> CHECK_EN
-    G2 --> CHECK_EN
-
-    CHECK_EN -->|"enabled=1"| CHECK_EXP
-    CHECK_EN -->|"not found or enabled=0"| DENY
-
-    CHECK_EXP -->|"not expired"| ALLOW
-    CHECK_EXP -->|"expired"| DENY
+    START --> U & S & G
+    U & S & G --> CHECK
+    CHECK -->|"Yes"| ALLOW
+    CHECK -->|"No"| DENY
 ```
 
 The `ai_unsanctioned_filter` macro performs six parallel lookups against `ai_sanctioned_entities.csv`. If **any** lookup returns an active, non-expired match, the event is filtered out. All six lookups must fail for the event to proceed and generate risk.

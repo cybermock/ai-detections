@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HDSI AI RBA Detection Pack - Interactive Reference</title>
+<style>
+/* ============================================================
+   ROOT VARIABLES & RESET
+   ============================================================ */
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-raised: #1c2129;
+  --border: #30363d;
+  --border-bright: #484f58;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --green: #00C853;
+  --green-dim: rgba(0,200,83,0.15);
+  --amber: #FFB300;
+  --amber-dim: rgba(255,179,0,0.15);
+  --red: #FF1744;
+  --red-dim: rgba(255,23,68,0.15);
+  --accent: #58a6ff;
+  --accent-dim: rgba(88,166,255,0.12);
+  --font-body: 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+  --glow-green: 0 0 12px rgba(0,200,83,0.25);
+  --glow-accent: 0 0 12px rgba(88,166,255,0.2);
+  --glow-amber: 0 0 12px rgba(255,179,0,0.2);
+  --glow-red: 0 0 12px rgba(255,23,68,0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle scan-line texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section {
+  margin-bottom: 64px;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.section-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 28px;
+  max-width: 700px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  padding: 48px 0 40px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--text) 60%, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header .subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(0,200,83,0.3);
+  white-space: nowrap;
+}
+
+.badge-pill::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.6;
+}
+
+.stat-card .stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -1px;
+  font-family: var(--font-mono);
+}
+
+.stat-card .stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   KILL CHAIN PIPELINE
+   ============================================================ */
+.pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.pipeline-phase {
+  flex: 1;
+  min-width: 150px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pipeline-phase:hover { transform: translateY(-2px); }
+
+.pipeline-phase:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid var(--border-bright);
+  z-index: 2;
+}
+
+.phase-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 14px;
+  margin-right: 16px;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  height: 100%;
+}
+
+.pipeline-phase:hover .phase-box {
+  border-color: var(--accent);
+  box-shadow: var(--glow-accent);
+}
+
+.pipeline-phase.active .phase-box {
+  border-color: var(--accent);
+  box-shadow: var(--glow-accent);
+}
+
+.phase-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.phase-count {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+.phase-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.phase-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  margin-right: 16px;
+}
+
+.phase-detail.open { max-height: 200px; }
+
+.phase-detail-inner {
+  padding: 10px 14px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.phase-detail-inner span {
+  display: inline-block;
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin: 2px 3px 2px 0;
+  font-size: 11px;
+}
+
+/* ============================================================
+   MITRE ATT&CK HEATMAP
+   ============================================================ */
+.mitre-grid {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 3px;
+  overflow-x: auto;
+}
+
+.mitre-tactic-header {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 10px 6px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  line-height: 1.3;
+}
+
+.mitre-column {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mitre-cell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 6px;
+  text-align: center;
+  cursor: default;
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.mitre-cell:hover {
+  transform: scale(1.04);
+  z-index: 2;
+  box-shadow: var(--shadow);
+}
+
+.mitre-cell .tech-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  display: block;
+}
+
+.mitre-cell .tech-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Heat levels */
+.mitre-cell.heat-1 {
+  background: rgba(88,166,255,0.08);
+  border-color: rgba(88,166,255,0.2);
+}
+.mitre-cell.heat-1 .tech-id { color: rgba(88,166,255,0.7); }
+
+.mitre-cell.heat-2 {
+  background: rgba(88,166,255,0.15);
+  border-color: rgba(88,166,255,0.35);
+}
+.mitre-cell.heat-2 .tech-id { color: rgba(88,166,255,0.85); }
+
+.mitre-cell.heat-3 {
+  background: rgba(88,166,255,0.22);
+  border-color: rgba(88,166,255,0.45);
+  box-shadow: 0 0 8px rgba(88,166,255,0.1);
+}
+.mitre-cell.heat-3 .tech-id { color: var(--accent); }
+
+.mitre-cell.heat-4 {
+  background: rgba(88,166,255,0.30);
+  border-color: rgba(88,166,255,0.55);
+  box-shadow: 0 0 12px rgba(88,166,255,0.15);
+}
+.mitre-cell.heat-4 .tech-id { color: var(--accent); }
+
+.mitre-cell.heat-5 {
+  background: rgba(88,166,255,0.40);
+  border-color: rgba(88,166,255,0.7);
+  box-shadow: 0 0 16px rgba(88,166,255,0.2);
+}
+.mitre-cell.heat-5 .tech-id { color: #fff; }
+
+/* Tooltip */
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c2129;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  color: var(--text);
+  pointer-events: none;
+}
+
+.tooltip .tip-name { font-weight: 600; margin-bottom: 4px; }
+.tooltip .tip-ids { color: var(--accent); font-family: var(--font-mono); font-size: 11px; }
+
+.mitre-cell:hover .tooltip { display: block; }
+
+/* ============================================================
+   DETECTION EXPLORER
+   ============================================================ */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.filter-group-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.filter-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.filter-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.search-input {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  width: 220px;
+  transition: border-color 0.15s;
+}
+
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--text-muted); }
+
+.det-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.det-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.det-table th {
+  background: var(--surface-raised);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+}
+
+.det-table th:hover { color: var(--accent); }
+
+.det-table th .sort-arrow {
+  font-size: 10px;
+  margin-left: 4px;
+  opacity: 0.3;
+}
+
+.det-table th.sorted-asc .sort-arrow,
+.det-table th.sorted-desc .sort-arrow {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.det-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.det-table tbody tr:hover td {
+  background: rgba(88,166,255,0.04);
+  color: var(--text);
+}
+
+.det-table .det-id {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.det-table .det-name { color: var(--text); font-weight: 500; }
+
+.cat-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.cat-core { background: var(--accent-dim); color: var(--accent); }
+.cat-shadow { background: var(--amber-dim); color: var(--amber); }
+.cat-adversarial { background: var(--red-dim); color: var(--red); }
+.cat-agentic { background: rgba(168,85,247,0.15); color: #a855f7; }
+.cat-ueba { background: var(--green-dim); color: var(--green); }
+.cat-rba { background: rgba(255,255,255,0.08); color: var(--text-secondary); }
+
+.mitre-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.phase-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.risk-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.det-table .no-results {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ============================================================
+   RISK SCORING FLOW
+   ============================================================ */
+.risk-pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.risk-stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  text-align: center;
+  min-width: 160px;
+  flex-shrink: 0;
+}
+
+.risk-stage .stage-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.risk-stage .stage-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.risk-arrow {
+  font-size: 20px;
+  color: var(--border-bright);
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.risk-example {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.risk-example .example-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.risk-example p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.risk-example code {
+  font-family: var(--font-mono);
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.dept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.dept-chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dept-chip .dept-name {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.dept-chip .dept-mult {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.mult-high { color: var(--red); }
+.mult-med { color: var(--amber); }
+.mult-low { color: var(--green); }
+.mult-base { color: var(--text-muted); }
+
+/* ============================================================
+   DATA SOURCE CARDS
+   ============================================================ */
+.ds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.ds-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ds-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.ds-card.ds-web::before { background: var(--accent); }
+.ds-card.ds-endpoint::before { background: var(--green); }
+.ds-card.ds-network::before { background: var(--amber); }
+.ds-card.ds-dns::before { background: #a855f7; }
+.ds-card.ds-dlp::before { background: var(--red); }
+.ds-card.ds-email::before { background: #f97316; }
+.ds-card.ds-filesystem::before { background: #14b8a6; }
+
+.ds-card .ds-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ds-card .ds-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.ds-card .ds-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+
+.ds-card .ds-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ds-card .field-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+/* ============================================================
+   LOOKUP CARDS
+   ============================================================ */
+.lookup-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.lookup-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  transition: border-color 0.2s;
+}
+
+.lookup-card:hover { border-color: var(--border-bright); }
+
+.lookup-card .lk-name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.lookup-card .lk-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.lookup-card .lk-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   RBA CORRELATION CARDS
+   ============================================================ */
+.rba-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.rba-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  position: relative;
+}
+
+.rba-card .rba-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.rba-card .rba-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.rba-card .rba-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.rba-card .rba-outcome {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.outcome-medium { background: var(--amber-dim); color: var(--amber); }
+.outcome-critical { background: var(--red-dim); color: var(--red); }
+.outcome-notable { background: var(--accent-dim); color: var(--accent); }
+
+/* ============================================================
+   LIVE TESTING RESULTS
+   ============================================================ */
+.env-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.env-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.env-card .env-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.env-card .env-name {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.env-card .env-version {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.05);
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+.env-card .env-score {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.score-55 { color: var(--amber); }
+.score-63 { color: var(--amber); }
+
+.readiness-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--border);
+  overflow: hidden;
+  display: flex;
+  margin: 12px 0 16px;
+}
+
+.readiness-bar .bar-ready { background: var(--green); }
+.readiness-bar .bar-partial { background: var(--amber); }
+.readiness-bar .bar-gap { background: var(--red); }
+
+.env-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.env-stat {
+  text-align: center;
+  padding: 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.env-stat .ev-val {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.env-stat .ev-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ev-ready .ev-val { color: var(--green); }
+.ev-partial .ev-val { color: var(--amber); }
+.ev-gap .ev-val { color: var(--red); }
+
+.env-detail {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.env-detail strong { color: var(--text); font-weight: 600; }
+
+.env-detail .gap-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--red-dim);
+  color: var(--red);
+  padding: 1px 8px;
+  border-radius: 3px;
+  margin: 2px 2px;
+}
+
+/* ============================================================
+   DEPLOYMENT CHECKLIST
+   ============================================================ */
+.checklist {
+  counter-reset: step;
+  list-style: none;
+}
+
+.checklist li {
+  counter-increment: step;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+  cursor: default;
+}
+
+.checklist li:hover { border-color: var(--border-bright); }
+
+.checklist li::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-dim);
+  min-width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checklist li .step-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+  padding-top: 6px;
+}
+
+.checklist li .step-text code {
+  font-family: var(--font-mono);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(13,17,23,0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 8px 0;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+}
+
+.nav-link:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .env-grid { grid-template-columns: 1fr; }
+  .lookup-grid { grid-template-columns: repeat(2, 1fr); }
+  .mitre-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .lookup-grid { grid-template-columns: 1fr; }
+  .pipeline { flex-direction: column; }
+  .pipeline-phase:not(:last-child)::after { display: none; }
+  .phase-box { margin-right: 0; }
+  .phase-detail { margin-right: 0; }
+  .risk-pipeline { flex-direction: column; }
+  .risk-arrow { transform: rotate(90deg); }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  body { background: #fff; color: #000; font-size: 11px; }
+  body::before { display: none; }
+  .nav-bar { display: none; }
+
+  .container { max-width: 100%; padding: 0 12px; }
+  section { margin-bottom: 24px; page-break-inside: avoid; }
+
+  .header { padding: 16px 0; margin-bottom: 20px; }
+  .header h1 { font-size: 22px; background: none; -webkit-text-fill-color: #000; color: #000; }
+  .badge-pill { border: 1px solid #999; color: #333; background: #eee; }
+  .badge-pill::before { background: #333; box-shadow: none; }
+
+  .stat-card, .ds-card, .lookup-card, .rba-card, .env-card, .risk-stage, .risk-example {
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: none;
+  }
+
+  .stat-card::before, .ds-card::before { display: none; }
+  .stat-card .stat-value { color: #000; }
+
+  .phase-box { background: #f5f5f5; border: 1px solid #ccc; }
+  .phase-name, .section-label, .nav-link { color: #333; }
+  .phase-count { color: #000; }
+
+  .det-table th { background: #f0f0f0; color: #333; }
+  .det-table td { color: #333; }
+  .det-table .det-id { color: #0066cc; }
+  .det-table .det-name { color: #000; }
+
+  .mitre-cell { background: #f5f5f5 !important; border: 1px solid #ccc !important; box-shadow: none !important; }
+  .mitre-cell .tech-id { color: #333 !important; }
+  .mitre-tactic-header { background: #e8e8e8; color: #333; }
+
+  .filter-bar { display: none; }
+  .search-input { display: none; }
+
+  .readiness-bar .bar-ready { background: #4caf50; }
+  .readiness-bar .bar-partial { background: #ff9800; }
+  .readiness-bar .bar-gap { background: #f44336; }
+
+  .env-card .env-score { color: #000 !important; }
+
+  .checklist li::before { background: #e8e8e8; color: #333; }
+
+  .section-title { color: #000; }
+  .section-desc { color: #555; }
+
+  a { color: #0066cc; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a class="nav-link" href="#header">Overview</a>
+    <a class="nav-link" href="#killchain">Kill Chain</a>
+    <a class="nav-link" href="#mitre">MITRE</a>
+    <a class="nav-link" href="#explorer">Detections</a>
+    <a class="nav-link" href="#risk">Risk Scoring</a>
+    <a class="nav-link" href="#datasources">Data Sources</a>
+    <a class="nav-link" href="#lookups">Lookups</a>
+    <a class="nav-link" href="#rba">RBA Rules</a>
+    <a class="nav-link" href="#testing">Testing</a>
+    <a class="nav-link" href="#deploy">Deploy</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     SECTION 1: HEADER
+     ============================================================ -->
+<div class="container">
+  <header class="header" id="header">
+    <div class="header-top">
+      <div>
+        <h1>HDSI AI RBA Detection Pack</h1>
+        <p class="subtitle">Interactive Detection Reference for Splunk ES</p>
+      </div>
+      <span class="badge-pill">Live Tested on Splunk ES 8.3.0</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">50</div>
+        <div class="stat-label">Detections</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">71</div>
+        <div class="stat-label">AI Providers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">20</div>
+        <div class="stat-label">MITRE Techniques</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">5</div>
+        <div class="stat-label">RBA Correlations</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       SECTION 2: KILL CHAIN PIPELINE
+       ============================================================ -->
+  <section id="killchain">
+    <span class="section-label">Attack Lifecycle</span>
+    <h2 class="section-title">Kill Chain Pipeline</h2>
+    <p class="section-desc">Six-phase AI threat lifecycle. Click a phase to expand detection IDs.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-phase" data-phase="recon" onclick="togglePhase(this)">
+        <div class="phase-box">
+          <div class="phase-name">Recon</div>
+          <div class="phase-count">4</div>
+          <div class="phase-label">detections</div>
+        </div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <span>AI-009</span><span>AI-012</span><span>AI-028</span><span>AI-042</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-phase" data-phase="execution" onclick="togglePhase(this)">
+        <div class="phase-box">
+          <div class="phase-name">Execution</div>
+          <div class="phase-count">7</div>
+          <div class="phase-label">detections</div>
+        </div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <span>AI-004</span><span>AI-005</span><span>AI-008</span><span>AI-011</span><span>AI-037</span><span>AI-039</span><span>AI-046</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-phase" data-phase="collection" onclick="togglePhase(this)">
+        <div class="phase-box">
+          <div class="phase-name">Collection</div>
+          <div class="phase-count">9</div>
+          <div class="phase-label">detections</div>
+        </div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <span>AI-006</span><span>AI-010</span><span>AI-016</span><span>AI-019</span><span>AI-022</span><span>AI-023</span><span>AI-025</span><span>AI-026</span><span>AI-043</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-phase" data-phase="staging" onclick="togglePhase(this)">
+        <div class="phase-box">
+          <div class="phase-name">Staging</div>
+          <div class="phase-count">6</div>
+          <div class="phase-label">detections</div>
+        </div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <span>AI-013</span><span>AI-030</span><span>AI-031</span><span>AI-033</span><span>AI-034</span><span>AI-045</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-phase" data-phase="exfiltration" onclick="togglePhase(this)">
+        <div class="phase-box">
+          <div class="phase-name">Exfiltration</div>
+          <div class="phase-count">12</div>
+          <div class="phase-label">detections</div>
+        </div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <span>AI-007</span><span>AI-015</span><span>AI-017</span><span>AI-018</span><span>AI-020</span><span>AI-024</span><span>AI-027</span><span>AI-032</span><span>AI-038</span><span>AI-040</span><span>AI-041</span><span>AI-044</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-phase" data-phase="persistence" onclick="togglePhase(this)">
+        <div class="phase-box">
+          <div class="phase-name">Persistence</div>
+          <div class="phase-count">3</div>
+          <div class="phase-label">detections</div>
+        </div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <span>AI-014</span><span>AI-021</span><span>AI-036</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3: MITRE ATT&CK COVERAGE GRID
+       ============================================================ -->
+  <section id="mitre">
+    <span class="section-label">Threat Coverage</span>
+    <h2 class="section-title">MITRE ATT&CK Coverage</h2>
+    <p class="section-desc">Heatmap of technique coverage across ATT&CK tactics. Brighter cells indicate higher detection density. Hover for details.</p>
+
+    <div class="mitre-grid" id="mitreGrid">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 4: DETECTION EXPLORER
+       ============================================================ -->
+  <section id="explorer">
+    <span class="section-label">Detection Catalog</span>
+    <h2 class="section-title">Detection Explorer</h2>
+    <p class="section-desc">All 50 detections with full metadata. Filter by phase, data model, or search by keyword. Click column headers to sort.</p>
+
+    <div class="filter-bar">
+      <span class="filter-group-label">Phase:</span>
+      <button class="filter-btn" data-filter="phase" data-value="all" onclick="setFilter(this)">All</button>
+      <button class="filter-btn" data-filter="phase" data-value="recon" onclick="setFilter(this)">Recon</button>
+      <button class="filter-btn" data-filter="phase" data-value="execution" onclick="setFilter(this)">Execution</button>
+      <button class="filter-btn" data-filter="phase" data-value="collection" onclick="setFilter(this)">Collection</button>
+      <button class="filter-btn" data-filter="phase" data-value="staging" onclick="setFilter(this)">Staging</button>
+      <button class="filter-btn" data-filter="phase" data-value="exfiltration" onclick="setFilter(this)">Exfiltration</button>
+      <button class="filter-btn" data-filter="phase" data-value="persistence" onclick="setFilter(this)">Persistence</button>
+    </div>
+    <div class="filter-bar">
+      <span class="filter-group-label">Data Model:</span>
+      <button class="filter-btn" data-filter="dm" data-value="all" onclick="setFilter(this)">All</button>
+      <button class="filter-btn" data-filter="dm" data-value="Web" onclick="setFilter(this)">Web</button>
+      <button class="filter-btn" data-filter="dm" data-value="Endpoint" onclick="setFilter(this)">Endpoint</button>
+      <button class="filter-btn" data-filter="dm" data-value="Network" onclick="setFilter(this)">Network</button>
+      <button class="filter-btn" data-filter="dm" data-value="DNS" onclick="setFilter(this)">DNS</button>
+      <button class="filter-btn" data-filter="dm" data-value="DLP" onclick="setFilter(this)">DLP</button>
+      <button class="filter-btn" data-filter="dm" data-value="Email" onclick="setFilter(this)">Email</button>
+      <button class="filter-btn" data-filter="dm" data-value="risk" onclick="setFilter(this)">Risk Index</button>
+    </div>
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search detections..." oninput="applyFilters()">
+    </div>
+
+    <div class="det-table-wrap">
+      <table class="det-table" id="detTable">
+        <thead>
+          <tr>
+            <th data-col="id" onclick="sortTable('id', this)">ID <span class="sort-arrow">--</span></th>
+            <th data-col="name" onclick="sortTable('name', this)">Name <span class="sort-arrow">--</span></th>
+            <th data-col="category" onclick="sortTable('category', this)">Category <span class="sort-arrow">--</span></th>
+            <th data-col="urisk" onclick="sortTable('urisk', this)">User Risk <span class="sort-arrow">--</span></th>
+            <th data-col="srisk" onclick="sortTable('srisk', this)">Sys Risk <span class="sort-arrow">--</span></th>
+            <th data-col="mitre" onclick="sortTable('mitre', this)">MITRE <span class="sort-arrow">--</span></th>
+            <th data-col="dm" onclick="sortTable('dm', this)">Data Model <span class="sort-arrow">--</span></th>
+            <th data-col="phase" onclick="sortTable('phase', this)">Phase <span class="sort-arrow">--</span></th>
+          </tr>
+        </thead>
+        <tbody id="detBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5: RISK SCORING FLOW
+       ============================================================ -->
+  <section id="risk">
+    <span class="section-label">Risk Framework</span>
+    <h2 class="section-title">Risk Scoring Flow</h2>
+    <p class="section-desc">How base detection scores are multiplied by context to produce final risk values.</p>
+
+    <div class="risk-pipeline">
+      <div class="risk-stage">
+        <div class="stage-label">Base Score</div>
+        <div class="stage-value">15 pts</div>
+      </div>
+      <div class="risk-arrow">&#10132;</div>
+      <div class="risk-stage">
+        <div class="stage-label">Dept Multiplier</div>
+        <div class="stage-value">x 2.0</div>
+      </div>
+      <div class="risk-arrow">&#10132;</div>
+      <div class="risk-stage">
+        <div class="stage-label">Priv Multiplier</div>
+        <div class="stage-value">x 1.5</div>
+      </div>
+      <div class="risk-arrow">&#10132;</div>
+      <div class="risk-stage">
+        <div class="stage-label">Accumulation</div>
+        <div class="stage-value">24h window</div>
+      </div>
+      <div class="risk-arrow">&#10132;</div>
+      <div class="risk-stage">
+        <div class="stage-label">Threshold</div>
+        <div class="stage-value">60 / 90 pts</div>
+      </div>
+    </div>
+
+    <div class="risk-example">
+      <div class="example-title">Worked Example</div>
+      <p>A <strong>finance department</strong> user (<code>2.0x</code>) with a <strong>privileged account</strong> (<code>1.5x</code>) triggers <strong>AI-028 Unsanctioned AI Web Access</strong> (base <code>15</code> user risk).</p>
+      <p style="margin-top:8px">Final score: <code>15 x 2.0 x 1.5 = 45 points</code></p>
+      <p style="margin-top:8px">At <code>60 points</code> accumulated in 24h, a <strong>medium notable</strong> fires. At <code>90 points</code>, a <strong>critical notable</strong> fires.</p>
+    </div>
+
+    <h3 style="font-size:16px; font-weight:700; margin-bottom:14px;">Department Sensitivity Multipliers</h3>
+    <div class="dept-grid">
+      <div class="dept-chip"><span class="dept-name">Executive</span><span class="dept-mult mult-high">2.5x</span></div>
+      <div class="dept-chip"><span class="dept-name">Finance</span><span class="dept-mult mult-high">2.0x</span></div>
+      <div class="dept-chip"><span class="dept-name">Legal</span><span class="dept-mult mult-high">2.0x</span></div>
+      <div class="dept-chip"><span class="dept-name">HR</span><span class="dept-mult mult-med">1.8x</span></div>
+      <div class="dept-chip"><span class="dept-name">Security</span><span class="dept-mult mult-med">1.8x</span></div>
+      <div class="dept-chip"><span class="dept-name">Engineering</span><span class="dept-mult mult-low">1.2x</span></div>
+      <div class="dept-chip"><span class="dept-name">IT</span><span class="dept-mult mult-low">1.2x</span></div>
+      <div class="dept-chip"><span class="dept-name">Sales</span><span class="dept-mult mult-low">1.2x</span></div>
+      <div class="dept-chip"><span class="dept-name">Marketing</span><span class="dept-mult mult-base">1.0x</span></div>
+      <div class="dept-chip"><span class="dept-name">Support</span><span class="dept-mult mult-base">1.0x</span></div>
+      <div class="dept-chip"><span class="dept-name">General</span><span class="dept-mult mult-base">1.0x</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 6: DATA SOURCE REQUIREMENTS
+       ============================================================ -->
+  <section id="datasources">
+    <span class="section-label">Prerequisites</span>
+    <h2 class="section-title">Data Source Requirements</h2>
+    <p class="section-desc">CIM-compliant data models and key fields needed by detections.</p>
+
+    <div class="ds-grid">
+      <div class="ds-card ds-web">
+        <div class="ds-header">
+          <span class="ds-name">Web</span>
+          <span class="ds-count">21 detections</span>
+        </div>
+        <div class="ds-fields">
+          <span class="field-chip">url_domain</span>
+          <span class="field-chip">user</span>
+          <span class="field-chip">src</span>
+          <span class="field-chip">dest</span>
+          <span class="field-chip">bytes_out</span>
+          <span class="field-chip">http_user_agent</span>
+        </div>
+      </div>
+
+      <div class="ds-card ds-endpoint">
+        <div class="ds-header">
+          <span class="ds-name">Endpoint.Processes</span>
+          <span class="ds-count">10 detections</span>
+        </div>
+        <div class="ds-fields">
+          <span class="field-chip">user</span>
+          <span class="field-chip">dest</span>
+          <span class="field-chip">process_name</span>
+          <span class="field-chip">parent_process_name</span>
+          <span class="field-chip">process_path</span>
+        </div>
+      </div>
+
+      <div class="ds-card ds-network">
+        <div class="ds-header">
+          <span class="ds-name">Network_Traffic</span>
+          <span class="ds-count">2 detections</span>
+        </div>
+        <div class="ds-fields">
+          <span class="field-chip">src</span>
+          <span class="field-chip">dest</span>
+          <span class="field-chip">dest_port</span>
+          <span class="field-chip">transport</span>
+          <span class="field-chip">app</span>
+        </div>
+      </div>
+
+      <div class="ds-card ds-dns">
+        <div class="ds-header">
+          <span class="ds-name">Network_Resolution</span>
+          <span class="ds-count">1 detection</span>
+        </div>
+        <div class="ds-fields">
+          <span class="field-chip">src</span>
+          <span class="field-chip">query</span>
+          <span class="field-chip">record_type</span>
+        </div>
+      </div>
+
+      <div class="ds-card ds-dlp">
+        <div class="ds-header">
+          <span class="ds-name">Data_Loss_Prevention</span>
+          <span class="ds-count">4 detections</span>
+        </div>
+        <div class="ds-fields">
+          <span class="field-chip">user</span>
+          <span class="field-chip">src</span>
+          <span class="field-chip">dest</span>
+          <span class="field-chip">file_name</span>
+          <span class="field-chip">dlp_type</span>
+        </div>
+      </div>
+
+      <div class="ds-card ds-email">
+        <div class="ds-header">
+          <span class="ds-name">Email</span>
+          <span class="ds-count">1 detection</span>
+        </div>
+        <div class="ds-fields">
+          <span class="field-chip">action</span>
+          <span class="field-chip">src_user</span>
+          <span class="field-chip">recipient</span>
+          <span class="field-chip">subject</span>
+        </div>
+      </div>
+
+      <div class="ds-card ds-filesystem">
+        <div class="ds-header">
+          <span class="ds-name">Endpoint.Filesystem</span>
+          <span class="ds-count">1 detection</span>
+        </div>
+        <div class="ds-fields">
+          <span class="field-chip">user</span>
+          <span class="field-chip">file_path</span>
+          <span class="field-chip">file_name</span>
+          <span class="field-chip">action</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 7: LOOKUP CONFIGURATION REFERENCE
+       ============================================================ -->
+  <section id="lookups">
+    <span class="section-label">Configuration</span>
+    <h2 class="section-title">Lookup Configuration Reference</h2>
+    <p class="section-desc">Nine CSV lookups that drive detection behavior. Edit these to tune for your environment.</p>
+
+    <div class="lookup-grid">
+      <div class="lookup-card">
+        <div class="lk-name">ai_provider_domains.csv</div>
+        <div class="lk-meta">113 domains / 71 providers</div>
+        <div class="lk-desc">Edit to add new AI services to monitor</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_tool_processes.csv</div>
+        <div class="lk-meta">88 processes</div>
+        <div class="lk-desc">Edit to add new AI CLI tools and desktop apps</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_sanctioned_entities.csv</div>
+        <div class="lk-meta">configurable</div>
+        <div class="lk-desc">Edit to allowlist users, systems, groups</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_detection_config.csv</div>
+        <div class="lk-meta">27 controls</div>
+        <div class="lk-desc">Edit to tune thresholds per your environment</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_mitre_mapping.csv</div>
+        <div class="lk-meta">44 mappings</div>
+        <div class="lk-desc">Edit to update MITRE ATT&CK mappings</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_department_sensitivity.csv</div>
+        <div class="lk-meta">11 departments</div>
+        <div class="lk-desc">Edit to adjust department risk multipliers</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_prompt_injection_patterns.csv</div>
+        <div class="lk-meta">25 patterns</div>
+        <div class="lk-desc">Edit to add prompt injection detection patterns</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_deepfake_tools.csv</div>
+        <div class="lk-meta">30 tools</div>
+        <div class="lk-desc">Edit to add deepfake/synthetic media tools</div>
+      </div>
+      <div class="lookup-card">
+        <div class="lk-name">ai_api_key_patterns.csv</div>
+        <div class="lk-meta">20 patterns</div>
+        <div class="lk-desc">Edit to add API key detection patterns</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 8: RBA CORRELATION RULES
+       ============================================================ -->
+  <section id="rba">
+    <span class="section-label">Correlation Engine</span>
+    <h2 class="section-title">RBA Correlation Rules</h2>
+    <p class="section-desc">Five correlation searches that aggregate risk events into actionable notables.</p>
+
+    <div class="rba-grid">
+      <div class="rba-card">
+        <div class="rba-id">AI-RISK-001</div>
+        <div class="rba-name">Medium Risk Threshold</div>
+        <div class="rba-desc">User risk score reaches or exceeds 60 points accumulated within a 24-hour sliding window. Generates a medium-severity notable event for analyst triage.</div>
+        <div class="rba-outcome outcome-medium">user risk &ge; 60pts &rarr; medium notable</div>
+      </div>
+
+      <div class="rba-card">
+        <div class="rba-id">AI-RISK-002</div>
+        <div class="rba-name">Critical Risk Threshold</div>
+        <div class="rba-desc">User risk score reaches or exceeds 90 points accumulated within a 24-hour sliding window. Generates a critical-severity notable event requiring immediate response.</div>
+        <div class="rba-outcome outcome-critical">user risk &ge; 90pts &rarr; critical notable</div>
+      </div>
+
+      <div class="rba-card">
+        <div class="rba-id">AI-RISK-003</div>
+        <div class="rba-name">Data Collection to AI Upload Kill Chain</div>
+        <div class="rba-desc">Detects the pattern of data collection events (file access, clipboard, database queries) followed by AI service upload within a 4-hour window. Indicates potential staged exfiltration.</div>
+        <div class="rba-outcome outcome-notable">60 pts + notable</div>
+      </div>
+
+      <div class="rba-card">
+        <div class="rba-id">AI-RISK-004</div>
+        <div class="rba-name">Privilege Escalation Plus AI Usage</div>
+        <div class="rba-desc">Correlates privilege escalation events (new admin rights, role changes, sudo usage) with subsequent AI service access. High-confidence indicator of insider threat or compromised account.</div>
+        <div class="rba-outcome outcome-notable">70 pts + notable</div>
+      </div>
+
+      <div class="rba-card">
+        <div class="rba-id">AI-RISK-005</div>
+        <div class="rba-name">Multi-Vector AI Risk</div>
+        <div class="rba-desc">Fires when a single user triggers detections from 3 or more distinct detection categories within 24 hours. Breadth of activity suggests systematic misuse or advanced threat.</div>
+        <div class="rba-outcome outcome-notable">55 pts + notable</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 9: LIVE TESTING RESULTS
+       ============================================================ -->
+  <section id="testing">
+    <span class="section-label">Validation</span>
+    <h2 class="section-title">Live Testing Results</h2>
+    <p class="section-desc">SPL validation against two production Splunk ES 8.3.0 environments. Scores reflect data model availability, not detection logic.</p>
+
+    <div class="env-grid">
+      <!-- ELU -->
+      <div class="env-card">
+        <div class="env-header">
+          <span class="env-name">Environment A</span>
+          <span class="env-version">ES 8.3.0</span>
+        </div>
+        <div class="env-score score-55">55% ready</div>
+
+        <div class="readiness-bar">
+          <div class="bar-ready" style="width:82.9%"></div>
+          <div class="bar-partial" style="width:4.9%"></div>
+          <div class="bar-gap" style="width:12.2%"></div>
+        </div>
+
+        <div class="env-stats">
+          <div class="env-stat ev-ready"><div class="ev-val">34</div><div class="ev-label">Ready</div></div>
+          <div class="env-stat ev-partial"><div class="ev-val">2</div><div class="ev-label">Partial</div></div>
+          <div class="env-stat ev-gap"><div class="ev-val">5</div><div class="ev-label">No Data</div></div>
+        </div>
+
+        <div class="env-detail">
+          <p><strong>Data Volume:</strong> 118K web events/day, 53K endpoint events/day</p>
+          <p style="margin-top:6px"><strong>Sources:</strong> Cisco Cloud Security (proxy+DNS), Cisco ASA, FortiGate, XmlWinEventLog</p>
+          <p style="margin-top:6px"><strong>Gaps:</strong>
+            <span class="gap-tag">No DLP</span>
+            <span class="gap-tag">No Email</span>
+            <span class="gap-tag">No Endpoint.Filesystem</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- SIH -->
+      <div class="env-card">
+        <div class="env-header">
+          <span class="env-name">Environment B</span>
+          <span class="env-version">ES 8.3.0</span>
+        </div>
+        <div class="env-score score-63">63% ready</div>
+
+        <div class="readiness-bar">
+          <div class="bar-ready" style="width:83.3%"></div>
+          <div class="bar-partial" style="width:7.1%"></div>
+          <div class="bar-gap" style="width:9.5%"></div>
+        </div>
+
+        <div class="env-stats">
+          <div class="env-stat ev-ready"><div class="ev-val">35</div><div class="ev-label">Ready</div></div>
+          <div class="env-stat ev-partial"><div class="ev-val">3</div><div class="ev-label">Partial</div></div>
+          <div class="env-stat ev-gap"><div class="ev-val">4</div><div class="ev-label">No Data</div></div>
+        </div>
+
+        <div class="env-detail">
+          <p><strong>Data Volume:</strong> 79M web events/day, 1.7M endpoint events/day</p>
+          <p style="margin-top:6px"><strong>Sources:</strong> Zscaler NSS (web+DNS+FW), Cisco Estreamer, WinEventLog, Email</p>
+          <p style="margin-top:6px"><strong>Gaps:</strong>
+            <span class="gap-tag">No DLP</span>
+            <span class="gap-tag">No Endpoint.Filesystem</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 10: DEPLOYMENT CHECKLIST
+       ============================================================ -->
+  <section id="deploy">
+    <span class="section-label">Operations</span>
+    <h2 class="section-title">Deployment Checklist</h2>
+    <p class="section-desc">Ten steps to go from zero to operational detection coverage.</p>
+
+    <ol class="checklist">
+      <li><span class="step-text">Deploy <code>hdsi_ai_rba_common</code> package (macros + transforms)</span></li>
+      <li><span class="step-text">Deploy detection packages (<code>hdsi_ai_*</code> and <code>hdsi_rba_ai_*</code>)</span></li>
+      <li><span class="step-text">Install all 9 CSV lookups in app context</span></li>
+      <li><span class="step-text">Validate CIM data model mappings</span></li>
+      <li><span class="step-text">Accelerate Web and Endpoint data models (30d+)</span></li>
+      <li><span class="step-text">Populate <code>ai_sanctioned_entities.csv</code> allowlist</span></li>
+      <li><span class="step-text">Set <code>ai_detection_config.csv</code> thresholds for your environment</span></li>
+      <li><span class="step-text">Review <code>ai_department_sensitivity.csv</code> risk multipliers</span></li>
+      <li><span class="step-text">Enable detections and observe for 1-2 weeks</span></li>
+      <li><span class="step-text">Tune thresholds using <code>TUNING_GUIDE.md</code> calibration queries</span></li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    HDSI AI RBA Detection Pack &mdash; Splunk Enterprise Security &mdash; Built for detection engineers
+  </footer>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+/* ---------------------------------------------------------------
+   DETECTION DATA
+   --------------------------------------------------------------- */
+var DETECTIONS = [
+  {id:"AI-004",name:"Unsanctioned AI CLI Execution",category:"Core",urisk:"25",srisk:"15",mitre:"T1059.001",dm:"Endpoint",phase:"execution"},
+  {id:"AI-005",name:"Unsanctioned AI Desktop App Execution",category:"Core",urisk:"20",srisk:"12",mitre:"T1204.002",dm:"Endpoint",phase:"execution"},
+  {id:"AI-006",name:"AI API Access From Non-Dev Endpoint",category:"Core",urisk:"24",srisk:"14",mitre:"T1071.001",dm:"Web",phase:"collection"},
+  {id:"AI-007",name:"High Volume Upload To AI Service",category:"Core",urisk:"20-80",srisk:"20",mitre:"T1567.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-008",name:"Scripted AI CLI Invocation",category:"Core",urisk:"32",srisk:"18",mitre:"T1059.004",dm:"Endpoint",phase:"execution"},
+  {id:"AI-009",name:"First-Seen AI Provider For User",category:"Core",urisk:"15",srisk:"8",mitre:"T1071.001",dm:"Web",phase:"recon"},
+  {id:"AI-010",name:"Repeated Unsanctioned AI Access Burst",category:"Core",urisk:"18",srisk:"10",mitre:"T1071.001",dm:"Web",phase:"collection"},
+  {id:"AI-011",name:"Local LLM Framework Execution",category:"Core",urisk:"20",srisk:"15",mitre:"T1204.002",dm:"Endpoint",phase:"execution"},
+  {id:"AI-012",name:"DNS Queries To AI Domains",category:"Core",urisk:"12",srisk:"-",mitre:"T1071.004",dm:"DNS",phase:"recon"},
+  {id:"AI-013",name:"LLM Model File Download",category:"Core",urisk:"30",srisk:"18",mitre:"T1105",dm:"Web",phase:"staging"},
+  {id:"AI-014",name:"Local LLM Listening Port Detected",category:"Core",urisk:"30",srisk:"-",mitre:"T1571",dm:"Network",phase:"persistence"},
+  {id:"AI-015",name:"After-Hours AI Service Usage",category:"Core",urisk:"15",srisk:"8",mitre:"T1567.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-016",name:"Privileged Account AI Service Usage",category:"Core",urisk:"40",srisk:"20",mitre:"T1078.004",dm:"Web+Identity",phase:"collection"},
+  {id:"AI-017",name:"AI Usage Volume Anomaly (z-score)",category:"Core",urisk:"35",srisk:"-",mitre:"T1567.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-018",name:"Multiple AI Services In Single Session",category:"Core",urisk:"15",srisk:"8",mitre:"T1567.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-019",name:"Code Assistant Network Connection",category:"Core",urisk:"15",srisk:"-",mitre:"T1071.001",dm:"Network",phase:"collection"},
+  {id:"AI-020",name:"DLP Violation On AI Service Upload",category:"Core",urisk:"60",srisk:"30",mitre:"T1567.002",dm:"DLP",phase:"exfiltration"},
+  {id:"AI-021",name:"AI Browser Extension Activity",category:"Core",urisk:"12",srisk:"8",mitre:"T1176",dm:"Web",phase:"persistence"},
+  {id:"AI-022",name:"AI Access Via VPN/Proxy Evasion",category:"Shadow AI",urisk:"35",srisk:"20",mitre:"T1090.003",dm:"Web",phase:"collection"},
+  {id:"AI-023",name:"AI Access From Unmanaged Device",category:"Shadow AI",urisk:"30",srisk:"25",mitre:"T1078.004",dm:"Web+Asset",phase:"collection"},
+  {id:"AI-024",name:"Browser Extension High-Volume Data",category:"Shadow AI",urisk:"30",srisk:"15",mitre:"T1176",dm:"Web",phase:"exfiltration"},
+  {id:"AI-025",name:"Copy-Paste Correlation To AI Service",category:"Shadow AI",urisk:"25",srisk:"12",mitre:"T1115",dm:"DLP+Web",phase:"collection"},
+  {id:"AI-026",name:"AI Usage From Personal Account",category:"Shadow AI",urisk:"28",srisk:"12",mitre:"T1078.004",dm:"Web+Identity",phase:"collection"},
+  {id:"AI-027",name:"Personal Email To AI Service Upload",category:"Shadow AI",urisk:"30",srisk:"15",mitre:"T1048.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-028",name:"Unsanctioned AI Web Access",category:"Shadow AI",urisk:"15",srisk:"10",mitre:"T1071.001",dm:"Web",phase:"recon"},
+  {id:"AI-030",name:"Prompt Injection In Web Uploads",category:"Adversarial",urisk:"45",srisk:"25",mitre:"T1190",dm:"DLP",phase:"staging"},
+  {id:"AI-031",name:"AI-Generated Phishing Indicators",category:"Adversarial",urisk:"40",srisk:"20",mitre:"T1566.001",dm:"Web+Email",phase:"staging"},
+  {id:"AI-032",name:"Model File Exfiltration From ML Infra",category:"Adversarial",urisk:"50",srisk:"30",mitre:"T1567.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-033",name:"AI API Key Exposure In Code/DLP",category:"Adversarial",urisk:"55",srisk:"25",mitre:"T1552.001",dm:"Code/DLP",phase:"staging"},
+  {id:"AI-034",name:"Deepfake Tool Execution/Access",category:"Adversarial",urisk:"50",srisk:"30",mitre:"T1588.005",dm:"Endpoint",phase:"staging"},
+  {id:"AI-035",name:"AI-Assisted Lateral Movement",category:"Adversarial",urisk:"45",srisk:"25",mitre:"T1059.001",dm:"Endpoint",phase:"collection"},
+  {id:"AI-036",name:"Compromised AI Plugin/Extension",category:"Adversarial",urisk:"35",srisk:"20",mitre:"T1195.002",dm:"Endpoint+Web",phase:"persistence"},
+  {id:"AI-037",name:"AI Agent Framework Execution",category:"Agentic AI",urisk:"35",srisk:"20",mitre:"T1059",dm:"Endpoint",phase:"execution"},
+  {id:"AI-038",name:"Sanctioned AI DLP Violation",category:"Agentic AI",urisk:"40",srisk:"20",mitre:"T1567.002",dm:"DLP",phase:"exfiltration"},
+  {id:"AI-039",name:"AI Agent Autonomous Action",category:"Agentic AI",urisk:"40",srisk:"20",mitre:"T1059",dm:"Endpoint",phase:"execution"},
+  {id:"AI-046",name:"MCP Server Execution",category:"Agentic AI",urisk:"35",srisk:"20",mitre:"T1059",dm:"Endpoint",phase:"execution"},
+  {id:"AI-040",name:"User Peer Group AI Usage Anomaly",category:"UEBA",urisk:"30",srisk:"-",mitre:"T1567.002",dm:"Web+Identity",phase:"exfiltration"},
+  {id:"AI-041",name:"Time-Of-Day Usage Pattern Anomaly",category:"UEBA",urisk:"25",srisk:"-",mitre:"T1567.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-042",name:"New AI Provider Adoption Velocity",category:"UEBA",urisk:"20",srisk:"10",mitre:"T1071.001",dm:"Web",phase:"recon"},
+  {id:"AI-043",name:"AI Usage Following Data Access Spike",category:"UEBA",urisk:"40",srisk:"20",mitre:"T1567.002",dm:"Endpoint+Web",phase:"collection"},
+  {id:"AI-044",name:"Gradual Low-And-Slow Data Exfil",category:"UEBA",urisk:"45",srisk:"20",mitre:"T1567.002",dm:"Web",phase:"exfiltration"},
+  {id:"AI-045",name:"Voice Cloning API Access",category:"UEBA",urisk:"40",srisk:"20",mitre:"T1588.005",dm:"Web",phase:"staging"},
+  {id:"AI-RISK-001",name:"User Risk Threshold - Medium (60pts)",category:"RBA",urisk:"notable",srisk:"-",mitre:"-",dm:"risk index",phase:"-"},
+  {id:"AI-RISK-002",name:"User Risk Threshold - Critical (90pts)",category:"RBA",urisk:"notable",srisk:"-",mitre:"-",dm:"risk index",phase:"-"},
+  {id:"AI-RISK-003",name:"Data Collection To AI Upload Kill Chain",category:"RBA",urisk:"60+notable",srisk:"-",mitre:"-",dm:"risk index",phase:"-"},
+  {id:"AI-RISK-004",name:"Privilege Escalation Plus AI Usage",category:"RBA",urisk:"70+notable",srisk:"-",mitre:"-",dm:"risk index",phase:"-"},
+  {id:"AI-RISK-005",name:"Multi-Vector AI Risk (3+ categories/24h)",category:"RBA",urisk:"55+notable",srisk:"-",mitre:"-",dm:"risk index",phase:"-"}
+];
+
+/* ---------------------------------------------------------------
+   MITRE DATA
+   --------------------------------------------------------------- */
+var MITRE_DATA = {
+  "Execution": [
+    {tid:"T1059", name:"Command and Scripting Interpreter", ids:["AI-004","AI-008","AI-037","AI-039","AI-046"]},
+    {tid:"T1059.004", name:"Unix Shell", ids:["AI-008"]},
+    {tid:"T1204.002", name:"Malicious File", ids:["AI-005","AI-011"]}
+  ],
+  "Collection": [
+    {tid:"T1071.001", name:"Web Protocols", ids:["AI-006","AI-009","AI-010","AI-019","AI-028","AI-042"]},
+    {tid:"T1115", name:"Clipboard Data", ids:["AI-025"]}
+  ],
+  "Command and Control": [
+    {tid:"T1071.004", name:"DNS", ids:["AI-012"]},
+    {tid:"T1105", name:"Ingress Tool Transfer", ids:["AI-013"]},
+    {tid:"T1219", name:"Remote Access Software", ids:["AI-014"]},
+    {tid:"T1090.003", name:"Multi-hop Proxy", ids:["AI-022"]}
+  ],
+  "Exfiltration": [
+    {tid:"T1567.002", name:"Exfiltration to Cloud Storage", ids:["AI-007","AI-015","AI-017","AI-018","AI-020","AI-032","AI-038","AI-040","AI-041","AI-043","AI-044"]},
+    {tid:"T1048.002", name:"Exfil Over Asymmetric Encrypted Non-C2", ids:["AI-027"]}
+  ],
+  "Initial Access": [
+    {tid:"T1190", name:"Exploit Public-Facing Application", ids:["AI-030"]},
+    {tid:"T1566.001", name:"Spearphishing Attachment", ids:["AI-031"]},
+    {tid:"T1078.004", name:"Cloud Accounts", ids:["AI-023","AI-026"]},
+    {tid:"T1195.002", name:"Compromise Software Supply Chain", ids:["AI-036"]}
+  ],
+  "Persistence": [
+    {tid:"T1176", name:"Browser Extensions", ids:["AI-021","AI-024"]}
+  ],
+  "Privilege Escalation": [
+    {tid:"T1078.004", name:"Cloud Accounts", ids:["AI-016"]}
+  ],
+  "Credential Access": [
+    {tid:"T1552.001", name:"Credentials In Files", ids:["AI-033"]}
+  ],
+  "Resource Development": [
+    {tid:"T1588.005", name:"Exploits", ids:["AI-034","AI-045"]}
+  ],
+  "Lateral Movement": [
+    {tid:"T1021", name:"Remote Services", ids:["AI-035"]}
+  ],
+  "Discovery": [
+    {tid:"T1046", name:"Network Service Discovery", ids:["AI-DISCOVERY-001"]}
+  ]
+};
+
+/* ---------------------------------------------------------------
+   BUILD MITRE GRID
+   --------------------------------------------------------------- */
+(function buildMitreGrid() {
+  var grid = document.getElementById('mitreGrid');
+  var tactics = Object.keys(MITRE_DATA);
+
+  /* Headers row */
+  tactics.forEach(function(t) {
+    var hdr = document.createElement('div');
+    hdr.className = 'mitre-tactic-header';
+    hdr.textContent = t;
+    grid.appendChild(hdr);
+  });
+
+  /* Find max rows */
+  var maxRows = 0;
+  tactics.forEach(function(t) { maxRows = Math.max(maxRows, MITRE_DATA[t].length); });
+
+  /* Build cells row by row */
+  for (var r = 0; r < maxRows; r++) {
+    tactics.forEach(function(t) {
+      var techs = MITRE_DATA[t];
+      if (r < techs.length) {
+        var tech = techs[r];
+        var count = tech.ids.length;
+        var heat = count >= 8 ? 5 : count >= 5 ? 4 : count >= 3 ? 3 : count >= 2 ? 2 : 1;
+        var cell = document.createElement('div');
+        cell.className = 'mitre-cell heat-' + heat;
+        cell.innerHTML = '<span class="tech-id">' + tech.tid + '</span>' +
+          '<span class="tech-count">' + count + ' det' + (count > 1 ? 's' : '') + '</span>' +
+          '<div class="tooltip"><div class="tip-name">' + tech.name + '</div><div class="tip-ids">' + tech.ids.join(', ') + '</div></div>';
+        grid.appendChild(cell);
+      } else {
+        var empty = document.createElement('div');
+        empty.style.minHeight = '48px';
+        grid.appendChild(empty);
+      }
+    });
+  }
+})();
+
+/* ---------------------------------------------------------------
+   BUILD DETECTION TABLE
+   --------------------------------------------------------------- */
+var currentFilters = { phase: 'all', dm: 'all' };
+var currentSort = { col: 'id', dir: 'asc' };
+
+function catClass(c) {
+  var map = {'Core':'cat-core','Shadow AI':'cat-shadow','Adversarial':'cat-adversarial','Agentic AI':'cat-agentic','UEBA':'cat-ueba','RBA':'cat-rba'};
+  return map[c] || 'cat-core';
+}
+
+function renderTable() {
+  var body = document.getElementById('detBody');
+  var search = document.getElementById('searchInput').value.toLowerCase();
+  var rows = DETECTIONS.filter(function(d) {
+    if (currentFilters.phase !== 'all' && d.phase !== currentFilters.phase) return false;
+    if (currentFilters.dm !== 'all') {
+      if (currentFilters.dm === 'risk') {
+        if (d.dm !== 'risk index') return false;
+      } else {
+        if (d.dm.indexOf(currentFilters.dm) === -1) return false;
+      }
+    }
+    if (search) {
+      var haystack = (d.id + ' ' + d.name + ' ' + d.category + ' ' + d.mitre + ' ' + d.dm + ' ' + d.phase).toLowerCase();
+      if (haystack.indexOf(search) === -1) return false;
+    }
+    return true;
+  });
+
+  /* Sort */
+  rows.sort(function(a, b) {
+    var va = a[currentSort.col] || '';
+    var vb = b[currentSort.col] || '';
+    /* Numeric sort for risk columns */
+    if (currentSort.col === 'urisk' || currentSort.col === 'srisk') {
+      var na = parseFloat(va) || 0;
+      var nb = parseFloat(vb) || 0;
+      return currentSort.dir === 'asc' ? na - nb : nb - na;
+    }
+    va = va.toString().toLowerCase();
+    vb = vb.toString().toLowerCase();
+    if (va < vb) return currentSort.dir === 'asc' ? -1 : 1;
+    if (va > vb) return currentSort.dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  if (rows.length === 0) {
+    body.innerHTML = '<tr><td colspan="8" class="no-results">No detections match the current filters.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = rows.map(function(d) {
+    return '<tr>' +
+      '<td class="det-id">' + d.id + '</td>' +
+      '<td class="det-name">' + d.name + '</td>' +
+      '<td><span class="cat-badge ' + catClass(d.category) + '">' + d.category + '</span></td>' +
+      '<td class="risk-val">' + d.urisk + '</td>' +
+      '<td class="risk-val">' + d.srisk + '</td>' +
+      '<td class="mitre-tag">' + d.mitre + '</td>' +
+      '<td>' + d.dm + '</td>' +
+      '<td class="phase-tag">' + d.phase + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function setFilter(btn) {
+  var filterType = btn.getAttribute('data-filter');
+  var value = btn.getAttribute('data-value');
+  currentFilters[filterType] = value;
+
+  /* Update active state */
+  var siblings = btn.parentElement.querySelectorAll('.filter-btn[data-filter="' + filterType + '"]');
+  siblings.forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+
+  applyFilters();
+}
+
+function applyFilters() { renderTable(); }
+
+function sortTable(col, th) {
+  if (currentSort.col === col) {
+    currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    currentSort.col = col;
+    currentSort.dir = 'asc';
+  }
+
+  /* Update header classes */
+  var allTh = document.querySelectorAll('.det-table th');
+  allTh.forEach(function(h) { h.classList.remove('sorted-asc', 'sorted-desc'); });
+  th.classList.add('sorted-' + currentSort.dir);
+
+  renderTable();
+}
+
+/* ---------------------------------------------------------------
+   KILL CHAIN TOGGLE
+   --------------------------------------------------------------- */
+function togglePhase(el) {
+  var detail = el.querySelector('.phase-detail');
+  var isOpen = detail.classList.contains('open');
+
+  /* Close all */
+  document.querySelectorAll('.phase-detail').forEach(function(d) { d.classList.remove('open'); });
+  document.querySelectorAll('.pipeline-phase').forEach(function(p) { p.classList.remove('active'); });
+
+  if (!isOpen) {
+    detail.classList.add('open');
+    el.classList.add('active');
+  }
+}
+
+/* ---------------------------------------------------------------
+   INIT
+   --------------------------------------------------------------- */
+(function init() {
+  /* Set default active filter buttons */
+  document.querySelectorAll('.filter-btn[data-value="all"]').forEach(function(b) { b.classList.add('active'); });
+  renderTable();
+})();
+</script>
+
+</body>
+</html>

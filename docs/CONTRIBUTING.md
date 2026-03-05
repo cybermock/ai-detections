@@ -1,6 +1,6 @@
 # Contributing Guide
 
-This guide covers development setup, project structure, and the process for adding new detections, lookups, and documentation to the AI RBA Starter Pack.
+How to add new detections, lookups, and documentation to the AI RBA Detection Pack. Written for detection engineers who build and maintain correlation searches in Splunk ES.
 
 ## Development Environment Setup
 
@@ -59,7 +59,7 @@ splunk-es-ai-rba/
 
 ### Step 1: Choose a detection ID
 
-Detection IDs follow the format `AI-XXX` where XXX is a zero-padded sequential number. IDs are organized by category:
+Detection IDs follow `AI-XXX` format (zero-padded sequential). IDs are organized by category:
 
 | Range | Category | Examples |
 |---|---|---|
@@ -71,11 +71,12 @@ Detection IDs follow the format `AI-XXX` where XXX is a zero-padded sequential n
 
 Check the current highest ID in `savedsearches.conf` and `ai_mitre_mapping.csv` before assigning a new one.
 
-### Important: tstats Hardcoding Limitation
+### tstats Hardcoding Limitation
 
-**When adding new AI domains or process names, you must update BOTH the lookup CSV AND the hardcoded lists in detection searches.**
+> [!WARNING]
+> **When adding new AI domains or process names, you must update BOTH the lookup CSV AND the hardcoded lists in detection searches.** Missing this causes silent drift where the lookup recognizes a new tool but `tstats` never finds events for it.
 
-Splunk's `tstats` command does not support runtime lookup joins in its `WHERE` clause. This means detections that use `tstats` must hardcode domain names and process names directly in the search. When you add a new entry to a lookup CSV (e.g., a new domain to `ai_provider_domains.csv` or a new process to `ai_tool_processes.csv`), you must also update the corresponding hardcoded lists in these detection searches:
+Splunk's `tstats` command does not support runtime lookup joins in its `WHERE` clause. Detections that use `tstats` must hardcode domain names and process names directly in the search. When you add a new entry to a lookup CSV (e.g., a new domain to `ai_provider_domains.csv` or a new process to `ai_tool_processes.csv`), you must also update the corresponding hardcoded lists in these detection searches:
 
 | Detection | Hardcoded Field | Lookup Used Post-tstats |
 |---|---|---|
@@ -87,7 +88,7 @@ Splunk's `tstats` command does not support runtime lookup joins in its `WHERE` c
 | AI-014 | `All_Traffic.dest_port IN (...)` | N/A (port-based) |
 | AI-035 | `Processes.process_name IN (...)` | `ai_tool_processes` |
 
-**Failure to update both will cause drift** where the lookup recognizes a new tool/domain but the `tstats` query never finds events for it. Always grep for existing hardcoded values in `savedsearches.conf` to find all places that need updating.
+Always grep for existing hardcoded values in `savedsearches.conf` to find all places that need updating.
 
 ### Step 2: Write the SPL search
 
@@ -200,7 +201,7 @@ Update ARCHITECTURE.md to include the new lookup in the lookup relationship diag
 
 ## Pull Request Checklist
 
-Before submitting a PR, verify:
+Before submitting, verify every item:
 
 - [ ] **Tests pass:** `python -m pytest tests/ -v` completes with no failures.
 - [ ] **Lint passes:** No syntax errors in .conf files; CSV files are valid.
