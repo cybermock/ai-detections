@@ -1,0 +1,21 @@
+pattern_id,provider,regex_pattern,description,severity,enabled
+AK-001,OpenAI,sk-[A-Za-z0-9]{20}T3BlbkFJ[A-Za-z0-9]{20},OpenAI API key (legacy format),critical,1
+AK-002,OpenAI,"sk-proj-[A-Za-z0-9_-]{60,180}",OpenAI project API key,critical,1
+AK-003,Anthropic,"sk-ant-(?:api03-)?[A-Za-z0-9_-]{80,130}",Anthropic API key,critical,1
+AK-004,Google Gemini,AIzaSy[A-Za-z0-9_-]{33},Google AI API key,critical,1
+AK-005,Azure OpenAI,"(?i)(?:azure[_-]?openai|x-api-key|api[_-]?key)(?:\x22|'|=|:|\s){0,8}[a-f0-9]{32}",Azure OpenAI API key (contextual 32-char hex),high,1
+AK-006,Cohere,"(?i)(?:cohere|cohere[_-]?api[_-]?key|x-api-key)(?:\x22|'|=|:|\s){0,8}[A-Za-z0-9]{40}",Cohere API key (contextual 40-char token),high,1
+AK-007,HuggingFace,hf_[A-Za-z0-9]{34},HuggingFace API token,high,1
+AK-008,Replicate,r8_[A-Za-z0-9]{36},Replicate API token,high,1
+AK-009,Together,tog-[A-Za-z0-9_-]{48},Together AI API key,high,1
+AK-010,Mistral,"(?i)(?:mistral|mistral[_-]?api[_-]?key|x-api-key)(?:\x22|'|=|:|\s){0,8}[A-Za-z0-9]{32}",Mistral API key (contextual 32-char token),high,1
+AK-011,Groq,"gsk_[A-Za-z0-9]{48,56}",Groq API key,high,1
+AK-012,DeepSeek,"(?i)(?:deepseek|deepseek[_-]?api[_-]?key|x-api-key)(?:\x22|'|=|:|\s){0,8}sk-[A-Za-z0-9]{48}",DeepSeek API key (contextual),high,1
+AK-013,Fireworks,fw_[A-Za-z0-9]{40},Fireworks AI API key,high,1
+AK-014,xAI,xai-[A-Za-z0-9]{48},xAI Grok API key,high,1
+AK-015,OpenRouter,sk-or-[A-Za-z0-9_-]{48},OpenRouter API key,high,1
+AK-016,Perplexity,pplx-[A-Za-z0-9]{48},Perplexity API key,high,1
+AK-017,Anthropic,"sk-ant-sid01-[A-Za-z0-9_-]{80,130}",Anthropic session key,high,1
+AK-018,Cohere,co-[A-Za-z0-9]{40},Cohere v2 API key,high,1
+AK-019,AWS,"(?i)(?:AKIA|ASIA)[A-Z0-9]{16}",AWS access key (potential Bedrock credential),high,1
+AK-020,GitHub,(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{36},GitHub personal/OAuth/app token,high,1

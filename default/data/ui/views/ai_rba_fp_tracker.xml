@@ -1,0 +1,126 @@
+<dashboard>
+  <label>AI RBA - False Positive Tracker</label>
+  <description>Track false positive rates, top FP-generating entities, and suggested allowlist entries for AI RBA detections.</description>
+
+  <fieldset submitButton="false">
+    <input type="time" token="time_picker">
+      <label>Time Range</label>
+      <default>
+        <earliest>-7d@d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+
+  <row>
+    <panel>
+      <title>False Positive Rate by Detection</title>
+      <table>
+        <search>
+          <query>index=notable source="AI RBA -*"
+| stats count as total count(eval(status_label="Resolved - False Positive" OR status_label="Closed - False Positive")) as fp_count by source
+| eval fp_rate=round(fp_count/total*100, 1)."%"
+| sort - fp_count
+| rename source as "Detection", total as "Total Notables", fp_count as "False Positives", fp_rate as "FP Rate"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel>
+      <title>FP Rate Distribution</title>
+      <chart>
+        <search>
+          <query>index=notable source="AI RBA -*"
+| stats count as total count(eval(status_label="Resolved - False Positive" OR status_label="Closed - False Positive")) as fp_count by source
+| eval fp_rate=round(fp_count/total*100, 1)
+| sort - fp_rate
+| rename source as "Detection", fp_rate as "FP Rate %"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.axisTitleX.text">Detection</option>
+        <option name="charting.axisTitleY.text">FP Rate (%)</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Top False Positive Generating Entities</title>
+      <table>
+        <search>
+          <query>index=notable source="AI RBA -*" (status_label="Resolved - False Positive" OR status_label="Closed - False Positive")
+| eval entity=coalesce(user, src, risk_object, "unknown")
+| stats count as fp_count dc(source) as detection_count values(source) as detections by entity
+| sort - fp_count
+| head 20
+| rename entity as "Entity", fp_count as "FP Count", detection_count as "Detection Types", detections as "Detections"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Suggested Allowlist Entries</title>
+      <table>
+        <search>
+          <query>index=notable source="AI RBA -*" (status_label="Resolved - False Positive" OR status_label="Closed - False Positive")
+| eval entity=coalesce(user, src, risk_object, "unknown")
+| eval provider=coalesce(provider, "unknown")
+| stats count as fp_count dc(source) as detection_count values(source) as detections latest(_time) as last_fp by entity provider
+| where fp_count>=3
+| eval last_fp=strftime(last_fp, "%Y-%m-%d %H:%M")
+| eval suggestion=case(
+    match(entity, "^svc_|^srv_"), "Service account - add to ai_sanctioned_entities.csv with entity_type=user, scope=global",
+    match(entity, "^\\d+\\.\\d+\\.\\d+\\.\\d+"), "IP address - add to ai_sanctioned_entities.csv with entity_type=system, scope=provider:".provider,
+    true(), "User - add to ai_sanctioned_entities.csv with entity_type=user, scope=provider:".provider
+)
+| sort - fp_count
+| rename entity as "Entity", provider as "Provider", fp_count as "FP Count", detection_count as "Detections", last_fp as "Last FP", suggestion as "Suggested Action"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>False Positive Trend Over Time</title>
+      <chart>
+        <search>
+          <query>index=notable source="AI RBA -*"
+| eval is_fp=if(status_label="Resolved - False Positive" OR status_label="Closed - False Positive", 1, 0)
+| timechart span=1d count as total_notables sum(is_fp) as false_positives
+| eval fp_rate=round(false_positives/total_notables*100, 1)</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.overlayFields">fp_rate</option>
+        <option name="charting.axisTitleX.text">Date</option>
+        <option name="charting.axisTitleY.text">Count</option>
+        <option name="charting.axisTitleY2.text">FP Rate (%)</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+</dashboard>

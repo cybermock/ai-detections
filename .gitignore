@@ -1,0 +1,49 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Testing
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Splunk local overrides (should not be committed)
+local/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Obsidian
+.obsidian/
+
+# Embedded repos
+soc-search-repo/
+
+# AI session artifacts
+claudeplan.md
+codexplan.md
+
+# One-time scripts
+convert_to_packages.py
+
+# Test run outputs
+p2r/tools/results_*.json
+p2r/tools/test_spl_manifest.json
+p2r/tools/spl_validation_report.md
+p2r/tools/generate_test_spl.py
+
+# Lock files
+uv.lock

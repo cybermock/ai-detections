@@ -1,0 +1,153 @@
+<dashboard>
+  <label>AI RBA - Lookup Health</label>
+  <description>Monitor lookup file freshness, domain coverage, process coverage, and staleness alerts for AI RBA detection lookups.</description>
+
+  <row>
+    <panel>
+      <title>Lookup File Last Modified Dates</title>
+      <table>
+        <search>
+          <query>| rest /services/data/lookup-table-files splunk_server=local
+| where match(title, "^ai_")
+| eval size_kb=round(eai:data.size/1024, 1)
+| eval updated=strftime(strptime(updated, "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%d %H:%M:%S")
+| eval age_days=round((now() - strptime(updated, "%Y-%m-%d %H:%M:%S")) / 86400, 0)
+| eval staleness=case(age_days>90, "STALE", age_days>30, "Aging", true(), "Fresh")
+| table title, updated, age_days, size_kb, staleness
+| rename title as "Lookup File", updated as "Last Updated", age_days as "Age (Days)", size_kb as "Size (KB)", staleness as "Status"
+| sort - age_days</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Domain Coverage: Lookup vs Traffic</title>
+      <table>
+        <search>
+          <query>| inputlookup ai_provider_domains.csv
+| stats dc(domain) as lookup_domains values(provider) as providers
+| appendcols [
+    | tstats dc(Web.url_domain) as traffic_domains from datamodel=Web where Web.url_domain=* by Web.url_domain
+    | rename Web.url_domain as domain
+    | lookup ai_provider_domains domain OUTPUTNEW provider
+    | stats dc(domain) as traffic_domains dc(eval(if(isnotnull(provider), domain, null()))) as matched_domains
+]
+| eval coverage_pct=round(matched_domains/traffic_domains*100, 1)."%"
+| eval unmatched=traffic_domains - matched_domains
+| table lookup_domains, traffic_domains, matched_domains, unmatched, coverage_pct
+| rename lookup_domains as "Domains in Lookup", traffic_domains as "Domains in Traffic", matched_domains as "Matched Domains", unmatched as "Unmatched Domains", coverage_pct as "Coverage %"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Domains in Traffic Not in Lookup</title>
+      <table>
+        <search>
+          <query>| tstats count from datamodel=Web where Web.url_domain=* by Web.url_domain
+| rename Web.url_domain as domain
+| lookup ai_provider_domains domain OUTPUTNEW provider
+| where isnull(provider)
+| where match(domain, "(?i)(ai|gpt|llm|copilot|claude|openai|anthropic|gemini|bard|mistral|deepseek|groq|cohere|replicate|hugging)")
+| sort - count
+| head 20
+| rename domain as "Domain", count as "Request Count"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Process Coverage: Lookup vs Endpoint Events</title>
+      <table>
+        <search>
+          <query>| inputlookup ai_tool_processes.csv
+| stats dc(process_name_lc) as lookup_processes values(tool) as tools
+| appendcols [
+    | tstats dc(Processes.process_name) as endpoint_processes from datamodel=Endpoint.Processes where Processes.process_name=* by Processes.process_name
+    | rename Processes.process_name as process_name
+    | eval process_name_lc=lower(process_name)
+    | lookup ai_tool_processes process_name_lc OUTPUTNEW tool
+    | stats dc(process_name) as endpoint_processes dc(eval(if(isnotnull(tool), process_name, null()))) as matched_processes
+]
+| eval coverage_pct=round(matched_processes/endpoint_processes*100, 1)."%"
+| eval unmatched=endpoint_processes - matched_processes
+| table lookup_processes, endpoint_processes, matched_processes, unmatched, coverage_pct
+| rename lookup_processes as "Processes in Lookup", endpoint_processes as "Processes in Events", matched_processes as "Matched", unmatched as "Unmatched", coverage_pct as "Coverage %"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel>
+      <title>AI-Related Processes Not in Lookup</title>
+      <table>
+        <search>
+          <query>| tstats count from datamodel=Endpoint.Processes where Processes.process_name=* by Processes.process_name
+| rename Processes.process_name as process_name
+| eval process_name_lc=lower(process_name)
+| lookup ai_tool_processes process_name_lc OUTPUTNEW tool
+| where isnull(tool)
+| where match(process_name, "(?i)(ai|gpt|llm|copilot|claude|openai|gemini|codex|cursor|windsurf|ollama|lmstudio)")
+| sort - count
+| head 20
+| rename process_name as "Process Name", count as "Execution Count"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Staleness Alerts</title>
+      <table>
+        <search>
+          <query>| rest /services/data/lookup-table-files splunk_server=local
+| where match(title, "^ai_")
+| eval updated_epoch=strptime(updated, "%Y-%m-%dT%H:%M:%S")
+| eval age_days=round((now() - updated_epoch) / 86400, 0)
+| where age_days > 30
+| eval severity=case(age_days>90, "Critical", age_days>60, "Warning", age_days>30, "Info")
+| eval recommendation=case(
+    age_days>90, "Immediate update required - lookup data may be outdated",
+    age_days>60, "Schedule update soon - approaching staleness threshold",
+    age_days>30, "Monitor - lookup has not been updated recently"
+)
+| table title, age_days, severity, recommendation
+| rename title as "Lookup File", age_days as "Age (Days)", severity as "Severity", recommendation as "Recommendation"
+| sort - age_days</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

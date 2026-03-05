@@ -1,0 +1,113 @@
+<dashboard>
+  <label>AI RBA - Detection Health</label>
+  <description>Operational health monitoring for AI RBA detection pack searches, runtimes, and data model status.</description>
+
+  <row>
+    <panel>
+      <title>Detection Execution Status</title>
+      <table>
+        <search>
+          <query>| rest /services/saved/searches splunk_server=local
+| where match(title, "AI RBA -")
+| eval last_run=strftime(strptime(updated, "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%d %H:%M:%S")
+| eval status=if(disabled=0, "Enabled", "Disabled")
+| eval schedule=cron_schedule
+| table title, status, schedule, last_run, dispatch.earliest_time, dispatch.latest_time
+| rename title as "Detection", status as "Status", schedule as "Cron Schedule", last_run as "Last Updated", dispatch.earliest_time as "Earliest Time", dispatch.latest_time as "Latest Time"
+| sort Detection</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Detection Failures Over Time (Last 7 Days)</title>
+      <chart>
+        <search>
+          <query>index=_internal sourcetype=scheduler status="failed" savedsearch_name="AI RBA -*"
+| timechart span=1h count by savedsearch_name</query>
+          <earliest>-7d@d</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Failure Count</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Data Model Acceleration Status</title>
+      <table>
+        <search>
+          <query>| rest /services/admin/summarization splunk_server=local
+| where match(title, "tstats:DM_Web|tstats:DM_Endpoint_Processes|tstats:DM_Network_Traffic|tstats:DM_Network_Resolution|tstats:DM_Data_Loss_Prevention")
+| eval size_mb=round(summary.size/1024/1024, 2)
+| eval complete_pct=round(summary.complete*100, 1)."%"
+| eval last_updated=strftime(summary.latest_time, "%Y-%m-%d %H:%M:%S")
+| eval status=case(summary.complete>=0.9, "Healthy", summary.complete>=0.5, "Building", true(), "Incomplete")
+| table title, status, complete_pct, size_mb, last_updated
+| rename title as "Data Model", status as "Status", complete_pct as "Complete", size_mb as "Size (MB)", last_updated as "Last Updated"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Search Runtime Trends (Last 24 Hours)</title>
+      <chart>
+        <search>
+          <query>index=_internal sourcetype=scheduler savedsearch_name="AI RBA -*"
+| eval runtime=round(run_time, 2)
+| timechart span=1h avg(runtime) as avg_runtime max(runtime) as max_runtime by savedsearch_name</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Runtime (seconds)</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Average Runtime by Detection</title>
+      <chart>
+        <search>
+          <query>index=_internal sourcetype=scheduler savedsearch_name="AI RBA -*"
+| stats avg(run_time) as avg_runtime max(run_time) as max_runtime count as executions by savedsearch_name
+| eval avg_runtime=round(avg_runtime, 2), max_runtime=round(max_runtime, 2)
+| sort - avg_runtime
+| rename savedsearch_name as "Detection", avg_runtime as "Avg Runtime (s)", max_runtime as "Max Runtime (s)", executions as "Executions"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.axisTitleX.text">Detection</option>
+        <option name="charting.axisTitleY.text">Runtime (seconds)</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+</dashboard>

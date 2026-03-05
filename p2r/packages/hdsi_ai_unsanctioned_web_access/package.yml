@@ -1,0 +1,27 @@
+version: 1.0.0
+package_title: HDSI AI Unsanctioned Web Access
+creation_date: '2026-03-04'
+author: Hurricane Labs
+description: "Consolidated detection for unsanctioned web access to any AI provider. Dynamically uses ai_provider_domains.csv lookup. Replaces deprecated AI-001, AI-002, AI-003. MITRE: T1071.001"
+enable_alerting: false
+app_context: HurricaneLabsContentUpdates
+common_dependencies:
+  - macros:ai_domains_filter
+  - macros:ai_risk_multiplier
+  - macros:ai_unsanctioned_filter
+tags:
+  - rba_only
+  - web
+  - proxy
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: ">="
+    required_version: "8.0.0"
+data_prereqs:
+  datamodels:
+    op: AND
+    items:
+    - "Web"
+deployment_type: global
+prereq_packages:
+  - hdsi_ai_rba_common

@@ -1,0 +1,89 @@
+tool,provider,process_name_lc,original_file_name_lc,platform,usage_type,enabled,notes
+codex,OpenAI,codex,codex,linux/macos/windows,cli,1,OpenAI Codex CLI
+codex,OpenAI,codex.exe,codex.exe,windows,cli,1,OpenAI Codex CLI (Windows)
+claude,Anthropic,claude,claude,linux/macos/windows,cli,1,Anthropic Claude Code CLI
+claude,Anthropic,claude.exe,claude.exe,windows,cli,1,Claude Code CLI (Windows)
+claude,Anthropic,claude,claude,macos,desktop_app,1,Claude desktop app (macOS)
+claude,Anthropic,claude.exe,claude.exe,windows,desktop_app,1,Claude desktop app (Windows)
+gemini,Google Gemini,gemini,gemini,linux/macos/windows,cli,1,Google Gemini CLI
+gemini,Google Gemini,gemini.exe,gemini.exe,windows,cli,1,Google Gemini CLI (Windows)
+gh-copilot,Microsoft Copilot,gh-copilot,gh-copilot,linux/macos/windows,cli,1,GitHub Copilot CLI
+gh-copilot,Microsoft Copilot,gh-copilot.exe,gh-copilot.exe,windows,cli,1,GitHub Copilot CLI (Windows)
+aider,Aider,aider,aider,linux/macos/windows,cli,1,Aider AI pair programming CLI
+aider,Aider,aider.exe,aider.exe,windows,cli,1,Aider CLI (Windows)
+sgpt,Shell GPT,sgpt,sgpt,linux/macos/windows,cli,1,Shell-GPT CLI
+sgpt,Shell GPT,sgpt.exe,sgpt.exe,windows,cli,1,Shell-GPT CLI (Windows)
+llm,LLM CLI,llm,llm,linux/macos/windows,cli,1,Simon Willison LLM CLI
+llm,LLM CLI,llm.exe,llm.exe,windows,cli,1,LLM CLI (Windows)
+tgpt,tgpt,tgpt,tgpt,linux/macos/windows,cli,1,tgpt terminal GPT
+tgpt,tgpt,tgpt.exe,tgpt.exe,windows,cli,1,tgpt CLI (Windows)
+mods,Charm,mods,mods,linux/macos/windows,cli,1,Charm Mods AI CLI
+mods,Charm,mods.exe,mods.exe,windows,cli,1,Charm Mods CLI (Windows)
+fabric,Fabric,fabric,fabric,linux/macos/windows,cli,1,Fabric AI CLI
+fabric,Fabric,fabric.exe,fabric.exe,windows,cli,1,Fabric CLI (Windows)
+aichat,aichat,aichat,aichat,linux/macos/windows,cli,1,aichat CLI
+aichat,aichat,aichat.exe,aichat.exe,windows,cli,1,aichat CLI (Windows)
+amazon-q,Amazon,amazon-q,amazon-q,linux/macos/windows,cli,1,Amazon Q CLI
+amazon-q,Amazon,amazon-q.exe,amazon-q.exe,windows,cli,1,Amazon Q CLI (Windows)
+openai,OpenAI,openai,openai,linux/macos/windows,cli,1,OpenAI CLI
+openai,OpenAI,openai.exe,openai.exe,windows,cli,1,OpenAI CLI (Windows)
+cline,Cline,cline,cline,linux/macos/windows,cli,1,Cline AI CLI
+cline,Cline,cline.exe,cline.exe,windows,cli,1,Cline CLI (Windows)
+chatgpt,OpenAI,chatgpt,chatgpt,windows/macos,desktop_app,1,ChatGPT desktop process
+chatgpt,OpenAI,chatgpt.exe,chatgpt.exe,windows,desktop_app,1,ChatGPT Windows executable
+cursor,Cursor,cursor,cursor,macos,desktop_app,1,Cursor IDE (macOS)
+cursor,Cursor,cursor.exe,cursor.exe,windows,desktop_app,1,Cursor IDE (Windows)
+cursor helper,Cursor,cursor helper,cursor helper,macos,desktop_app,1,Cursor Helper process
+windsurf,Codeium,windsurf,windsurf,macos,desktop_app,1,Windsurf IDE (macOS)
+windsurf,Codeium,windsurf.exe,windsurf.exe,windows,desktop_app,1,Windsurf IDE (Windows)
+windsurf helper,Codeium,windsurf helper,windsurf helper,macos,desktop_app,1,Windsurf Helper process
+pieces os,Pieces,pieces os,pieces os,macos,desktop_app,1,Pieces OS (macOS)
+piecesos,Pieces,piecesos,piecesos,macos,desktop_app,1,Pieces OS alternate name
+pieces os,Pieces,pieces os.exe,pieces os.exe,windows,desktop_app,1,Pieces OS (Windows)
+pieces,Pieces,pieces,pieces,macos,desktop_app,1,Pieces short process name (macOS)
+pieces,Pieces,pieces.exe,pieces.exe,windows,desktop_app,1,Pieces short process name (Windows)
+jan,Local LLM,jan,jan,linux/macos/windows,desktop_app,1,Jan desktop local LLM
+jan,Local LLM,jan.exe,jan.exe,windows,desktop_app,1,Jan (Windows)
+jan,Local LLM,jan,jan,linux/macos/windows,local_llm,1,Jan local LLM runtime
+jan,Local LLM,jan.exe,jan.exe,windows,local_llm,1,Jan local LLM runtime (Windows)
+lm studio,Local LLM,lm studio,lm studio,macos,desktop_app,1,LM Studio (macOS)
+lm studio,Local LLM,lm studio.exe,lm studio.exe,windows,desktop_app,1,LM Studio (Windows)
+lmstudio,Local LLM,lmstudio,lmstudio,linux/macos/windows,desktop_app,1,LM Studio runtime
+lmstudio,Local LLM,lmstudio.exe,lmstudio.exe,windows,desktop_app,1,LM Studio (Windows)
+lmstudio,Local LLM,lmstudio,lmstudio,linux/macos/windows,local_llm,1,LM Studio local LLM runtime
+lmstudio,Local LLM,lmstudio.exe,lmstudio.exe,windows,local_llm,1,LM Studio local LLM runtime (Windows)
+continue,Continue,continue,continue,macos,desktop_app,1,Continue IDE extension
+continue,Continue,continue.exe,continue.exe,windows,desktop_app,1,Continue IDE (Windows)
+tabnine,Tabnine,tabnine,tabnine,macos,desktop_app,1,Tabnine (macOS)
+tabnine,Tabnine,tabnine.exe,tabnine.exe,windows,desktop_app,1,Tabnine (Windows)
+trae,ByteDance,trae,trae,macos,desktop_app,1,Trae IDE (macOS)
+trae,ByteDance,trae.exe,trae.exe,windows,desktop_app,1,Trae IDE (Windows)
+zed,Zed,zed,zed,macos,desktop_app,1,Zed editor
+zed,Zed,zed.exe,zed.exe,windows,desktop_app,1,Zed editor (Windows)
+warp,Warp,warp,warp,macos,desktop_app,1,Warp terminal
+warp,Warp,warp.exe,warp.exe,windows,desktop_app,1,Warp terminal (Windows)
+ollama,Local LLM,ollama,ollama,linux/macos/windows,local_llm,1,Ollama runner
+ollama,Local LLM,ollama.exe,ollama.exe,windows,local_llm,1,Ollama (Windows)
+llamafile,Local LLM,llamafile,llamafile,linux/macos/windows,local_llm,1,Llamafile runtime
+llamafile,Local LLM,llamafile.exe,llamafile.exe,windows,local_llm,1,Llamafile (Windows)
+gpt4all,Local LLM,gpt4all,gpt4all,linux/macos/windows,local_llm,1,GPT4All desktop local LLM
+gpt4all,Local LLM,gpt4all.exe,gpt4all.exe,windows,local_llm,1,GPT4All (Windows)
+llama-server,Local LLM,llama-server,llama-server,linux/macos,local_llm,1,llama.cpp server
+llama-server,Local LLM,llama-server.exe,llama-server.exe,windows,local_llm,1,llama.cpp server (Windows)
+llama-run,Local LLM,llama-run,llama-run,linux/macos,local_llm,1,llama.cpp runner
+llama-run,Local LLM,llama-run.exe,llama-run.exe,windows,local_llm,1,llama.cpp runner (Windows)
+llama-cli,Local LLM,llama-cli,llama-cli,linux/macos,local_llm,1,llama.cpp CLI
+llama-cli,Local LLM,llama-cli.exe,llama-cli.exe,windows,local_llm,1,llama.cpp CLI (Windows)
+koboldcpp,Local LLM,koboldcpp,koboldcpp,linux/macos,local_llm,1,KoboldCpp
+koboldcpp,Local LLM,koboldcpp.exe,koboldcpp.exe,windows,local_llm,1,KoboldCpp (Windows)
+localai,Local LLM,localai,localai,linux/macos,local_llm,1,LocalAI
+local-ai,Local LLM,local-ai,local-ai,linux/macos,local_llm,1,LocalAI alternate name
+text-generation-launcher,Local LLM,text-generation-launcher,text-generation-launcher,linux,local_llm,1,HuggingFace TGI server
+vllm,Local LLM,vllm,vllm,linux,local_llm,1,vLLM inference server
+mlx_lm.server,Local LLM,mlx_lm.server,mlx_lm.server,macos,local_llm,1,Apple MLX LM server
+mlx_lm.generate,Local LLM,mlx_lm.generate,mlx_lm.generate,macos,local_llm,1,Apple MLX LM generate
+open-webui,Local LLM,open-webui,open-webui,linux/macos,local_llm,1,Open WebUI for local LLMs
+open-webui,Local LLM,open-webui.exe,open-webui.exe,windows,local_llm,1,Open WebUI (Windows)
+lms,Local LLM,lms,lms,linux/macos,local_llm,1,LM Studio CLI
+lms,Local LLM,lms.exe,lms.exe,windows,local_llm,1,LM Studio CLI (Windows)
+chat,Local LLM,chat.exe,chat.exe,windows,local_llm,1,GPT4All chat executable

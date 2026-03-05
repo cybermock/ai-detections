@@ -1,0 +1,45 @@
+{
+  "_metadata": {
+    "datamodel": "Data_Loss_Prevention",
+    "description": "CIM DLP sample events for testing AI DLP violation detections"
+  },
+  "_detection_ids_expected": ["AI-020"],
+  "events": [
+    {
+      "_time": "2025-01-15T13:00:00-05:00",
+      "src": "10.1.1.50",
+      "user": "analyst@corp.example",
+      "dest": "https://chatgpt.com/backend-api/conversation",
+      "url": "https://chatgpt.com/backend-api/conversation",
+      "file_name": "quarterly_financials.xlsx",
+      "dlp_type": "PII_Detection"
+    },
+    {
+      "_time": "2025-01-15T13:05:00-05:00",
+      "src": "10.1.1.50",
+      "user": "analyst@corp.example",
+      "dest": "https://api.anthropic.com/v1/messages",
+      "url": "https://api.anthropic.com/v1/messages",
+      "file_name": "customer_data_export.csv",
+      "dlp_type": "Sensitive_Data"
+    },
+    {
+      "_time": "2025-01-15T14:30:00-05:00",
+      "src": "10.2.5.200",
+      "user": "intern@corp.example",
+      "dest": "https://claude.ai/api/append_message",
+      "url": "https://claude.ai/api/append_message",
+      "file_name": "source_code_main.py",
+      "dlp_type": "Source_Code"
+    },
+    {
+      "_time": "2025-01-15T15:00:00-05:00",
+      "src": "10.1.1.90",
+      "user": "legal@corp.example",
+      "dest": "https://api.openai.com/v1/files",
+      "url": "https://api.openai.com/v1/files",
+      "file_name": "merger_agreement_draft.docx",
+      "dlp_type": "Confidential_Document"
+    }
+  ]
+}

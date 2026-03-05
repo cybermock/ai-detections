@@ -1,0 +1,32 @@
+[savedsearches]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+
+[macros]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+
+[transforms]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+
+[lookups]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+
+[views]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+
+[eventtypes]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+
+[tags]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+
+[collections]
+export = system
+access = read : [ * ], write : [ admin, sc_admin ]
+

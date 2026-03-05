@@ -1,0 +1,43 @@
+detection_id,mitre_technique_id,mitre_technique_name,mitre_tactic
+AI-004,T1059,Command and Scripting Interpreter,Execution
+AI-005,T1204.002,User Execution: Malicious File,Execution
+AI-006,T1071.001,Application Layer Protocol: Web Protocols,Command and Control
+AI-007,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-008,T1059.004,Command and Scripting Interpreter: Unix Shell,Execution
+AI-009,T1071.001,Application Layer Protocol: Web Protocols,Collection
+AI-010,T1071.001,Application Layer Protocol: Web Protocols,Collection
+AI-011,T1204.002,User Execution: Malicious File,Execution
+AI-012,T1071.004,Application Layer Protocol: DNS,Command and Control
+AI-013,T1105,Ingress Tool Transfer,Command and Control
+AI-014,T1219,Remote Access Software,Command and Control
+AI-015,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-016,T1078.004,Valid Accounts: Cloud Accounts,Privilege Escalation
+AI-017,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-018,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-019,T1071.001,Application Layer Protocol: Web Protocols,Collection
+AI-020,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-021,T1176,Browser Extensions,Persistence
+AI-022,T1090.003,Proxy: Multi-hop Proxy,Command and Control
+AI-023,T1078.004,Valid Accounts: Cloud Accounts,Initial Access
+AI-024,T1176,Browser Extensions,Persistence
+AI-025,T1115,Clipboard Data,Collection
+AI-026,T1078.004,Valid Accounts: Cloud Accounts,Initial Access
+AI-027,T1048.002,Exfiltration Over Alternative Protocol: Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,Exfiltration
+AI-028,T1071.001,Application Layer Protocol: Web Protocols,Collection
+AI-030,T1190,Exploit Public-Facing Application,Initial Access
+AI-031,T1566.001,Phishing: Spearphishing Attachment,Initial Access
+AI-032,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-033,T1552.001,Unsecured Credentials: Credentials In Files,Credential Access
+AI-034,T1588.005,Obtain Capabilities: Exploits,Resource Development
+AI-035,T1021,Remote Services,Lateral Movement
+AI-036,T1195.002,Supply Chain Compromise: Compromise Software Supply Chain,Initial Access
+AI-037,T1059,Command and Scripting Interpreter,Execution
+AI-040,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-041,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-042,T1071.001,Application Layer Protocol: Web Protocols,Collection
+AI-043,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-044,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-038,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+AI-039,T1059,Command and Scripting Interpreter,Execution
+AI-045,T1588.005,Obtain Capabilities: Exploits,Resource Development
+AI-046,T1059,Command and Scripting Interpreter,Execution

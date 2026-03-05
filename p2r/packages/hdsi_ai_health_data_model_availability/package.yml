@@ -1,0 +1,16 @@
+version: 1.0.0
+package_title: HDSI AI Health Data Model Availability
+creation_date: '2026-03-04'
+author: Hurricane Labs
+description: "Hourly verification that required data models (Web, Endpoint.Processes, Network_Traffic, Network_Resolution, Data_Loss_Prevention, Email, Endpoint.Filesystem) contain recent events. Alerts if any model has zero events in the last 2 hours."
+enable_alerting: false
+app_context: HurricaneLabsContentUpdates
+tags:
+  - audit
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: ">="
+    required_version: "8.0.0"
+deployment_type: global
+prereq_packages:
+  - hdsi_ai_rba_common

@@ -1,0 +1,31 @@
+tool_name,process_name,category,risk_level,enabled,notes
+DeepFaceLab,deepfacelab.exe,face_swap,critical,1,DeepFaceLab face swap tool
+FaceFusion,facefusion,face_swap,critical,1,FaceFusion real-time face swap
+Roop,roop,face_swap,critical,1,Roop one-click deepfake
+DeepFaceLive,deepfacelive.exe,face_swap,critical,1,Real-time deepfake streaming
+FaceSwap,faceswap.py,face_swap,high,1,Open source faceswap tool
+SimSwap,simswap,face_swap,high,1,SimSwap face swap framework
+RVC,rvc-webui,voice_clone,critical,1,Retrieval-based Voice Conversion
+ElevenLabs,elevenlabs,voice_clone,high,1,ElevenLabs voice cloning CLI
+TortoiseTTS,tortoise_tts,voice_clone,high,1,Tortoise text-to-speech voice cloning
+XTTS,xtts,voice_clone,high,1,Coqui XTTS voice cloning
+Bark,bark,voice_clone,medium,1,Suno Bark voice generation
+Wav2Lip,wav2lip,lip_sync,high,1,Wav2Lip lip sync deepfake
+SadTalker,sadtalker,avatar_generation,high,1,SadTalker talking face generation
+Stable Diffusion,webui.py,image_generation,medium,1,Stable Diffusion WebUI
+ComfyUI,comfyui,image_generation,medium,1,ComfyUI node-based image generation
+OpenVoice,openvoice,voice_clone,high,1,MyShell OpenVoice voice cloning
+VALL-E-X,valle_x,voice_clone,critical,1,Microsoft VALL-E-X voice synthesis
+WhisperSpeech,whisperspeech,voice_clone,high,1,WhisperSpeech voice generation
+StyleTTS2,styletts2,voice_clone,high,1,StyleTTS2 voice synthesis
+GPT-SoVITS,gpt_sovits,voice_clone,critical,1,GPT-SoVITS voice cloning
+So-VITS-SVC,so-vits-svc,voice_clone,high,1,SoftVC VITS singing voice conversion
+Fish Speech,fish_speech,voice_clone,high,1,Fish Speech multilingual voice cloning
+CosyVoice,cosyvoice,voice_clone,high,1,Alibaba CosyVoice TTS
+Parler-TTS,parler_tts,voice_clone,medium,1,HuggingFace Parler TTS
+F5-TTS,f5_tts,voice_clone,high,1,F5-TTS voice synthesis
+LivePortrait,liveportrait,avatar_generation,high,1,LivePortrait talking head
+MuseTalk,musetalk,lip_sync,high,1,Real-time lip sync
+Heygen CLI,heygen,avatar_generation,high,1,Heygen AI avatar CLI
+D-ID,did-cli,avatar_generation,high,1,D-ID AI avatar CLI
+Synthesia,synthesia,avatar_generation,medium,1,Synthesia AI video generation

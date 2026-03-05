@@ -1,0 +1,75 @@
+{
+  "_metadata": {
+    "datamodel": "Endpoint.Processes",
+    "description": "CIM Endpoint Processes sample events for testing AI CLI and desktop app detections"
+  },
+  "_detection_ids_expected": ["AI-004", "AI-005", "AI-008", "AI-011"],
+  "events": [
+    {
+      "_time": "2025-01-15T09:00:00-05:00",
+      "process_name": "claude",
+      "parent_process_name": "zsh",
+      "user": "dev1@corp.example",
+      "dest": "WKSTN-DEV-042",
+      "process_path": "/usr/local/bin/claude",
+      "process": "/usr/local/bin/claude chat",
+      "original_file_name": "claude",
+      "parent_process": "/bin/zsh"
+    },
+    {
+      "_time": "2025-01-15T09:05:00-05:00",
+      "process_name": "codex.exe",
+      "parent_process_name": "powershell.exe",
+      "user": "dev2@corp.example",
+      "dest": "WKSTN-DEV-101",
+      "process_path": "C:\\Users\\dev2\\AppData\\Local\\Programs\\codex\\codex.exe",
+      "process": "codex.exe --model gpt-4",
+      "original_file_name": "codex.exe",
+      "parent_process": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+    },
+    {
+      "_time": "2025-01-15T10:15:00-05:00",
+      "process_name": "cursor",
+      "parent_process_name": "launchd",
+      "user": "designer@corp.example",
+      "dest": "MAC-DESIGN-007",
+      "process_path": "/Applications/Cursor.app/Contents/MacOS/cursor",
+      "process": "/Applications/Cursor.app/Contents/MacOS/cursor",
+      "original_file_name": "cursor",
+      "parent_process": "/sbin/launchd"
+    },
+    {
+      "_time": "2025-01-15T11:00:00-05:00",
+      "process_name": "aider",
+      "parent_process_name": "python3",
+      "user": "dev3@corp.example",
+      "dest": "WKSTN-DEV-055",
+      "process_path": "/home/dev3/.local/bin/aider",
+      "process": "aider --model claude-3-opus",
+      "original_file_name": "aider",
+      "parent_process": "/usr/bin/python3 /home/dev3/scripts/auto_review.py"
+    },
+    {
+      "_time": "2025-01-15T14:30:00-05:00",
+      "process_name": "ollama",
+      "parent_process_name": "bash",
+      "user": "researcher@corp.example",
+      "dest": "SRV-ML-003",
+      "process_path": "/usr/local/bin/ollama",
+      "process": "ollama run llama3.1:70b",
+      "original_file_name": "ollama",
+      "parent_process": "/bin/bash"
+    },
+    {
+      "_time": "2025-01-15T15:00:00-05:00",
+      "process_name": "windsurf.exe",
+      "parent_process_name": "explorer.exe",
+      "user": "contractor@corp.example",
+      "dest": "WKSTN-CONT-019",
+      "process_path": "C:\\Users\\contractor\\AppData\\Local\\Programs\\Windsurf\\windsurf.exe",
+      "process": "windsurf.exe",
+      "original_file_name": "windsurf.exe",
+      "parent_process": "C:\\Windows\\explorer.exe"
+    }
+  ]
+}

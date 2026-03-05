@@ -1,0 +1,18 @@
+[project]
+name = "splunk-es-ai-rba"
+version = "1.0.0"
+description = "Splunk ES AI RBA Detection Pack"
+requires-python = ">=3.9"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]

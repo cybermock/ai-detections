@@ -1,0 +1,14 @@
+version: 1.0.0
+package_title: HDSI AI RBA Common Macros and Lookups
+creation_date: '2026-03-04'
+author: Hurricane Labs
+description: "Shared macros and lookup definitions used by all AI RBA detection packages. Must be deployed before any AI detection packages."
+enable_alerting: false
+app_context: HurricaneLabsContentUpdates
+tags:
+  - rba_only
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: ">="
+    required_version: "8.0.0"
+deployment_type: global

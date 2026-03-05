@@ -1,0 +1,138 @@
+<dashboard>
+  <label>AI RBA - Risk Analytics</label>
+  <description>Risk score analytics and trending for AI-related detections across users, departments, and detection types.</description>
+
+  <fieldset submitButton="false">
+    <input type="time" token="time_picker">
+      <label>Time Range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+
+  <row>
+    <panel>
+      <title>Risk Score Distribution by User (Top 20)</title>
+      <chart>
+        <search>
+          <query>index=risk search_name="AI RBA - *" risk_object_type="user"
+| stats sum(risk_score) as total_risk dc(search_name) as detection_count by risk_object
+| sort - total_risk
+| head 20
+| rename risk_object as "User", total_risk as "Total Risk Score", detection_count as "Unique Detections"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.axisTitleX.text">User</option>
+        <option name="charting.axisTitleY.text">Total Risk Score</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Risk Score Trend Over Time</title>
+      <chart>
+        <search>
+          <query>index=risk search_name="AI RBA - *"
+| timechart span=1h sum(risk_score) as total_risk count as event_count</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="charting.chart">area</option>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Risk Score</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Detection Contribution Breakdown</title>
+      <chart>
+        <search>
+          <query>index=risk search_name="AI RBA - *"
+| stats sum(risk_score) as total_risk count as fires by search_name
+| sort - total_risk
+| rename search_name as "Detection", total_risk as "Total Risk Generated", fires as "Times Fired"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Detection Fire Count</title>
+      <table>
+        <search>
+          <query>index=risk search_name="AI RBA - *"
+| stats sum(risk_score) as total_risk count as fires dc(risk_object) as unique_entities by search_name
+| sort - fires
+| rename search_name as "Detection", total_risk as "Total Risk", fires as "Times Fired", unique_entities as "Unique Entities"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Top Risk Users with Details</title>
+      <table>
+        <search>
+          <query>index=risk search_name="AI RBA - *" risk_object_type="user"
+| stats sum(risk_score) as total_risk dc(search_name) as detection_count values(search_name) as detections earliest(_time) as first_seen latest(_time) as last_seen by risk_object
+| sort - total_risk
+| head 20
+| eval first_seen=strftime(first_seen, "%Y-%m-%d %H:%M"), last_seen=strftime(last_seen, "%Y-%m-%d %H:%M")
+| rename risk_object as "User", total_risk as "Total Risk", detection_count as "Detection Types", detections as "Detections Triggered", first_seen as "First Seen", last_seen as "Last Seen"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">row</option>
+        <option name="refresh.display">progressbar</option>
+        <drilldown>
+          <link target="_blank">search?q=index%3Drisk%20search_name%3D%22AI%20RBA%20-%20%2A%22%20risk_object%3D%22$row.User$%22&amp;earliest=$time_picker.earliest$&amp;latest=$time_picker.latest$</link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Risk by Department / Business Unit</title>
+      <chart>
+        <search>
+          <query>index=risk search_name="AI RBA - *" risk_object_type="user"
+| lookup identity_lookup_expanded identity as risk_object OUTPUT bunit as business_unit
+| eval business_unit=coalesce(business_unit, "Unknown")
+| stats sum(risk_score) as total_risk dc(risk_object) as unique_users count as event_count by business_unit
+| sort - total_risk
+| rename business_unit as "Business Unit", total_risk as "Total Risk", unique_users as "Unique Users", event_count as "Events"</query>
+          <earliest>$time_picker.earliest$</earliest>
+          <latest>$time_picker.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.axisTitleX.text">Business Unit</option>
+        <option name="charting.axisTitleY.text">Total Risk Score</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+</dashboard>

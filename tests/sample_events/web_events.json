@@ -1,0 +1,87 @@
+{
+  "_metadata": {
+    "datamodel": "Web",
+    "description": "CIM Web data model sample events for testing AI web access detections"
+  },
+  "_detection_ids_expected": ["AI-001", "AI-002", "AI-003", "AI-006", "AI-007", "AI-009", "AI-010", "AI-015", "AI-016", "AI-018"],
+  "events": [
+    {
+      "_time": "2025-01-15T10:30:00-05:00",
+      "url": "https://chatgpt.com/c/abc123",
+      "url_domain": "chatgpt.com",
+      "dest": "chatgpt.com",
+      "src": "10.1.1.50",
+      "user": "jdoe@corp.example",
+      "bytes_out": 1024,
+      "bytes_in": 8192,
+      "http_method": "POST",
+      "http_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0",
+      "status": 200
+    },
+    {
+      "_time": "2025-01-15T10:31:00-05:00",
+      "url": "https://claude.ai/chat/def456",
+      "url_domain": "claude.ai",
+      "dest": "claude.ai",
+      "src": "10.1.1.50",
+      "user": "jdoe@corp.example",
+      "bytes_out": 2048,
+      "bytes_in": 16384,
+      "http_method": "POST",
+      "http_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0",
+      "status": 200
+    },
+    {
+      "_time": "2025-01-15T10:32:00-05:00",
+      "url": "https://gemini.google.com/app/ghi789",
+      "url_domain": "gemini.google.com",
+      "dest": "gemini.google.com",
+      "src": "10.1.1.50",
+      "user": "jdoe@corp.example",
+      "bytes_out": 512,
+      "bytes_in": 4096,
+      "http_method": "POST",
+      "http_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0",
+      "status": 200
+    },
+    {
+      "_time": "2025-01-15T14:00:00-05:00",
+      "url": "https://api.openai.com/v1/chat/completions",
+      "url_domain": "api.openai.com",
+      "dest": "api.openai.com",
+      "src": "10.2.5.100",
+      "user": "svc_marketing@corp.example",
+      "bytes_out": 52428800,
+      "bytes_in": 1024,
+      "http_method": "POST",
+      "http_user_agent": "python-requests/2.31.0",
+      "status": 200
+    },
+    {
+      "_time": "2025-01-15T22:30:00-05:00",
+      "url": "https://api.anthropic.com/v1/messages",
+      "url_domain": "api.anthropic.com",
+      "dest": "api.anthropic.com",
+      "src": "10.1.1.75",
+      "user": "admin@corp.example",
+      "bytes_out": 10485760,
+      "bytes_in": 2048,
+      "http_method": "POST",
+      "http_user_agent": "anthropic-python/0.7.0",
+      "status": 200
+    },
+    {
+      "_time": "2025-01-15T10:35:00-05:00",
+      "url": "https://api.deepseek.com/v1/chat/completions",
+      "url_domain": "api.deepseek.com",
+      "dest": "api.deepseek.com",
+      "src": "10.1.1.50",
+      "user": "jdoe@corp.example",
+      "bytes_out": 4096,
+      "bytes_in": 8192,
+      "http_method": "POST",
+      "http_user_agent": "curl/8.1.0",
+      "status": 200
+    }
+  ]
+}

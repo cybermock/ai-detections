@@ -1,0 +1,57 @@
+{
+  "_metadata": {
+    "datamodel": "Network_Resolution",
+    "description": "CIM Network Resolution (DNS) sample events for testing AI DNS query detections"
+  },
+  "_detection_ids_expected": ["AI-012"],
+  "events": [
+    {
+      "_time": "2025-01-15T09:55:00-05:00",
+      "query": "chatgpt.com",
+      "query_type": "A",
+      "src": "10.1.1.50",
+      "answer": "104.18.6.192",
+      "record_type": "A"
+    },
+    {
+      "_time": "2025-01-15T09:55:01-05:00",
+      "query": "api.openai.com",
+      "query_type": "A",
+      "src": "10.1.1.50",
+      "answer": "104.18.7.192",
+      "record_type": "A"
+    },
+    {
+      "_time": "2025-01-15T10:00:00-05:00",
+      "query": "claude.ai",
+      "query_type": "A",
+      "src": "10.1.1.60",
+      "answer": "104.26.12.50",
+      "record_type": "A"
+    },
+    {
+      "_time": "2025-01-15T10:30:00-05:00",
+      "query": "huggingface.co",
+      "query_type": "A",
+      "src": "10.2.3.100",
+      "answer": "18.154.227.100",
+      "record_type": "A"
+    },
+    {
+      "_time": "2025-01-15T11:00:00-05:00",
+      "query": "registry.ollama.ai",
+      "query_type": "A",
+      "src": "10.1.1.75",
+      "answer": "76.76.21.21",
+      "record_type": "A"
+    },
+    {
+      "_time": "2025-01-15T14:00:00-05:00",
+      "query": "api.deepseek.com",
+      "query_type": "AAAA",
+      "src": "10.1.1.50",
+      "answer": "2606:4700::6812:6c0",
+      "record_type": "AAAA"
+    }
+  ]
+}

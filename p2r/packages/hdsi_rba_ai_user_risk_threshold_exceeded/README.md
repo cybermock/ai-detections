@@ -1,0 +1,16 @@
+## Architect Notes
+---
+### AI-RISK-001: User Risk Threshold Exceeded
+
+**Description:** Create a medium notable when user AI risk reaches threshold in 24 hours.
+
+### Tuning
+- Use `hdsi_rba_ai_user_risk_threshold_exceeded_filter` macro for exclusions
+- Use `hdsi_rba_ai_user_risk_threshold_exceeded_customizations` macro for post-processing
+
+### Dependencies
+This search depends on shared AI RBA macros and lookups:
+- `ai_domains_filter` - AI provider domain lookup
+- `ai_unsanctioned_filter` - Sanctioned entity allowlist
+- `ai_process_filter` - AI process lookup
+- Various `ai_*.csv` lookup files

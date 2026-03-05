@@ -1,0 +1,113 @@
+provider,domain,usage_type,severity_weight,enabled,notes,source,first_seen,last_verified,confidence
+OpenAI,chatgpt.com,web,1.0,1,ChatGPT primary domain,vendor_docs,2024-01-01,2025-05-01,high
+OpenAI,chat.openai.com,web,1.0,1,Legacy ChatGPT domain,vendor_docs,2022-11-30,2025-05-01,high
+OpenAI,api.openai.com,api,1.2,1,OpenAI API,vendor_docs,2023-03-01,2025-05-01,high
+Anthropic,claude.ai,web,1.0,1,Claude web app,vendor_docs,2023-07-11,2025-05-01,high
+Anthropic,api.anthropic.com,api,1.2,1,Anthropic API,vendor_docs,2023-03-14,2025-05-01,high
+Anthropic,api.claude.ai,api,1.2,1,Claude API alternate endpoint,vendor_docs,2024-06-01,2025-05-01,high
+Google Gemini,gemini.google.com,web,1.0,1,Gemini web app,vendor_docs,2024-02-08,2025-05-01,high
+Google Gemini,bard.google.com,web,0.5,1,Bard (deprecated - redirects to Gemini),vendor_docs,2023-03-21,2025-05-01,medium
+Google Gemini,aistudio.google.com,web,0.8,1,Google AI Studio,vendor_docs,2024-01-01,2025-05-01,high
+Google Gemini,generativelanguage.googleapis.com,api,1.2,1,Gemini API endpoint,vendor_docs,2023-12-01,2025-05-01,high
+Microsoft Copilot,copilot.microsoft.com,web,0.7,1,Copilot web app,vendor_docs,2024-01-01,2025-05-01,high
+Microsoft Copilot,api.githubcopilot.com,api,1.2,1,GitHub Copilot API,vendor_docs,2022-06-01,2025-05-01,high
+Microsoft Copilot,copilot-proxy.githubusercontent.com,api,1.2,1,GitHub Copilot proxy,vendor_docs,2022-06-01,2025-05-01,high
+Microsoft Copilot,openai.azure.com,api,1.2,1,Azure OpenAI endpoint,vendor_docs,2023-01-01,2025-05-01,high
+Perplexity,perplexity.ai,web,0.7,1,Perplexity web app,vendor_docs,2023-01-01,2025-05-01,high
+Perplexity,api.perplexity.ai,api,1.0,1,Perplexity API,vendor_docs,2024-01-01,2025-05-01,high
+DeepSeek,deepseek.com,web,1.0,1,DeepSeek web app,vendor_docs,2024-01-01,2025-05-01,high
+DeepSeek,api.deepseek.com,api,1.2,1,DeepSeek API,vendor_docs,2024-01-01,2025-05-01,high
+Mistral,mistral.ai,web,1.0,1,Mistral web app,vendor_docs,2024-02-01,2025-05-01,high
+Mistral,api.mistral.ai,api,1.2,1,Mistral API,vendor_docs,2024-02-01,2025-05-01,high
+Groq,groq.com,web,0.8,1,Groq web app,vendor_docs,2024-02-01,2025-05-01,high
+Groq,api.groq.com,api,1.0,1,Groq API,vendor_docs,2024-02-01,2025-05-01,high
+Together,together.ai,web,0.8,1,Together web app,vendor_docs,2023-06-01,2025-05-01,high
+Together,api.together.xyz,api,1.0,1,Together API,vendor_docs,2023-06-01,2025-05-01,high
+Replicate,replicate.com,web,0.8,1,Replicate web app,vendor_docs,2023-01-01,2025-05-01,high
+Replicate,api.replicate.com,api,1.0,1,Replicate API,vendor_docs,2023-01-01,2025-05-01,high
+Cohere,cohere.com,web,0.8,1,Cohere web app,vendor_docs,2023-01-01,2025-05-01,high
+Cohere,api.cohere.ai,api,1.0,1,Cohere API,vendor_docs,2023-01-01,2025-05-01,high
+Poe,poe.com,web,0.6,1,Quora Poe,vendor_docs,2023-02-01,2025-05-01,high
+xAI,grok.com,web,0.7,1,Grok web app (grok.com),vendor_docs,2024-11-01,2025-05-01,high
+xAI,grok.x.ai,web,0.7,1,Grok web app (grok.x.ai),vendor_docs,2024-03-01,2025-05-01,high
+xAI,api.x.ai,api,1.0,1,xAI API,vendor_docs,2024-10-01,2025-05-01,high
+Cursor,cursor.sh,ide,1.0,1,Cursor IDE web,vendor_docs,2023-03-01,2025-05-01,high
+Cursor,api.cursor.sh,api,1.2,1,Cursor API,vendor_docs,2023-03-01,2025-05-01,high
+Codeium,codeium.com,ide,1.0,1,Codeium IDE web,vendor_docs,2023-01-01,2025-05-01,high
+Continue,continue.dev,ide,0.8,1,Continue IDE extension,vendor_docs,2023-06-01,2025-05-01,high
+Phind,phind.com,web,0.6,1,Phind web app,vendor_docs,2023-01-01,2025-05-01,high
+You.com,you.com,web,0.6,1,You.com web app,vendor_docs,2023-01-01,2025-05-01,medium
+Character AI,character.ai,web,0.6,1,Character.AI web app,vendor_docs,2023-01-01,2025-05-01,high
+Midjourney,midjourney.com,web,0.8,1,Midjourney image generation,vendor_docs,2023-01-01,2025-05-01,high
+OpenRouter,openrouter.ai,api,1.0,1,OpenRouter API aggregator,vendor_docs,2023-06-01,2025-05-01,high
+Fireworks,fireworks.ai,web,0.8,1,Fireworks AI web,vendor_docs,2023-06-01,2025-05-01,high
+Fireworks,api.fireworks.ai,api,1.0,1,Fireworks AI API,vendor_docs,2023-06-01,2025-05-01,high
+Stability AI,api.stability.ai,api,1.0,1,Stability AI API,vendor_docs,2023-01-01,2025-05-01,high
+Sourcegraph,api.sourcegraph.com,api,1.0,1,Sourcegraph Cody API,vendor_docs,2023-06-01,2025-05-01,high
+Vercel,v0.dev,web,0.7,1,Vercel v0 AI,vendor_docs,2024-01-01,2025-05-01,high
+Aider,aider.chat,cli,0.8,1,Aider CLI tool web,vendor_docs,2023-06-01,2025-05-01,high
+Pieces,pieces.app,ide,0.7,1,Pieces IDE assistant,vendor_docs,2023-06-01,2025-05-01,high
+Local LLM,ollama.com,local_llm,1.1,1,Ollama website,vendor_docs,2023-08-01,2025-05-01,high
+Local LLM,registry.ollama.ai,local_llm,1.1,1,Ollama model registry,vendor_docs,2023-08-01,2025-05-01,high
+Model Registry,huggingface.co,model_registry,0.9,1,Hugging Face model hub,vendor_docs,2023-01-01,2025-05-01,high
+Model Registry,modelscope.cn,model_registry,0.9,1,ModelScope model hub,vendor_docs,2023-01-01,2025-05-01,high
+Baidu ERNIE,ernie.baidu.com,web,1.0,1,Baidu ERNIE Bot web app,threat_intel,2024-01-01,2026-02-22,high
+Baidu ERNIE,yiyan.baidu.com,web,1.0,1,Baidu Yiyan (ERNIE) web app,threat_intel,2024-01-01,2026-02-22,high
+Baidu ERNIE,aip.baidubce.com,api,1.2,1,Baidu AI Platform API,threat_intel,2024-01-01,2026-02-22,high
+Alibaba Tongyi,tongyi.aliyun.com,web,1.0,1,Alibaba Tongyi Qianwen web app,threat_intel,2024-01-01,2026-02-22,high
+Alibaba Tongyi,dashscope.aliyuncs.com,api,1.2,1,Alibaba DashScope API,threat_intel,2024-01-01,2026-02-22,high
+ByteDance Doubao,doubao.com,web,1.0,1,ByteDance Doubao web app,threat_intel,2024-06-01,2026-02-22,high
+Zhipu AI,chatglm.cn,web,1.0,1,Zhipu AI ChatGLM web app,threat_intel,2024-01-01,2026-02-22,high
+Zhipu AI,open.bigmodel.cn,api,1.2,1,Zhipu AI BigModel API,threat_intel,2024-01-01,2026-02-22,high
+MiniMax,minimax.chat,web,1.0,1,MiniMax web app,threat_intel,2024-01-01,2026-02-22,high
+MiniMax,api.minimax.chat,api,1.2,1,MiniMax API,threat_intel,2024-01-01,2026-02-22,high
+01.AI,01.ai,web,1.0,1,01.AI (Yi) web app,threat_intel,2024-01-01,2026-02-22,high
+01.AI,api.lingyiwanwu.com,api,1.2,1,01.AI (Yi) API,threat_intel,2024-01-01,2026-02-22,high
+Moonshot,kimi.moonshot.cn,web,1.0,1,Moonshot Kimi web app,threat_intel,2024-01-01,2026-02-22,high
+Moonshot,api.moonshot.cn,api,1.2,1,Moonshot API,threat_intel,2024-01-01,2026-02-22,high
+AWS Bedrock,bedrock.us-east-1.amazonaws.com,api,1.2,1,AWS Bedrock API endpoint,threat_intel,2024-01-01,2026-02-22,high
+AWS Bedrock,bedrock-runtime.us-east-1.amazonaws.com,api,1.2,1,AWS Bedrock Runtime API endpoint,threat_intel,2024-01-01,2026-02-22,high
+GCP Vertex AI,aiplatform.googleapis.com,api,1.2,1,Google Cloud Vertex AI API,threat_intel,2024-01-01,2026-02-22,high
+Databricks,accounts.cloud.databricks.com,api,1.0,1,Databricks AI platform,threat_intel,2024-01-01,2026-02-22,high
+Snowflake Cortex,app.snowflake.com,web,0.8,1,Snowflake Cortex AI web app,threat_intel,2024-01-01,2026-02-22,high
+Runway,runwayml.com,web,0.8,1,Runway AI video generation,threat_intel,2024-01-01,2026-02-22,high
+Runway,api.runwayml.com,api,1.0,1,Runway API,threat_intel,2024-01-01,2026-02-22,high
+Pika,pika.art,web,0.8,1,Pika AI video generation,threat_intel,2024-01-01,2026-02-22,medium
+Kling,klingai.com,web,0.8,1,Kling AI video generation,threat_intel,2024-06-01,2026-02-22,medium
+Luma,lumalabs.ai,web,0.8,1,Luma AI video/3D generation,threat_intel,2024-01-01,2026-02-22,medium
+ElevenLabs,elevenlabs.io,web,0.8,1,ElevenLabs AI voice synthesis,threat_intel,2024-01-01,2026-02-22,high
+ElevenLabs,api.elevenlabs.io,api,1.0,1,ElevenLabs API,threat_intel,2024-01-01,2026-02-22,high
+PlayHT,play.ht,web,0.8,1,PlayHT voice synthesis web app,threat_intel,2024-01-01,2026-03-04,high
+PlayHT,api.play.ht,api,1.0,1,PlayHT API,threat_intel,2024-01-01,2026-03-04,high
+Resemble AI,resemble.ai,web,0.8,1,Resemble AI voice cloning web app,threat_intel,2024-01-01,2026-03-04,high
+Resemble AI,api.resemble.ai,api,1.0,1,Resemble AI API,threat_intel,2024-01-01,2026-03-04,high
+WellSaid Labs,wellsaidlabs.com,web,0.8,1,WellSaid Labs voice synthesis,threat_intel,2024-01-01,2026-03-04,high
+Murf AI,murf.ai,web,0.8,1,Murf AI voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
+LOVO AI,lovo.ai,web,0.8,1,LOVO AI voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
+Deepgram,api.deepgram.com,api,1.0,1,Deepgram speech API,threat_intel,2024-01-01,2026-03-04,high
+Speechify,speechify.com,web,0.8,1,Speechify AI voice synthesis web app,threat_intel,2024-01-01,2026-03-04,high
+Coqui,coqui.ai,web,0.8,1,Coqui AI voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
+FakeYou,fakeyou.com,web,0.7,1,FakeYou voice cloning platform,threat_intel,2024-01-01,2026-03-04,high
+Uberduck,uberduck.ai,web,0.7,1,Uberduck voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
+Voicemod,voicemod.net,web,0.7,1,Voicemod voice modulation platform,threat_intel,2024-01-01,2026-03-04,high
+Suno,suno.com,web,0.8,1,Suno AI music generation,threat_intel,2024-01-01,2026-02-22,high
+Suno,studio-api.suno.ai,api,1.0,1,Suno API,threat_intel,2024-01-01,2026-02-22,high
+Leonardo,leonardo.ai,web,0.8,1,Leonardo AI image generation,threat_intel,2024-01-01,2026-02-22,medium
+Leonardo,cloud.leonardo.ai,api,1.0,1,Leonardo AI API,threat_intel,2024-01-01,2026-02-22,medium
+AI21 Labs,ai21.com,web,0.8,1,AI21 Labs web app,threat_intel,2024-01-01,2026-02-22,high
+AI21 Labs,api.ai21.com,api,1.0,1,AI21 Labs API,threat_intel,2024-01-01,2026-02-22,high
+Meta AI,meta.ai,web,0.8,1,Meta AI web app,threat_intel,2024-01-01,2026-02-22,high
+Anyscale,anyscale.com,web,0.8,1,Anyscale AI platform,threat_intel,2024-01-01,2026-02-22,medium
+Anyscale,api.endpoints.anyscale.com,api,1.0,1,Anyscale Endpoints API,threat_intel,2024-01-01,2026-02-22,medium
+Modal,modal.com,web,0.8,1,Modal serverless AI platform,threat_intel,2024-01-01,2026-02-22,medium
+Cerebras,cerebras.ai,web,0.8,1,Cerebras AI web app,threat_intel,2024-01-01,2026-02-22,high
+Cerebras,api.cerebras.ai,api,1.0,1,Cerebras AI API,threat_intel,2024-01-01,2026-02-22,high
+Jasper AI,jasper.ai,web,0.8,1,Jasper AI writing assistant,threat_intel,2024-01-01,2026-02-22,medium
+Writer,writer.com,web,0.8,1,Writer AI writing platform,threat_intel,2024-01-01,2026-02-22,medium
+Writer,api.writer.com,api,1.0,1,Writer API,threat_intel,2024-01-01,2026-02-22,medium
+Notion AI,notion.so,web,0.5,1,Notion AI productivity assistant,threat_intel,2024-01-01,2026-02-22,high
+Grammarly,grammarly.com,web,0.4,1,Grammarly AI writing assistant,threat_intel,2024-01-01,2026-02-22,high
+Windsurf,windsurf.com,web,0.8,1,Windsurf AI IDE web domain,threat_intel,2024-06-01,2026-02-22,high
+Bolt,bolt.new,web,0.8,1,Bolt AI code generation,threat_intel,2024-06-01,2026-02-22,medium
+Lovable,lovable.dev,web,0.8,1,Lovable AI code generation,threat_intel,2024-06-01,2026-02-22,medium
+Replit,replit.com,web,0.6,1,Replit AI-powered coding platform,threat_intel,2024-01-01,2026-02-22,high
