@@ -8,7 +8,7 @@
 ![P2R Conformance](https://img.shields.io/badge/P2R_conformance-100%25-brightgreen)
 
 > [!NOTE]
-> **Battle-tested:** Validated against 2 production Splunk ES 8.3.0 environments with real Cisco, Zscaler, FortiGate, and WinEventLog data. 95.7% SPL pass rate (44/46 per environment, 4 expected DLP gaps). See [environment assessment](docs/reviews/environment_fit_assessment.md).
+> **Battle-tested:** Validated against 2 production Splunk ES 8.3.0 environments with real Cisco, Zscaler, FortiGate, and WinEventLog data. 95.7% SPL pass rate (44/46 per environment, 4 expected DLP gaps). See [Live Environment Testing](#live-environment-testing) below.
 
 ---
 
@@ -207,8 +207,6 @@ This pack was validated against 2 production Splunk ES 8.3.0 environments runnin
 - **Tier 2 (after DLP onboarding):** AI-020, AI-025, AI-030, AI-038
 - **Tier 3 (source-specific):** AI-031 (Email), AI-033 (code scanning), AI-043 (Filesystem)
 
-Full details: [Environment assessment](docs/reviews/environment_fit_assessment.md)
-
 ---
 
 ## Architecture at a Glance
@@ -293,4 +291,3 @@ All thresholds are configurable via `lookups/ai_detection_config.csv`.
 | [Contributing](docs/CONTRIBUTING.md) | Adding detections, P2R packaging, review process |
 | [Detection Template](docs/DETECTION_TEMPLATE.md) | Template for new detection development |
 | [Runbooks](docs/runbooks/) | 49 investigation runbooks |
-| [Environment Assessment](docs/reviews/environment_fit_assessment.md) | Live testing results |
