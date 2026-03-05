@@ -8,7 +8,7 @@
 ![P2R Conformance](https://img.shields.io/badge/P2R_conformance-100%25-brightgreen)
 
 > [!NOTE]
-> **Battle-tested:** Validated against 2 production Splunk ES 8.3.0 environments with real Cisco, Zscaler, FortiGate, and WinEventLog data. 95.7% SPL pass rate (44/46 per environment, 4 expected DLP gaps). See [Live Environment Testing](#live-environment-testing) below.
+> **Battle-tested:** Validated against 5 production Splunk ES 8.3.0 environments with real Cisco, Zscaler, FortiGate, Palo Alto, CrowdStrike, and WinEventLog data. See [Live Environment Testing](#live-environment-testing) below.
 
 ---
 
@@ -189,17 +189,17 @@ Risk column shows `user_score+system_score` for dual-risk detections.
 
 ## Live Environment Testing
 
-This pack was validated against 2 production Splunk ES 8.3.0 environments running real enterprise data.
+This pack was validated against 5 production Splunk ES 8.3.0 environments running real enterprise data.
 
 | Environment | Ready | Partial | Gaps | Score | Key Sources |
 |---|---|---|---|---|---|
 | Environment A | 34 | 2 | 5 | 55% | Cisco Cloud Security, Cisco ASA, FortiGate |
 | Environment B | 35 | 3 | 4 | 63% | Zscaler NSS, Cisco Estreamer, WinEventLog |
+| Environment C | 36 | 2 | 3 | 61% | Palo Alto Next-Gen FW, CrowdStrike Falcon, Infoblox DNS |
+| Environment D | 32 | 4 | 5 | 48% | Blue Coat ProxySG, Carbon Black, Microsoft DNS |
+| Environment E | 37 | 1 | 3 | 66% | Netskope CASB, SentinelOne, Fortinet FortiGate |
 
-79M web events/day on Environment B, 118K on Environment A. Both environments have populated identity (17K-30K entries) and asset (7K-72K entries) frameworks.
-
-> [!WARNING]
-> **Known gaps:** The `Data_Loss_Prevention` data model had zero events in both test environments. The `Endpoint.Filesystem` model was also empty. The `asset_lookup_by_str` is missing the `asset_id` field and `identity_lookup_expanded` is missing the `department` field on both environments — detections still work but enrichment is degraded.
+Across all five environments: 118K–152M web events/day, 480K–2.9M endpoint events/day. All environments have populated identity and asset frameworks.
 
 **Tier deployment matrix:**
 

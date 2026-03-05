@@ -1,0 +1,4 @@
+loguru
+jsonschema
+pyyaml
+addonfactory_splunk_conf_parser_lib
