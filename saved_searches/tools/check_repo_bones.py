@@ -40,7 +40,7 @@ def main() -> int:
         missing.append("packages/*/package.yml")
 
     if missing:
-        print("ERROR: p2r is missing required repo-bones paths:", file=sys.stderr)
+        print("ERROR: saved_searches is missing required repo-bones paths:", file=sys.stderr)
         for path in missing:
             print(f"- {path}", file=sys.stderr)
         return 1

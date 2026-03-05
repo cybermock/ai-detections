@@ -8,8 +8,8 @@ OUT_DIR="${1:-${P2R_DIR}/reports}"
 
 mkdir -p "${OUT_DIR}"
 
-JSON_OUT="${OUT_DIR}/p2r_savedsearch_conformance.json"
-MD_OUT="${OUT_DIR}/p2r_savedsearch_conformance.md"
+JSON_OUT="${OUT_DIR}/savedsearch_conformance.json"
+MD_OUT="${OUT_DIR}/savedsearch_conformance.md"
 
 FILES="$(find "${PACKAGES_DIR}" -maxdepth 3 -type f -name 'savedsearches.conf' | sort)"
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply convention compliance fixes to all p2r detection packages.
+"""Apply convention compliance fixes to all saved_searches detection packages.
 
 Addresses findings from the soc-search-repo pipeline audit:
 1. enable_alerting: False -> false (all package.yml)
