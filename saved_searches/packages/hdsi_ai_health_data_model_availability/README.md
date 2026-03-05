@@ -1,4 +1,6 @@
 ## Architect Notes
+**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
+
 ---
 ### Health-DataModel: AI RBA Data Model Availability
 

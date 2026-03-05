@@ -1,4 +1,6 @@
 ## Architect Notes
+**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
+
 ---
 ### Multiple AI Services In Single Session
 

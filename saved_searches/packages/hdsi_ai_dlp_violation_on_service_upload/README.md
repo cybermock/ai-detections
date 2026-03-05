@@ -1,4 +1,6 @@
 ## Architect Notes
+**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
+
 ---
 ### DLP Violation On AI Service Upload
 

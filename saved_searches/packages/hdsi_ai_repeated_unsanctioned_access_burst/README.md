@@ -1,4 +1,6 @@
 ## Architect Notes
+**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
+
 ---
 ### Repeated Unsanctioned AI Access Burst
 

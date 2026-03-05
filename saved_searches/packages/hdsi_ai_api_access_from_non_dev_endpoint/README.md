@@ -1,4 +1,6 @@
 ## Architect Notes
+**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
+
 ---
 ### AI API Access From Non-Dev Endpoint
 
