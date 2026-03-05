@@ -1,16 +1,16 @@
 version: 1.0.0
-package_title: HDSI RBA AI Data Collection Kill Chain
 creation_date: '2026-03-04'
-author: Hurricane Labs
+package_title: HDSI RBA AI Data Collection Kill Chain
 description: "Multi-phase kill chain detection: data collection (file access, clipboard, DLP) followed by AI service upload within configurable window."
-enable_alerting: false
-app_context: HurricaneLabsContentUpdates
-tags:
-  - rba_only
+author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
-    operator: ">="
-    required_version: "8.0.0"
+    operator: '*'
+    required_version: '*'
+app_context: HurricaneLabsContentUpdates
+enable_alerting: false
+tags:
+  - rba_only
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common

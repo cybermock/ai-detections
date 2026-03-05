@@ -1,10 +1,14 @@
 version: 1.0.0
-package_title: HDSI AI Usage Volume Anomaly
 creation_date: '2026-03-04'
-author: Hurricane Labs
+package_title: HDSI AI Usage Volume Anomaly
 description: "Statistical anomaly detection using z-score analysis against per-user baseline. Flags users whose daily AI request count exceeds configured standard deviations from historical mean. MITRE: T1567.002"
-enable_alerting: false
+author: Hurricane Labs
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: '*'
+    required_version: '*'
 app_context: HurricaneLabsContentUpdates
+enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
   - macros:ai_unsanctioned_filter
@@ -12,10 +16,6 @@ tags:
   - rba_only
   - web
   - proxy
-app_compatibility:
-  - app_name: SplunkEnterpriseSecuritySuite
-    operator: ">="
-    required_version: "8.0.0"
 data_prereqs:
   datamodels:
     op: AND

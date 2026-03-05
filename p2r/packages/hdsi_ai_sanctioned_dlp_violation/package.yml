@@ -1,20 +1,20 @@
 version: 1.0.0
-package_title: HDSI AI Sanctioned DLP Violation
 creation_date: '2026-03-04'
-author: Hurricane Labs
+package_title: HDSI AI Sanctioned DLP Violation
 description: "Detect DLP policy violations involving sensitive data uploaded to sanctioned (approved) AI providers. Even approved AI tools should not receive sensitive data like PII, source code, or trade secrets. MITRE: T1567.002"
-enable_alerting: false
+author: Hurricane Labs
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: '*'
+    required_version: '*'
 app_context: HurricaneLabsContentUpdates
+enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
   - macros:ai_risk_multiplier
 tags:
   - rba_only
   - data_exfiltration
-app_compatibility:
-  - app_name: SplunkEnterpriseSecuritySuite
-    operator: ">="
-    required_version: "8.0.0"
 data_prereqs:
   datamodels:
     op: AND

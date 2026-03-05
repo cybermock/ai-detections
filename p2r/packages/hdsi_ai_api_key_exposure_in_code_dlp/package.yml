@@ -1,19 +1,19 @@
 version: 1.0.0
-package_title: HDSI AI API Key Exposure In Code/DLP
 creation_date: '2026-03-04'
-author: Hurricane Labs
+package_title: HDSI AI API Key Exposure In Code/DLP
 description: "Detect AI provider API keys exposed in code repositories, DLP alerts, or log entries using regex patterns. MITRE: T1552.001"
-enable_alerting: false
+author: Hurricane Labs
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: '*'
+    required_version: '*'
 app_context: HurricaneLabsContentUpdates
+enable_alerting: false
 common_dependencies:
   - macros:ai_api_key_patterns_enabled
   - macros:ai_unsanctioned_filter
 tags:
   - rba_only
-app_compatibility:
-  - app_name: SplunkEnterpriseSecuritySuite
-    operator: ">="
-    required_version: "8.0.0"
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common
