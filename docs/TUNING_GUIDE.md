@@ -1,19 +1,23 @@
 # Tuning Guide
 
-This guide covers threshold calibration, allowlist management, false positive reduction, and performance tuning for the AI RBA Starter Pack.
+Threshold calibration, allowlist management, false positive reduction, and performance tuning for the AI RBA Detection Pack.
 
-## Tuning Philosophy
+## Day 1 Quick Start
 
-**Start permissive, tighten based on your environment.**
+Don't tune anything on day one. Seriously.
 
-When first deploying the pack:
+1. **Deploy with defaults.** The pack ships with conservative thresholds that work across most environments.
+2. **Observe for 1-2 weeks.** Let detections fire and risk accumulate. Watch what patterns emerge.
+3. **Allowlist first.** The single biggest win is populating `ai_sanctioned_entities.csv` with known-approved users and teams. This eliminates most false positives without weakening detection.
+4. **Then calibrate.** Use the queries in this guide to set thresholds that match your environment's actual usage patterns.
+5. **Tighten gradually.** Adjust one threshold at a time. Monitor notable volume after each change.
 
-1. Deploy with default thresholds and observe for 1-2 weeks.
-2. Identify the most common false positive patterns and address them through allowlisting.
-3. Calibrate thresholds using the queries in this guide to match your organization's actual usage patterns.
-4. Tighten thresholds gradually, monitoring notable volume after each change.
+> [!TIP]
+> **Target notable volume:** 1-5 high-severity notables/day, 5-15 medium-severity notables/day. More than this means thresholds are too low or allowlists need expansion. Fewer means thresholds are too high or data sources are missing.
 
-The goal is **1-5 high-severity notables per day** and **5-15 medium-severity notables per day**. More than this indicates thresholds are too low or allowlists need expansion. Fewer than this may indicate thresholds are too high or data sources are not properly configured.
+## Per-Threshold Calibration
+
+All thresholds live in `lookups/ai_detection_config.csv`. Changes take effect on the next detection run (within 5-15 minutes for most detections).
 
 ## Per-Threshold Calibration
 
@@ -58,11 +62,8 @@ Update this value to your SOC distribution list so these searches alert the corr
     count             as total_windows
 ```
 
-**Interpretation:**
-- Set tier 1 above p90 (most normal usage should not alert).
-- Set tier 2 at p95.
-- Set tier 3 at p99.
-- Set tier 4 well above observed max during normal operations.
+> [!TIP]
+> Set tier 1 above p90 (most normal usage won't fire), tier 2 at p95, tier 3 at p99, and tier 4 well above observed max during normal operations.
 
 **Example adjustment for a development-heavy organization:**
 
@@ -100,11 +101,8 @@ upload_tier4_mb,200,Raised from 50: only full database exports should hit this
     max(window_requests)    as max
 ```
 
-**Guidance:**
-- Modern AI chat interfaces generate 5-20 subrequests per user interaction (XHR, WebSocket, polling).
-- API users generate far more requests per minute than web users.
-- Set the threshold at p90-p95 for your environment.
-- Typical adjustment: 10 -> 25 for environments with heavy AI API usage.
+> [!TIP]
+> Modern AI chat interfaces generate 5-20 subrequests per user interaction (XHR, WebSocket, polling). API users generate far more. Set at p90-p95 for your environment. Typical adjustment: 10 -> 25 for heavy AI API usage.
 
 ### AI-015: After-Hours Window
 
@@ -128,11 +126,8 @@ upload_tier4_mb,200,Raised from 50: only full database exports should hit this
 | sort hour
 ```
 
-**Guidance:**
-- This query shows AI request volume by hour on weekdays.
-- Set the after-hours start after the last hour with significant activity.
-- Set the after-hours end before the first hour with significant activity.
-- For global organizations, consider creating timezone-specific configurations or using user-level timezone data.
+> [!TIP]
+> Set after-hours start after the last hour with significant activity, and end before the first. For global organizations, consider timezone-specific configurations or user-level timezone data.
 
 **Example for a company with developers working until 10 PM:**
 
@@ -165,11 +160,8 @@ index=risk search_name="AI RBA - *" risk_object_type="user" earliest=-30d
     count               as user_days
 ```
 
-**Guidance:**
-- Medium threshold: set above p90 of daily user risk scores. Users below this represent normal background noise.
-- High threshold: set above p95-p99. Only genuinely concerning accumulations should trigger high.
-- If too many notables: raise both thresholds.
-- If too few notables: lower thresholds or review if detections are generating risk correctly.
+> [!TIP]
+> Medium threshold: above p90 of daily user risk scores (background noise stays below). High threshold: above p95-p99 (only genuinely concerning accumulations fire). Too many notables? Raise both. Too few? Lower thresholds or check if detections are generating risk correctly.
 
 ### AI-017: Volume Anomaly Z-Score
 
@@ -193,11 +185,8 @@ index=risk search_name="AI RBA - *" risk_object_type="user" earliest=-30d
 | stats perc90(z) as p90 perc95(z) as p95 perc99(z) as p99 max(z) as max
 ```
 
-**Guidance:**
-- Z-score of 2.0: flags ~2.3% of days (more sensitive, more notables).
-- Z-score of 3.0: flags ~0.13% of days (default, balanced).
-- Z-score of 4.0: flags only extreme outliers (less sensitive, fewer notables).
-- Also adjust `volume_anomaly_min_days` if users have sparse baseline data.
+> [!TIP]
+> Z-score 2.0 = flags ~2.3% of days (sensitive). Z-score 3.0 = flags ~0.13% (default, balanced). Z-score 4.0 = extreme outliers only. Also adjust `volume_anomaly_min_days` if users have sparse baseline data.
 
 ## Allowlist Management
 
@@ -262,9 +251,12 @@ For large-scale allowlisting (e.g., onboarding a department):
 
 ## False Positive Reduction Strategies
 
+> [!NOTE]
+> **Target volume:** If you're seeing more than 5 high-severity or 15 medium-severity notables per day, work through these strategies in order. Strategy 1 alone resolves most FP issues.
+
 ### Strategy 1: Allowlist sanctioned users first
 
-The single most effective tuning action is populating the allowlist with known-approved users and teams. This eliminates the vast majority of false positives without reducing detection sensitivity for unsanctioned users.
+The single most effective tuning action. Populate the allowlist with known-approved users and teams. This eliminates the vast majority of false positives without reducing detection sensitivity for unsanctioned users.
 
 ### Strategy 2: Adjust thresholds for your environment
 
