@@ -1,4 +1,5 @@
 # Saved Search Conformance Report
+**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
 
 - Generated: 2026-03-05 02:55:09Z
 - Scope: `saved_searches/packages`

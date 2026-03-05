@@ -1,6 +1,6 @@
 # P2R Packages
 
-**Author:** Trevor Mock, Hurricane Labs LLC
+**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
 
 P2R (Package-to-Release) structures each detection as an independently deployable, versioned package. This format enables selective deployment, per-package version control, and granular dependency tracking.
 
