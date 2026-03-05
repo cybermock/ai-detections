@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-006: AI API Access From Non-Dev Endpoint
+### AI API Access From Non-Dev Endpoint
 
 **Description:** Detect API calls to AI providers from endpoints not tagged as development assets. Covers all known AI API endpoints. MITRE: T1071.001
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_006_ai_api_access_from_non_dev_endpoint_filter` macro for exclusions
-- Use `hdsi_ai_006_ai_api_access_from_non_dev_endpoint_customizations` macro for post-processing
+- Use `hdsi_ai_api_access_from_non_dev_endpoint_filter` macro for exclusions
+- Use `hdsi_ai_api_access_from_non_dev_endpoint_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

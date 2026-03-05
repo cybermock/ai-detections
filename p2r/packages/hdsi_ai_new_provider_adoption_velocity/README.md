@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-042: New AI Provider Adoption Velocity
+### New AI Provider Adoption Velocity
 
 **Description:** Detect users rapidly adopting multiple new AI providers within a short window (default: 3+ new providers in 7 days). MITRE: T1071.001
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_042_new_ai_provider_adoption_velocity_filter` macro for exclusions
-- Use `hdsi_ai_042_new_ai_provider_adoption_velocity_customizations` macro for post-processing
+- Use `hdsi_ai_new_provider_adoption_velocity_filter` macro for exclusions
+- Use `hdsi_ai_new_provider_adoption_velocity_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

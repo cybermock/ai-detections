@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-007: High Volume Upload To AI Service
+### High Volume Upload To AI Service
 
 **Description:** Detect high data upload volume to AI providers with tiered risk scoring: 1MB (low), 5MB (medium), 10MB (high), 50MB (critical). MITRE: T1567.002
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_007_high_volume_upload_to_ai_service_filter` macro for exclusions
-- Use `hdsi_ai_007_high_volume_upload_to_ai_service_customizations` macro for post-processing
+- Use `hdsi_ai_high_volume_upload_to_ai_service_filter` macro for exclusions
+- Use `hdsi_ai_high_volume_upload_to_ai_service_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-015: After Hours AI Service Usage
+### After Hours AI Service Usage
 
 **Description:** Detect AI service usage outside business hours (configurable, default before 6AM or after 8PM, or on weekends). After-hours usage may indicate data exfiltration or reduced oversight. MITRE: T1567.002
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_015_after_hours_ai_service_usage_filter` macro for exclusions
-- Use `hdsi_ai_015_after_hours_ai_service_usage_customizations` macro for post-processing
+- Use `hdsi_ai_after_hours_service_usage_filter` macro for exclusions
+- Use `hdsi_ai_after_hours_service_usage_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

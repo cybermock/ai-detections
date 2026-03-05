@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-037: AI Agent Framework Execution
+### AI Agent Framework Execution
 
 **Description:** Detect execution of AI autonomous agent frameworks including AutoGPT, CrewAI, LangChain serve, AutoGen, MetaGPT, BabyAGI, SuperAGI, AgentGPT, OpenDevin, SWE-agent, and similar orchestration tools. MITRE: T1059
 
@@ -9,8 +9,8 @@
 **Data Models:** Endpoint.Processes
 
 ### Tuning
-- Use `hdsi_ai_037_ai_agent_framework_execution_filter` macro for exclusions
-- Use `hdsi_ai_037_ai_agent_framework_execution_customizations` macro for post-processing
+- Use `hdsi_ai_agent_framework_execution_filter` macro for exclusions
+- Use `hdsi_ai_agent_framework_execution_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

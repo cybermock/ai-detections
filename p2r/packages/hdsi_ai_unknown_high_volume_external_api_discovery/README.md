@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-DISCOVERY-001: Unknown High-Volume External API Discovery
+### Unknown High-Volume External API Discovery
 
 **Description:** Detect unknown high-volume external API usage that may indicate unsanctioned AI service access by specific users and systems.
 

@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-004: Unsanctioned AI CLI Execution
+### Unsanctioned AI CLI Execution
 
 **Description:** Detect unsanctioned use of AI CLI tools including codex, claude, gemini, aider, sgpt, llm, tgpt, mods, fabric, aichat, amazon-q, openai, cline, and gh-copilot. MITRE: T1059
 
@@ -9,8 +9,8 @@
 **Data Models:** Endpoint.Processes
 
 ### Tuning
-- Use `hdsi_ai_004_unsanctioned_ai_cli_execution_filter` macro for exclusions
-- Use `hdsi_ai_004_unsanctioned_ai_cli_execution_customizations` macro for post-processing
+- Use `hdsi_ai_unsanctioned_cli_execution_filter` macro for exclusions
+- Use `hdsi_ai_unsanctioned_cli_execution_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

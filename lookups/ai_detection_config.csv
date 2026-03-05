@@ -1,27 +1,27 @@
 control_name,value,notes
-upload_tier1_mb,1,MB threshold for tier 1 upload risk (score 20) in AI-007
-upload_tier2_mb,5,MB threshold for tier 2 upload risk (score 40) in AI-007
-upload_tier3_mb,10,MB threshold for tier 3 upload risk (score 60) in AI-007
-upload_tier4_mb,50,MB threshold for tier 4 upload risk (score 80) in AI-007
-request_burst_count,10,Request count to AI providers in 15m to trigger AI-010
+upload_tier1_mb,1,MB threshold for tier 1 upload risk (score 20) in hdsi_ai_high_volume_upload_to_ai_service
+upload_tier2_mb,5,MB threshold for tier 2 upload risk (score 40) in hdsi_ai_high_volume_upload_to_ai_service
+upload_tier3_mb,10,MB threshold for tier 3 upload risk (score 60) in hdsi_ai_high_volume_upload_to_ai_service
+upload_tier4_mb,50,MB threshold for tier 4 upload risk (score 80) in hdsi_ai_high_volume_upload_to_ai_service
+request_burst_count,10,Request count to AI providers in 15m to trigger hdsi_ai_repeated_unsanctioned_access_burst
 medium_risk_threshold,60,Total user AI risk in 24h for medium notable
 high_risk_threshold,90,Total user AI risk in 24h for high notable
-after_hours_start,20,Hour (24h format) when after-hours begins for AI-015
-after_hours_end,6,Hour (24h format) when after-hours ends for AI-015
-multi_service_threshold,3,Distinct AI services in 1h to trigger AI-018
-volume_anomaly_zscore,3,Z-score threshold for AI-017 volume anomaly
-volume_anomaly_min_days,14,Minimum baseline days for AI-017 anomaly detection
-model_download_mb,500,MB threshold for model download detection AI-013
-extension_bytes_threshold_mb,10,MB threshold for browser extension high-volume data in AI-024
-new_provider_velocity_count,3,New provider count within 7 days to trigger AI-042
-new_provider_velocity_days,7,Lookback days for new provider velocity in AI-042
-low_slow_cumulative_mb,50,7-day cumulative MB threshold for AI-044 low-and-slow exfil
-low_slow_days,7,Lookback window in days for AI-044
-peer_group_zscore,2.5,Z-score threshold for peer group anomaly in AI-040
-time_anomaly_zscore,3,Z-score threshold for time-of-day anomaly in AI-041
-data_access_spike_count,100,File access count threshold for AI-043 correlation
-kill_chain_window_hours,4,Hours for kill chain phase correlation in AI-RISK-003
-multi_vector_categories,3,Distinct detection categories in 24h for AI-RISK-005
-discovery_api_count,50,Request count threshold for unknown API discovery AI-DISCOVERY-001
-dns_query_threshold,20,Minimum DNS queries to AI domains to trigger AI-012
+after_hours_start,20,Hour (24h format) when after-hours begins for hdsi_ai_after_hours_service_usage
+after_hours_end,6,Hour (24h format) when after-hours ends for hdsi_ai_after_hours_service_usage
+multi_service_threshold,3,Distinct AI services in 1h to trigger hdsi_ai_multiple_services_in_single_session
+volume_anomaly_zscore,3,Z-score threshold for hdsi_ai_usage_volume_anomaly volume anomaly
+volume_anomaly_min_days,14,Minimum baseline days for hdsi_ai_usage_volume_anomaly anomaly detection
+model_download_mb,500,MB threshold for model download detection hdsi_ai_llm_model_file_download
+extension_bytes_threshold_mb,10,MB threshold for browser extension high-volume data in hdsi_ai_browser_extension_high_volume_data_transmission
+new_provider_velocity_count,3,New provider count within 7 days to trigger hdsi_ai_new_provider_adoption_velocity
+new_provider_velocity_days,7,Lookback days for new provider velocity in hdsi_ai_new_provider_adoption_velocity
+low_slow_cumulative_mb,50,7-day cumulative MB threshold for hdsi_ai_gradual_data_exfiltration_via_ai low-and-slow exfil
+low_slow_days,7,Lookback window in days for hdsi_ai_gradual_data_exfiltration_via_ai
+peer_group_zscore,2.5,Z-score threshold for peer group anomaly in hdsi_ai_user_peer_group_usage_anomaly
+time_anomaly_zscore,3,Z-score threshold for time-of-day anomaly in hdsi_ai_time_of_day_usage_pattern_anomaly
+data_access_spike_count,100,File access count threshold for hdsi_ai_usage_following_data_access_spike correlation
+kill_chain_window_hours,4,Hours for kill chain phase correlation in hdsi_rba_ai_data_collection_kill_chain
+multi_vector_categories,3,Distinct detection categories in 24h for hdsi_rba_ai_multi_vector_risk
+discovery_api_count,50,Request count threshold for unknown API discovery hdsi_ai_unknown_high_volume_external_api_discovery
+dns_query_threshold,20,Minimum DNS queries to AI domains to trigger hdsi_ai_dns_queries_to_ai_domains
 alert_email_to,soc-alerts@company.com,Recipient email used by health monitoring searches

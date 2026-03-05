@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-017: Usage Volume Anomaly
+### Usage Volume Anomaly
 
 **Description:** Statistical anomaly detection using z-score analysis against per-user baseline. Flags users whose daily AI request count exceeds configured standard deviations from historical mean. MITRE: T1567.002
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_017_usage_volume_anomaly_filter` macro for exclusions
-- Use `hdsi_ai_017_usage_volume_anomaly_customizations` macro for post-processing
+- Use `hdsi_ai_usage_volume_anomaly_filter` macro for exclusions
+- Use `hdsi_ai_usage_volume_anomaly_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

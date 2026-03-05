@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-027: Personal Email To AI Service Upload Correlation
+### Personal Email To AI Service Upload Correlation
 
 **Description:** Detect file uploads to personal email services followed by AI service uploads within a 1-hour window, indicating data staging through personal email. MITRE: T1048.002
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_027_personal_email_to_ai_service_upload_correlation_filter` macro for exclusions
-- Use `hdsi_ai_027_personal_email_to_ai_service_upload_correlation_customizations` macro for post-processing
+- Use `hdsi_ai_personal_email_to_ai_service_upload_correlation_filter` macro for exclusions
+- Use `hdsi_ai_personal_email_to_ai_service_upload_correlation_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

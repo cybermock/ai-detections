@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-010: Repeated Unsanctioned AI Access Burst
+### Repeated Unsanctioned AI Access Burst
 
 **Description:** Detect repeated unsanctioned access bursts to AI providers. MITRE: T1071.001
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_010_repeated_unsanctioned_ai_access_burst_filter` macro for exclusions
-- Use `hdsi_ai_010_repeated_unsanctioned_ai_access_burst_customizations` macro for post-processing
+- Use `hdsi_ai_repeated_unsanctioned_access_burst_filter` macro for exclusions
+- Use `hdsi_ai_repeated_unsanctioned_access_burst_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

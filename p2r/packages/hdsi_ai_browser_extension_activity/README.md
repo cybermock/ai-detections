@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-021: Browser Extension Activity
+### Browser Extension Activity
 
 **Description:** Detect installation or usage of AI browser extensions (ChatGPT, Copilot, Claude, Perplexity) via proxy logs. Browser extensions can intercept page content and exfiltrate to AI services. MITRE: T1176
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_021_browser_extension_activity_filter` macro for exclusions
-- Use `hdsi_ai_021_browser_extension_activity_customizations` macro for post-processing
+- Use `hdsi_ai_browser_extension_activity_filter` macro for exclusions
+- Use `hdsi_ai_browser_extension_activity_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

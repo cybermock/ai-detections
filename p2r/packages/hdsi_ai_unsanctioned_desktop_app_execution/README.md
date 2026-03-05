@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-005: Unsanctioned AI Desktop App Execution
+### Unsanctioned AI Desktop App Execution
 
 **Description:** Detect unsanctioned use of AI desktop applications including ChatGPT, Claude, Cursor, Windsurf, Pieces, LM Studio, Jan, Continue, Tabnine, Trae, Zed, and Warp. MITRE: T1204.002
 
@@ -9,8 +9,8 @@
 **Data Models:** Endpoint.Processes
 
 ### Tuning
-- Use `hdsi_ai_005_unsanctioned_ai_desktop_app_execution_filter` macro for exclusions
-- Use `hdsi_ai_005_unsanctioned_ai_desktop_app_execution_customizations` macro for post-processing
+- Use `hdsi_ai_unsanctioned_desktop_app_execution_filter` macro for exclusions
+- Use `hdsi_ai_unsanctioned_desktop_app_execution_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

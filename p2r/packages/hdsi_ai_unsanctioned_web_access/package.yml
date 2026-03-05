@@ -2,7 +2,7 @@ version: 1.0.0
 package_title: HDSI AI Unsanctioned Web Access
 creation_date: '2026-03-04'
 author: Hurricane Labs
-description: "Consolidated detection for unsanctioned web access to any AI provider. Dynamically uses ai_provider_domains.csv lookup. Replaces deprecated AI-001, AI-002, AI-003. MITRE: T1071.001"
+description: "Consolidated detection for unsanctioned web access to any AI provider. Dynamically uses ai_provider_domains.csv lookup. Replaces deprecated legacy unsanctioned AI web access detections. MITRE: T1071.001"
 enable_alerting: false
 app_context: HurricaneLabsContentUpdates
 common_dependencies:

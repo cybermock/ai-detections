@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-RISK-001: User Risk Threshold Exceeded
+### User Risk Threshold Exceeded
 
 **Description:** Create a medium notable when user AI risk reaches threshold in 24 hours.
 

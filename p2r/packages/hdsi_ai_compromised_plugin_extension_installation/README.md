@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-036: Compromised AI Plugin/Extension Installation
+### Compromised AI Plugin/Extension Installation
 
 **Description:** Detect installation of known-compromised or suspicious AI plugins/extensions via package managers or browser extension stores. MITRE: T1195.002
 
@@ -9,8 +9,8 @@
 **Data Models:** Endpoint.Processes, Web
 
 ### Tuning
-- Use `hdsi_ai_036_compromised_ai_plugin_extension_installation_filter` macro for exclusions
-- Use `hdsi_ai_036_compromised_ai_plugin_extension_installation_customizations` macro for post-processing
+- Use `hdsi_ai_compromised_plugin_extension_installation_filter` macro for exclusions
+- Use `hdsi_ai_compromised_plugin_extension_installation_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-040: User Peer Group AI Usage Anomaly
+### User Peer Group AI Usage Anomaly
 
 **Description:** Detect users whose AI usage significantly deviates from their department peer group using eventstats z-score analysis. MITRE: T1567.002
 
@@ -9,8 +9,8 @@
 **Data Models:** Web
 
 ### Tuning
-- Use `hdsi_ai_040_user_peer_group_ai_usage_anomaly_filter` macro for exclusions
-- Use `hdsi_ai_040_user_peer_group_ai_usage_anomaly_customizations` macro for post-processing
+- Use `hdsi_ai_user_peer_group_usage_anomaly_filter` macro for exclusions
+- Use `hdsi_ai_user_peer_group_usage_anomaly_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-008: Scripted AI CLI Invocation
+### Scripted AI CLI Invocation
 
 **Description:** Detect scripted AI CLI invocations where interpreter or shell processes launch AI CLIs. Covers all known AI CLI tools. MITRE: T1059.004
 
@@ -9,8 +9,8 @@
 **Data Models:** Endpoint.Processes
 
 ### Tuning
-- Use `hdsi_ai_008_scripted_ai_cli_invocation_filter` macro for exclusions
-- Use `hdsi_ai_008_scripted_ai_cli_invocation_customizations` macro for post-processing
+- Use `hdsi_ai_scripted_cli_invocation_filter` macro for exclusions
+- Use `hdsi_ai_scripted_cli_invocation_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:

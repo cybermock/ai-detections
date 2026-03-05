@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-RISK-002: User Critical Risk Threshold Exceeded
+### User Critical Risk Threshold Exceeded
 
 **Description:** Create a high notable when user AI risk reaches critical threshold in 24 hours.
 

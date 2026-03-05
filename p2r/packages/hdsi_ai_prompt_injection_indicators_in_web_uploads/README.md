@@ -1,6 +1,6 @@
 ## Architect Notes
 ---
-### AI-030: Prompt Injection Indicators In Web Uploads
+### Prompt Injection Indicators In Web Uploads
 
 **Description:** Detect known prompt injection patterns in web upload content destined for AI services using DLP/proxy content inspection. MITRE: T1190
 
@@ -9,8 +9,8 @@
 **Data Models:** DLP
 
 ### Tuning
-- Use `hdsi_ai_030_prompt_injection_indicators_in_web_uploads_filter` macro for exclusions
-- Use `hdsi_ai_030_prompt_injection_indicators_in_web_uploads_customizations` macro for post-processing
+- Use `hdsi_ai_prompt_injection_indicators_in_web_uploads_filter` macro for exclusions
+- Use `hdsi_ai_prompt_injection_indicators_in_web_uploads_customizations` macro for post-processing
 
 ### Dependencies
 This search depends on shared AI RBA macros and lookups:
