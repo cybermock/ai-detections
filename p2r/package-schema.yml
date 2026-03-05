@@ -1,0 +1,115 @@
+type: object
+properties:
+  version:
+    type: string
+    minLength: 5
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+  creation_date:
+    type: string
+    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+  package_title:
+    type: string
+  description:
+    type: string
+  app_compatibility:
+    type: array
+    items:
+      type: object
+      properties: 
+        app_name:
+          type: string
+        operator:
+          type: string
+          enum:
+            - '<'
+            - '<='
+            - '=='
+            - '>'
+            - '>='
+            - '*'
+        required_version:
+          type: string
+          pattern: "(^\\d+\\.\\d+\\.\\d+$|\\*)"
+  app_context: 
+    type: string
+  common_dependencies:
+    type: array
+    items:
+      type: string
+      pattern: "[a-z]+:.+"
+  enable_alerting:
+    type: boolean
+  tags:
+    type: array
+    items:
+      type: string
+  prereq_packages:
+    type: array
+    items:
+      type: string
+  data_prereqs:
+    type: object
+    additionalProperties: false
+    properties:
+      sourcetypes:
+        type: object
+        properties:
+          op:
+            type: string
+            pattern: "^(AND|OR)$"
+          items:
+            type: array
+            items:
+              type: string
+              pattern: "^[^\\\"]+$"
+      sources:
+        type: object
+        properties:
+          op:
+            type: string
+            pattern: "^(AND|OR)$"
+          items:
+            type: array
+            items:
+              type: string
+              pattern: "^[^\\\"]+$"
+      datamodels:
+        type: object
+        properties:
+          op:
+            type: string
+            pattern: "^(AND|OR)$"
+          items:
+            type: array
+            items:
+              type: string
+      searches:
+        type: object
+        properties:
+          op:
+            type: string
+            pattern: "^(AND|OR)$"
+          items:
+            type: array
+            items:
+              type: string
+              pattern: "^\\s*\\|.*"
+  post_deploy_search:
+    type: string
+    pattern: "^\\s*\\|.*"
+  deployment_type:
+    type: string
+    enum:
+      - global_critical
+      - global
+      - adhoc
+  is_free:
+    type: boolean
+  is_hl_only:
+    type: boolean
+
+required:
+  - version
+  - package_title
+  - description
+  - deployment_type

@@ -1,0 +1,63 @@
+image: ghcr.io/astral-sh/uv:bookworm-slim
+
+stages:
+  - validate
+  - deploy
+
+validate:
+    stage: validate
+    script:
+        - uv run tools/check_repo_bones.py
+        - uv run validate.py
+    tags:
+        - docker
+
+deploy_prod:
+    stage: deploy
+    variables:
+        STAGE: "prod"
+    before_script:
+        - apt update
+        - apt install -y awscli
+    script:
+        - uv run deploy.py
+    artifacts:
+        paths:
+            - public
+    only:
+        - master
+    tags:
+        - docker
+
+deploy_dev:
+    stage: deploy
+    variables:
+        STAGE: "dev"
+    before_script:
+        - apt update
+        - apt install -y awscli
+    script:
+        - uv run deploy.py
+    artifacts:
+        paths:
+            - public
+    only:
+        - dev
+    tags:
+        - docker
+
+to_hec:
+    stage: deploy
+    variables:
+        STAGE: "prod"
+    before_script:
+        - apt update
+    script:
+        - uv run to_hec.py
+    artifacts:
+        paths:
+            - public
+    only:
+        - master
+    tags:
+        - docker

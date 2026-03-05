@@ -1,0 +1,39 @@
+version: 1.0.0 # CHANGEME when updating a search
+package_title: HDSI Package Template #CHANGEME
+creation_date: '2023-06-30' #CHANGEME
+author: Hurricane Labs #CHANGEME
+description: template for creating packages #CHANGEME
+enable_alerting: False #CHANGEME This will immediately set should_alert=yes in hdsi_es_alerting.csv when this is deployed. This should almost never be True.
+tags: #CHANGEME
+  - rba_only # Only deploy at clients with RBA
+  - windows 
+  - aws
+  - okta
+post_deploy_search: '| search index=foo' #CHANGEME or DELETEME
+# Dependencies
+app_compatibility: #CHANGEME if needed.
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: "*"
+    required_version: "*"
+prereq_packages:
+  - hdsi_ip_access_tracker #CHANGEME list of required packages to push first if needed DO NOT POINT SEARCHES AT THEMSELVES AS PREREQS YOU WILL CAUSE A LOOP
+data_prereqs: #CHANGEME
+  sources:
+    op: AND # Use AND if your package requires both to be true
+    items:
+    - '*wineventlog:security'
+    - 'auditd'
+  sourcetypes:
+    op: OR # Use OR if your package can function with any one item from this list
+    items:
+    - 'sourcetype_a'
+    - 'sourcetype_b'
+  datamodels:
+    op: AND
+    items:
+    - "Malware.Malware_Attacks"
+  searches:
+    op: AND
+    items:
+    - '|search index!=_* source=*wineventlog:security EventCode=4740 4740 | head 1'
+deployment_type: global #CHANGEME Possible values: "adhoc", "global", "global_critical"

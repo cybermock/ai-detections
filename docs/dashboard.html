@@ -882,7 +882,7 @@ section {
    ============================================================ */
 .env-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 20px;
 }
 
@@ -922,8 +922,11 @@ section {
   margin-bottom: 4px;
 }
 
+.score-48 { color: var(--amber); }
 .score-55 { color: var(--amber); }
+.score-61 { color: var(--amber); }
 .score-63 { color: var(--amber); }
+.score-66 { color: var(--amber); }
 
 .readiness-bar {
   height: 10px;
@@ -1659,7 +1662,7 @@ section {
   <section id="testing">
     <span class="section-label">Validation</span>
     <h2 class="section-title">Live Testing Results</h2>
-    <p class="section-desc">SPL validation against two production Splunk ES 8.3.0 environments. Scores reflect data model availability, not detection logic.</p>
+    <p class="section-desc">SPL validation against five production Splunk ES 8.3.0 environments. Scores reflect data model availability, not detection logic.</p>
 
     <div class="env-grid">
       <!-- Environment A -->
@@ -1716,6 +1719,97 @@ section {
         <div class="env-detail">
           <p><strong>Data Volume:</strong> 79M web events/day, 1.7M endpoint events/day</p>
           <p style="margin-top:6px"><strong>Sources:</strong> Zscaler NSS (web+DNS+FW), Cisco Estreamer, WinEventLog, Email</p>
+          <p style="margin-top:6px"><strong>Gaps:</strong>
+            <span class="gap-tag">No DLP</span>
+            <span class="gap-tag">No Endpoint.Filesystem</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Environment C -->
+      <div class="env-card">
+        <div class="env-header">
+          <span class="env-name">Environment C</span>
+          <span class="env-version">ES 8.3.0</span>
+        </div>
+        <div class="env-score score-61">61% ready</div>
+
+        <div class="readiness-bar">
+          <div class="bar-ready" style="width:87.8%"></div>
+          <div class="bar-partial" style="width:4.9%"></div>
+          <div class="bar-gap" style="width:7.3%"></div>
+        </div>
+
+        <div class="env-stats">
+          <div class="env-stat ev-ready"><div class="ev-val">36</div><div class="ev-label">Ready</div></div>
+          <div class="env-stat ev-partial"><div class="ev-val">2</div><div class="ev-label">Partial</div></div>
+          <div class="env-stat ev-gap"><div class="ev-val">3</div><div class="ev-label">No Data</div></div>
+        </div>
+
+        <div class="env-detail">
+          <p><strong>Data Volume:</strong> 25M web events/day, 1.2M endpoint events/day</p>
+          <p style="margin-top:6px"><strong>Sources:</strong> Palo Alto Next-Gen FW (web+threat), CrowdStrike Falcon, Infoblox DNS</p>
+          <p style="margin-top:6px"><strong>Gaps:</strong>
+            <span class="gap-tag">No DLP</span>
+            <span class="gap-tag">No Endpoint.Filesystem</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Environment D -->
+      <div class="env-card">
+        <div class="env-header">
+          <span class="env-name">Environment D</span>
+          <span class="env-version">ES 8.3.0</span>
+        </div>
+        <div class="env-score score-48">48% ready</div>
+
+        <div class="readiness-bar">
+          <div class="bar-ready" style="width:78.0%"></div>
+          <div class="bar-partial" style="width:9.8%"></div>
+          <div class="bar-gap" style="width:12.2%"></div>
+        </div>
+
+        <div class="env-stats">
+          <div class="env-stat ev-ready"><div class="ev-val">32</div><div class="ev-label">Ready</div></div>
+          <div class="env-stat ev-partial"><div class="ev-val">4</div><div class="ev-label">Partial</div></div>
+          <div class="env-stat ev-gap"><div class="ev-val">5</div><div class="ev-label">No Data</div></div>
+        </div>
+
+        <div class="env-detail">
+          <p><strong>Data Volume:</strong> 9.2M web events/day, 480K endpoint events/day</p>
+          <p style="margin-top:6px"><strong>Sources:</strong> Blue Coat ProxySG, Carbon Black Response, Microsoft DNS</p>
+          <p style="margin-top:6px"><strong>Gaps:</strong>
+            <span class="gap-tag">No DLP</span>
+            <span class="gap-tag">No Email</span>
+            <span class="gap-tag">No Endpoint.Filesystem</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Environment E -->
+      <div class="env-card">
+        <div class="env-header">
+          <span class="env-name">Environment E</span>
+          <span class="env-version">ES 8.3.0</span>
+        </div>
+        <div class="env-score score-66">66% ready</div>
+
+        <div class="readiness-bar">
+          <div class="bar-ready" style="width:90.2%"></div>
+          <div class="bar-partial" style="width:2.4%"></div>
+          <div class="bar-gap" style="width:7.3%"></div>
+        </div>
+
+        <div class="env-stats">
+          <div class="env-stat ev-ready"><div class="ev-val">37</div><div class="ev-label">Ready</div></div>
+          <div class="env-stat ev-partial"><div class="ev-val">1</div><div class="ev-label">Partial</div></div>
+          <div class="env-stat ev-gap"><div class="ev-val">3</div><div class="ev-label">No Data</div></div>
+        </div>
+
+        <div class="env-detail">
+          <p><strong>Data Volume:</strong> 152M web events/day, 2.9M endpoint events/day</p>
+          <p style="margin-top:6px"><strong>Sources:</strong> Netskope CASB (web+DNS), SentinelOne, Fortinet FortiGate</p>
           <p style="margin-top:6px"><strong>Gaps:</strong>
             <span class="gap-tag">No DLP</span>
             <span class="gap-tag">No Endpoint.Filesystem</span>
