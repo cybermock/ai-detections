@@ -1,0 +1,44 @@
+detection_id,mitre_technique_id,mitre_technique_name,mitre_tactic
+hdsi_ai_unsanctioned_cli_execution,T1059,Command and Scripting Interpreter,Execution
+hdsi_ai_unsanctioned_desktop_app_execution,T1204.002,User Execution: Malicious File,Execution
+hdsi_ai_api_access_from_non_dev_endpoint,T1071.001,Application Layer Protocol: Web Protocols,Command and Control
+hdsi_ai_high_volume_upload_to_ai_service,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_scripted_cli_invocation,T1059.004,Command and Scripting Interpreter: Unix Shell,Execution
+hdsi_ai_first_seen_provider_for_user,T1071.001,Application Layer Protocol: Web Protocols,Collection
+hdsi_ai_repeated_unsanctioned_access_burst,T1071.001,Application Layer Protocol: Web Protocols,Collection
+hdsi_ai_local_llm_framework_execution,T1204.002,User Execution: Malicious File,Execution
+hdsi_ai_dns_queries_to_ai_domains,T1071.004,Application Layer Protocol: DNS,Command and Control
+hdsi_ai_llm_model_file_download,T1105,Ingress Tool Transfer,Command and Control
+hdsi_ai_local_llm_listening_port_detected,T1219,Remote Access Software,Command and Control
+hdsi_ai_after_hours_service_usage,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_privileged_account_service_usage,T1078.004,Valid Accounts: Cloud Accounts,Privilege Escalation
+hdsi_ai_usage_volume_anomaly,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_multiple_services_in_single_session,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_code_assistant_network_connection,T1071.001,Application Layer Protocol: Web Protocols,Collection
+hdsi_ai_dlp_violation_on_service_upload,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_browser_extension_activity,T1176,Browser Extensions,Persistence
+hdsi_ai_access_via_vpn_proxy_evasion,T1090.003,Proxy: Multi-hop Proxy,Command and Control
+hdsi_ai_access_from_unmanaged_device,T1078.004,Valid Accounts: Cloud Accounts,Initial Access
+hdsi_ai_browser_extension_high_volume_data_transmission,T1176,Browser Extensions,Persistence
+hdsi_ai_copy_paste_correlation_to_ai_service,T1115,Clipboard Data,Collection
+hdsi_ai_usage_from_personal_account_oauth_mismatch,T1078.004,Valid Accounts: Cloud Accounts,Initial Access
+hdsi_ai_personal_email_to_ai_service_upload_correlation,T1048.002,Exfiltration Over Alternative Protocol: Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,Exfiltration
+hdsi_ai_unsanctioned_web_access,T1071.001,Application Layer Protocol: Web Protocols,Collection
+hdsi_ai_unknown_high_volume_external_api_discovery,T1046,Network Service Discovery,Discovery
+hdsi_ai_prompt_injection_indicators_in_web_uploads,T1190,Exploit Public-Facing Application,Initial Access
+hdsi_ai_generated_phishing_indicators,T1566.001,Phishing: Spearphishing Attachment,Initial Access
+hdsi_ai_suspicious_model_file_exfiltration,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_api_key_exposure_in_code_dlp,T1552.001,Unsecured Credentials: Credentials In Files,Credential Access
+hdsi_ai_deepfake_tool_execution_access,T1588.005,Obtain Capabilities: Exploits,Resource Development
+hdsi_ai_assisted_lateral_movement,T1021,Remote Services,Lateral Movement
+hdsi_ai_compromised_plugin_extension_installation,T1195.002,Supply Chain Compromise: Compromise Software Supply Chain,Initial Access
+hdsi_ai_agent_framework_execution,T1059,Command and Scripting Interpreter,Execution
+hdsi_ai_user_peer_group_usage_anomaly,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_time_of_day_usage_pattern_anomaly,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_new_provider_adoption_velocity,T1071.001,Application Layer Protocol: Web Protocols,Collection
+hdsi_ai_usage_following_data_access_spike,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_gradual_data_exfiltration_via_ai,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_sanctioned_dlp_violation,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,Exfiltration
+hdsi_ai_agent_autonomous_action_detection,T1059,Command and Scripting Interpreter,Execution
+hdsi_ai_voice_cloning_api_access,T1588.005,Obtain Capabilities: Exploits,Resource Development
+hdsi_ai_mcp_server_execution,T1059,Command and Scripting Interpreter,Execution

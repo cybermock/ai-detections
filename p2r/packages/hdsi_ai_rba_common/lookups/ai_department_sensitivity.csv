@@ -1,0 +1,12 @@
+department,sensitivity_level,risk_multiplier,notes
+executive,critical,2.5,C-suite and executive leadership
+finance,critical,2.0,Financial data and reporting
+legal,critical,2.0,Legal counsel and compliance
+hr,high,1.8,Human resources and employee data
+security,high,1.8,Information security team
+engineering,medium,1.2,Software engineering and development
+it,medium,1.2,IT operations and infrastructure
+sales,medium,1.2,Sales and business development
+marketing,low,1.0,Marketing and communications
+support,low,1.0,Customer support
+general,low,1.0,Default department classification

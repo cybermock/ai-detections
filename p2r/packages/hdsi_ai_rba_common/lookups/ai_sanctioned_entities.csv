@@ -1,0 +1,6 @@
+entity_type,entity,provider,scope,expires,owner,reason,enabled,allow_key
+user,alice@corp.example,*,global,2099-12-31,security,approved_ai_research,1,alice@corp.example|*
+user,bob@corp.example,OpenAI,provider,2099-12-31,security,approved_openai_workflow,1,bob@corp.example|openai
+system,10.20.30.40,*,subnet,2099-12-31,soc,approved_dev_jumpbox,1,10.20.30.40|*
+group,engineering,Google Gemini,group,2099-12-31,security,approved_gemini_usage,1,engineering|google gemini
+
