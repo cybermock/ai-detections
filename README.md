@@ -1,21 +1,111 @@
-# Splunk ES AI RBA Detection Pack
+# HDSI AI RBA Detection Pack for Splunk ES
 
-50 Splunk Enterprise Security detections for unsanctioned AI usage with Risk-Based Alerting (RBA). Covers shadow AI browsing, desktop apps, CLI tools, API access, local LLMs, data uploads, behavioral anomalies, DLP correlation, adversarial AI threats, agentic AI risks, and UEBA baselines.
+50 correlation searches detecting unsanctioned and adversarial AI usage across shadow AI browsing, desktop apps, CLI tools, API access, local LLMs, data uploads, agentic AI, MCP servers, and behavioral anomalies. Every detection writes dual risk events (user + system risk objects) and uses RBA signal stacking — no single low-signal detection fires a notable on its own. Risk threshold searches aggregate signals so only genuinely concerning patterns surface as notables. Validated: 50/50 SPL parse, 50/50 P2R conformance (10-check audit).
 
-All detections validated against live Splunk ES environments — zero SPL parse errors.
+## Quick start
+
+1. **Deploy `hdsi_ai_rba_common` first** — contains 7 shared macros required by all detection packages.
+2. **Deploy detection packages** — `hdsi_ai_*` and `hdsi_rba_ai_*` packages from `p2r/packages/`.
+3. **Install lookups** — copy all 9 CSVs from `lookups/` into the same app context (e.g., `HurricaneLabsContentUpdates`).
+4. **Validate CIM mappings** — confirm your proxy, DNS, endpoint, network, DLP, and email sources map correctly to the required data models.
+5. **Configure allowlists and thresholds:**
+   - `lookups/ai_sanctioned_entities.csv` — sanctioned users, systems, and groups.
+   - `lookups/ai_detection_config.csv` — tunable thresholds (upload tiers, risk thresholds, z-scores, time windows).
+   - `lookups/ai_department_sensitivity.csv` — department-level risk multipliers.
+
+### Optional data source setup
+
+- **Identity-aware detections** (AI-016, AI-026, AI-040): Requires `identity_lookup_expanded` with `bunit` field in ES.
+- **DLP detections** (AI-020, AI-025, AI-030, AI-038): Requires `Data_Loss_Prevention` data model populated.
+- **Email detection** (AI-031): Requires `Email` data model with `action="send"` events.
+- **Filesystem detection** (AI-043): Requires `Endpoint.Filesystem` data model with file access events.
 
 ## Repository structure
 
 ```
-default/                    # Monolithic Splunk app (savedsearches, macros, transforms, views)
-p2r/packages/               # P2R package format — one package per detection
-  hdsi_ai_rba_common/       #   Shared macros
-  hdsi_ai_<name>/           #   Detection package (savedsearches.conf, macros.conf, package.yml)
-  hdsi_rba_ai_<name>/       #   RBA correlation package
-lookups/                    # CSV lookup files (provider domains, tool processes, allowlists, config)
-docs/                       # Architecture, tuning guide, runbooks, reviews
-tests/                      # SPL syntax tests, CSV schema validation, metadata checks
+default/                           # Monolithic Splunk app
+  savedsearches.conf               #   All 50 searches (single file)
+  macros.conf                      #   All macros
+  transforms.conf                  #   Lookup definitions
+  data/ui/views/                   #   4 dashboards
+p2r/                               # Modular P2R format
+  packages/
+    hdsi_ai_rba_common/            #   Shared macros (prerequisite)
+    hdsi_ai_<name>/                #   Detection package
+    hdsi_rba_ai_<name>/            #   RBA correlation package
+  tools/                           #   Conformance audit, SPL validation, fix scripts
+  reports/                         #   Audit results (JSON + Markdown)
+lookups/                           # 9 CSV lookup files
+docs/                              # Architecture, tuning, runbooks, reviews
+tests/                             # 6 test modules (pytest)
 ```
+
+## P2R package format
+
+P2R (Package-to-Release) structures each detection as an independently deployable, versioned package. Each package contains:
+
+```
+hdsi_ai_<name>/
+  package.yml               # Metadata: version, author, description, dependencies, data prereqs
+  confs/savedsearches.conf   # The correlation search
+  confs/macros.conf          # Per-package extension macros
+  README.md                  # Package-specific documentation
+```
+
+### Per-package extension macros
+
+Every detection package ships two local macros:
+
+- **`hdsi_ai_<name>_filter`** — empty `()` placeholder. Add `WHERE` clauses to exclude specific users, hosts, or patterns without modifying the search itself.
+- **`hdsi_ai_<name>_customizations`** — passthrough `search *`. Append post-processing logic (field overrides, enrichments) without touching the base SPL.
+
+### Common prerequisite
+
+`hdsi_ai_rba_common` must be deployed first. All detection packages declare it in `prereq_packages` and reference its shared macros via `common_dependencies` in `package.yml`.
+
+### Conformance audit
+
+`p2r/tools/audit_savedsearch_conformance.sh` validates all 50 packages against 10 checks:
+
+| Check | Validates |
+|---|---|
+| `action.notable = 1` | Notable event creation enabled |
+| `action.risk = 1` | Risk event creation enabled |
+| Notable description present | `rule_description` populated |
+| Risk message present | `_risk_message` populated |
+| Risk object present | `_risk` JSON array defined |
+| Drilldown searches present | Drilldown searches configured |
+| Drilldown dashboards present | Empty dashboards array set |
+| Drilldown key schema | Uses `earliest_offset`/`latest_offset` (not legacy `earliest`/`latest`) |
+| Enabled by default | `disabled = 0` |
+| Risk object type schema | `risk_object_type` restricted to `user` or `system` |
+
+Current result: **50/50 fully conformant**.
+
+### Convention compliance fixes
+
+`p2r/tools/apply_audit_fixes.py` enforces packaging conventions across all packages:
+
+- Cron offset staggering (anti-thundering-herd across `*/5` and `*/15` schedules)
+- Risk score normalization (string → integer in `_risk` JSON)
+- Multi-line SPL reformatting (pipe-delimited line breaks with `\` continuation)
+- Suppress period conversion (human-readable → seconds)
+- Dynamic field tokens in `rule_title` (e.g., `($user$)`)
+- `common_dependencies` injection based on macro usage detection
+
+## Shared macros
+
+7 macros defined in `hdsi_ai_rba_common`:
+
+| Macro | Args | Purpose |
+|---|---|---|
+| `ai_domains_filter` | — | Normalizes domain fields, joins `ai_provider_domains` lookup, resolves cloud AI endpoints (Bedrock, Vertex, Azure OpenAI), filters `enabled=1` |
+| `ai_unsanctioned_filter(3)` | `user_field`, `system_field`, `provider_field` | Multi-tier allowlist check against `ai_sanctioned_entities.csv` — matches by user, system, and group with provider-specific and wildcard scopes; enforces `enabled` and `expires` |
+| `ai_process_filter` | — | Joins `ai_tool_processes` lookup by lowercase process name, filters `enabled=1` |
+| `ai_risk_multiplier` | — | Enriches with department sensitivity from `ai_department_sensitivity.csv`, applies 1.5x multiplier for privileged/critical accounts via `identity_lookup_expanded` |
+| `ai_risk_defaults(1)` | `control_name` | Returns threshold value from `ai_detection_config.csv` for the given control name |
+| `ai_prompt_injection_patterns_enabled` | — | Returns enabled prompt injection regex patterns from `ai_prompt_injection_patterns.csv` |
+| `ai_api_key_patterns_enabled` | — | Returns enabled API key regex patterns from `ai_api_key_patterns.csv` |
 
 ## Detection inventory
 
@@ -114,48 +204,37 @@ Risk column shows `user_score+system_score` for dual-risk detections.
 | AI-002 | AI-028 | Claude web access merged into consolidated detection |
 | AI-003 | AI-028 | Gemini web access merged into consolidated detection |
 
-## Data model requirements
+## Risk scoring model
 
-| Data Model | Required By |
-|---|---|
-| `Web` | Most web-based detections |
-| `Endpoint.Processes` | AI-004, AI-005, AI-008, AI-011, AI-034–AI-039, AI-046 |
-| `Network_Traffic` | AI-014, AI-019 |
-| `Network_Resolution` | AI-012 |
-| `Data_Loss_Prevention` | AI-020, AI-025, AI-030, AI-038 |
-| `Endpoint.Filesystem` | AI-043 |
-| `Email` | AI-031 |
-| `risk` index | AI-RISK-001 through AI-RISK-005 |
-| `identity_lookup_expanded` | AI-016, AI-026, AI-040 |
-| `asset_lookup_by_str` | AI-006, AI-022, AI-023, AI-032 |
+### Dual-risk pattern
 
-## Setup
+Every detection emits two risk events via the `_risk` JSON array: one for the **user** risk object and one for the **system** (host/src) risk object. This ensures risk accumulates on both the person and the machine, enabling correlation from either pivot.
 
-1. Install in a Splunk app context used by Splunk ES.
-2. Confirm lookups are accessible in the same app context.
-3. Validate CIM mappings for your proxy, DNS, endpoint, network, DLP, and email sources.
-4. Update `lookups/ai_sanctioned_entities.csv` with sanctioned users/systems.
-5. Review `lookups/ai_detection_config.csv` and adjust thresholds for your environment.
-6. Update `lookups/ai_department_sensitivity.csv` with department sensitivity levels.
-7. Set `alert_email_to` in `lookups/ai_detection_config.csv` to route health alerts to your SOC.
+### Dynamic scoring
 
-### Optional data source setup
+Some detections use variable risk scores based on severity tiers. AI-007 (high volume upload) scores 20/40/60/80 based on upload size thresholds (1/5/10/50 MB). Detections enriched via `ai_domains_filter` inherit `severity_weight` from the provider lookup, allowing higher-risk providers to score proportionally higher.
 
-- **Identity-aware detections** (AI-016, AI-026, AI-040): Requires `identity_lookup_expanded` with `bunit` field in ES.
-- **DLP detections** (AI-020, AI-025, AI-030, AI-038): Requires `Data_Loss_Prevention` data model populated.
-- **Email detection** (AI-031): Requires `Email` data model with `action="send"` events.
-- **Filesystem detection** (AI-043): Requires `Endpoint.Filesystem` data model with file access events.
+### Risk multipliers
 
-## Allowlist model
+The `ai_risk_multiplier` macro applies two multipliers to the base risk score:
 
-`ai_sanctioned_entities.csv` supports provider-specific and provider-agnostic entries:
+- **Department sensitivity** — looked up from `ai_department_sensitivity.csv` (e.g., finance, legal, executive may carry higher multipliers).
+- **Privileged account** — 1.5x multiplier for accounts where `category=privileged` or `priority=critical` in `identity_lookup_expanded`.
 
-```
-allow_key = "<entity>|<provider>"    # provider-specific exception
-allow_key = "<entity>|*"             # all AI providers
-```
+These multiply together: a privileged user in a sensitive department gets `department_multiplier * 1.5`.
 
-The `ai_unsanctioned_filter` macro enforces `enabled` and `expires` fields. Group-based allowlisting is supported via `user_group`, `user_category`, `category`, or `bunit` fields.
+### Threshold-based notables
+
+Risk threshold searches aggregate all AI risk events per user over a rolling 24-hour window:
+
+- **AI-RISK-001**: Notable at **60 points** (medium).
+- **AI-RISK-002**: Notable at **90 points** (critical).
+
+Both thresholds are configurable via `ai_detection_config.csv`.
+
+### Kill chain correlation
+
+AI-RISK-003 correlates data collection activity (file access spikes) with subsequent AI service uploads within a configurable window (default: 4 hours), detecting the staging-to-exfiltration pattern.
 
 ## Detection overlap & stacking
 
@@ -170,9 +249,60 @@ Multiple detections are expected to fire for the same activity. This is by desig
 
 No single low-scoring detection generates a notable. Risk threshold searches (AI-RISK-001/002) aggregate signals so only genuinely concerning patterns surface.
 
+## Scheduling & performance
+
+### Cron schedules
+
+Detections run on `*/5` or `*/15` minute intervals with **staggered offsets** to prevent thundering-herd load spikes. Offsets are distributed by `apply_audit_fixes.py` (e.g., `0-59/5`, `1-59/5`, `2-59/5` for `*/5` searches; `0-59/15`, `3-59/15`, `6-59/15` for `*/15` searches).
+
+### Dispatch windows
+
+- `*/5` searches: `dispatch.earliest_time = -5m@m`
+- `*/15` searches: `dispatch.earliest_time = -15m@m`
+
+### Suppression periods
+
+| Period | Applies To |
+|---|---|
+| 3600s (1h) | Most detection searches |
+| 14400s (4h) | RBA correlation rules |
+| 86400s (24h) | UEBA behavioral baselines |
+| 604800s (7d) | Health checks |
+
+### Scheduling flags
+
+All searches set `allow_skew = 5m` and `realtime_schedule = 0` to reduce search head contention.
+
+## Lookups
+
+| File | Purpose | Entries |
+|---|---|---|
+| `ai_provider_domains.csv` | Provider/domain catalog | 112 domains |
+| `ai_tool_processes.csv` | CLI, desktop, local LLM process catalog | 88 processes |
+| `ai_sanctioned_entities.csv` | User/system allowlist with expiration | configurable |
+| `ai_detection_config.csv` | Tunable thresholds | 26 controls |
+| `ai_mitre_mapping.csv` | MITRE ATT&CK mapping per detection ID | 42 mappings |
+| `ai_department_sensitivity.csv` | Department risk multipliers | 11 departments |
+| `ai_prompt_injection_patterns.csv` | Prompt injection pattern library | 25 patterns |
+| `ai_deepfake_tools.csv` | Deepfake/synthetic media tools | 30 tools |
+| `ai_api_key_patterns.csv` | API key regex patterns | 20 patterns |
+
+## Allowlist model
+
+`ai_sanctioned_entities.csv` supports provider-specific and provider-agnostic entries:
+
+```
+allow_key = "<entity>|<provider>"    # provider-specific exception
+allow_key = "<entity>|*"             # all AI providers
+```
+
+CSV schema: `entity_type`, `entity`, `provider`, `scope`, `expires`, `owner`, `reason`, `enabled`, `allow_key`
+
+The `ai_unsanctioned_filter` macro enforces `enabled` and `expires` fields. Group-based allowlisting is supported via `user_group`, `user_category`, `category`, or `bunit` fields.
+
 ## Tuning
 
-All thresholds are configurable via `lookups/ai_detection_config.csv`:
+All thresholds are configurable via `lookups/ai_detection_config.csv`. See [`docs/TUNING_GUIDE.md`](docs/TUNING_GUIDE.md) for detailed guidance.
 
 | Control | Default | Detection |
 |---|---|---|
@@ -192,6 +322,21 @@ All thresholds are configurable via `lookups/ai_detection_config.csv`:
 | Data access spike | 100 files | AI-043 |
 | Kill chain window | 4 hours | AI-RISK-003 |
 | Multi-vector categories | 3 categories | AI-RISK-005 |
+
+## Data model requirements
+
+| Data Model | Required By |
+|---|---|
+| `Web` | Most web-based detections |
+| `Endpoint.Processes` | AI-004, AI-005, AI-008, AI-011, AI-034–AI-039, AI-046 |
+| `Network_Traffic` | AI-014, AI-019 |
+| `Network_Resolution` | AI-012 |
+| `Data_Loss_Prevention` | AI-020, AI-025, AI-030, AI-038 |
+| `Endpoint.Filesystem` | AI-043 |
+| `Email` | AI-031 |
+| `risk` index | AI-RISK-001 through AI-RISK-005 |
+| `identity_lookup_expanded` | AI-016, AI-026, AI-040 |
+| `asset_lookup_by_str` | AI-006, AI-022, AI-023, AI-032 |
 
 ## MITRE ATT&CK coverage
 
@@ -217,7 +362,7 @@ All thresholds are configurable via `lookups/ai_detection_config.csv`:
 
 ## Kill chain phases
 
-Every detection includes an `ai_kill_chain_phase` field:
+Every detection includes an `ai_kill_chain_phase` field. AI-RISK-003 specifically correlates across phases, detecting the collection → exfiltration transition.
 
 | Phase | Detections |
 |---|---|
@@ -228,16 +373,35 @@ Every detection includes an `ai_kill_chain_phase` field:
 | exfiltration | AI-007, AI-015, AI-017, AI-018, AI-020, AI-024, AI-027, AI-032, AI-038, AI-040, AI-041, AI-044 |
 | persistence | AI-014, AI-021, AI-036 |
 
-## Lookups
+## Dashboards
 
-| File | Purpose | Entries |
-|---|---|---|
-| `ai_provider_domains.csv` | Provider/domain catalog | 52+ domains |
-| `ai_tool_processes.csv` | CLI, desktop, local LLM process catalog | 80+ processes |
-| `ai_sanctioned_entities.csv` | User/system allowlist with expiration | configurable |
-| `ai_detection_config.csv` | Tunable thresholds | 25 controls |
-| `ai_mitre_mapping.csv` | MITRE ATT&CK mapping per detection ID | all IDs |
-| `ai_department_sensitivity.csv` | Department risk multipliers | configurable |
-| `ai_prompt_injection_patterns.csv` | Prompt injection pattern library | AI-030 |
-| `ai_deepfake_tools.csv` | Deepfake/synthetic media tools | AI-034 |
-| `ai_api_key_patterns.csv` | API key regex patterns | AI-033 |
+| Dashboard | Purpose |
+|---|---|
+| `ai_rba_analytics` | Detection hit rates, risk score trends, top users/providers, stacking analysis |
+| `ai_rba_fp_tracker` | False positive tracking and tuning feedback loop |
+| `ai_rba_health` | Search execution health, skipped/failed searches, data model availability |
+| `ai_rba_lookup_health` | Lookup staleness, row counts, last-modified timestamps |
+
+## Tests
+
+6 pytest modules in `tests/`:
+
+| Module | Purpose |
+|---|---|
+| `test_spl_syntax.py` | SPL parse validation for all savedsearches.conf |
+| `test_csv_schema.py` | CSV lookup schemas, value constraints, uniqueness rules |
+| `test_detection_metadata.py` | Required fields, naming conventions, risk/notable config |
+| `test_mitre_coverage.py` | MITRE ATT&CK coverage and cross-references |
+| `test_runbook_coverage.py` | Runbook existence for every detection |
+| `test_sample_events.py` | Sample event matching against detection logic |
+
+## Additional documentation
+
+| Document | Description |
+|---|---|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | System design, data flow, macro architecture |
+| [`docs/TUNING_GUIDE.md`](docs/TUNING_GUIDE.md) | Threshold tuning, FP reduction, environment-specific guidance |
+| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | Adding new detections, P2R packaging, review process |
+| [`docs/DETECTION_TEMPLATE.md`](docs/DETECTION_TEMPLATE.md) | Template for new detection development |
+| [`docs/runbooks/`](docs/runbooks/) | 49 investigation runbooks (one per detection/correlation) |
+| [`docs/reviews/`](docs/reviews/) | Architecture and code reviews |
