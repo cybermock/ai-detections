@@ -1,5 +1,7 @@
 # HDSI AI RBA Detection Pack for Splunk ES
 
+**Author:** Trevor Mock, Hurricane Labs LLC
+
 **50 correlation searches that detect unsanctioned and adversarial AI usage — then stack risk signals so only genuinely concerning patterns surface as notables.** Shadow AI browsing, desktop apps, CLI tools, API access, local LLMs, data uploads, agentic AI, MCP servers, behavioral anomalies. Every detection writes dual risk events (user + system) and no single low-signal detection fires a notable on its own.
 
 ![Detections](https://img.shields.io/badge/detections-50-blue)
@@ -70,7 +72,7 @@ flowchart LR
 **Steps:**
 
 1. **Deploy `hdsi_ai_rba_common`** — contains 7 shared macros and lookup definitions required by all detection packages.
-2. **Deploy detection packages** — `hdsi_ai_*` and `hdsi_rba_ai_*` packages from `p2r/packages/`.
+2. **Deploy detection packages** — `hdsi_ai_*` and `hdsi_rba_ai_*` packages from `saved_searches/packages/`.
 3. **Install lookups** — copy all 9 CSVs from `lookups/` into the same app context (e.g., `HurricaneLabsContentUpdates`).
 4. **Validate CIM mappings** — confirm your proxy, DNS, endpoint, network, DLP, and email sources map correctly to the required data models.
 5. **Configure allowlists and thresholds:**

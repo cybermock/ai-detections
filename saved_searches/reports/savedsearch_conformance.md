@@ -1,7 +1,7 @@
-# P2R Saved Search Conformance Report
+# Saved Search Conformance Report
 
 - Generated: 2026-03-05 02:55:09Z
-- Scope: `/Users/tmock/Projects/splunk-es-ai-rba/p2r/packages`
+- Scope: `saved_searches/packages`
 - Total searches audited: 50
 - Fully conformant searches: 50
 

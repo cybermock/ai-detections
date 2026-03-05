@@ -14,7 +14,7 @@ P2R (Package-to-Release) structures each detection as an independently deployabl
 ## Package Structure
 
 ```
-p2r/packages/
+saved_searches/packages/
   hdsi_ai_rba_common/           # DEPLOY FIRST -- shared macros, lookups, transforms
     confs/macros.conf            #   7 shared macros
     confs/transforms.conf        #   Lookup definitions
@@ -78,7 +78,7 @@ All 50 searches pass a 10-check conformance audit:
 | Enabled by default (`disabled=0`) | 50/50 |
 | Risk object type (`user` or `system`) | 50/50 |
 
-Run the audit yourself: `p2r/tools/audit_savedsearch_conformance.sh`
+Run the audit yourself: `saved_searches/tools/audit_savedsearch_conformance.sh`
 
 ## Related Documentation
 
