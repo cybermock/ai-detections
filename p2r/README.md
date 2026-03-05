@@ -1,5 +1,7 @@
 # P2R Packages
 
+**Author:** Trevor Mock, Hurricane Labs LLC
+
 P2R (Package-to-Release) structures each detection as an independently deployable, versioned package. This format enables selective deployment, per-package version control, and granular dependency tracking.
 
 ## Why Modular Packaging Matters
