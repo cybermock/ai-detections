@@ -1,16 +1,16 @@
 version: 1.0.0
-package_title: HDSI AI Health Lookup Staleness Alert
 creation_date: '2026-03-04'
-author: Hurricane Labs
+package_title: HDSI AI Health Lookup Staleness Alert
 description: Weekly check for AI RBA lookup files that have not been updated in 90+ days. Sends email alert for stale lookups requiring maintenance.
-enable_alerting: false
-app_context: HurricaneLabsContentUpdates
-tags:
-  - audit
+author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
-    operator: ">="
-    required_version: "8.0.0"
+    operator: '*'
+    required_version: '*'
+app_context: HurricaneLabsContentUpdates
+enable_alerting: false
+tags:
+  - audit
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common

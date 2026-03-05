@@ -1,10 +1,14 @@
 version: 1.0.0
-package_title: HDSI AI High Volume Upload To AI Service
 creation_date: '2026-03-04'
-author: Hurricane Labs
+package_title: HDSI AI High Volume Upload To AI Service
 description: "Detect high data upload volume to AI providers with tiered risk scoring: 1MB (low), 5MB (medium), 10MB (high), 50MB (critical). MITRE: T1567.002"
-enable_alerting: false
+author: Hurricane Labs
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: '*'
+    required_version: '*'
 app_context: HurricaneLabsContentUpdates
+enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
   - macros:ai_risk_multiplier
@@ -14,10 +18,6 @@ tags:
   - web
   - proxy
   - data_exfiltration
-app_compatibility:
-  - app_name: SplunkEnterpriseSecuritySuite
-    operator: ">="
-    required_version: "8.0.0"
 data_prereqs:
   datamodels:
     op: AND

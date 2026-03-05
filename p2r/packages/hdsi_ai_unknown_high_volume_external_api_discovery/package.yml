@@ -1,18 +1,18 @@
 version: 1.0.0
-package_title: HDSI AI Unknown High-Volume External API Discovery
 creation_date: '2026-03-04'
-author: Hurricane Labs
+package_title: HDSI AI Unknown High-Volume External API Discovery
 description: Discovery search to identify unknown high-volume external API endpoints that may be undocumented AI services. Not a detection - used for threat intelligence enrichment.
-enable_alerting: false
+author: Hurricane Labs
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: '*'
+    required_version: '*'
 app_context: HurricaneLabsContentUpdates
+enable_alerting: false
 tags:
   - rba_only
   - web
   - proxy
-app_compatibility:
-  - app_name: SplunkEnterpriseSecuritySuite
-    operator: ">="
-    required_version: "8.0.0"
 data_prereqs:
   datamodels:
     op: AND
