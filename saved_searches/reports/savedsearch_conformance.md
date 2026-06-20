@@ -1,8 +1,7 @@
-# Saved Search Conformance Report
-**Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
+# P2R Saved Search Conformance Report
 
-- Generated: 2026-03-05 02:55:09Z
-- Scope: `saved_searches/packages`
+- Generated: 2026-06-19 16:26:05Z
+- Scope: `/Users/tmock/Projects/splunk-es-ai-rba/saved_searches/packages`
 - Total searches audited: 50
 - Fully conformant searches: 50
 

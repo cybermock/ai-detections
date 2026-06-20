@@ -96,23 +96,23 @@ Risk column shows `user_score+system_score` for dual-risk detections.
 | ID | Detection | Risk | MITRE | Data Source |
 |---|---|---|---|---|
 | AI-004 | Unsanctioned AI CLI execution | 25+15 | T1059.001 | Endpoint |
-| AI-005 | Unsanctioned AI desktop app execution | 20+12 | T1204.002 | Endpoint |
-| AI-006 | AI API access from non-dev endpoint | 24+14 | T1071.001 | Web |
+| AI-005 | Unsanctioned AI desktop app execution | 20+10 | T1204.002 | Endpoint |
+| AI-006 | AI API access from non-dev endpoint | 25+15 | T1071.001 | Web |
 | AI-007 | High volume upload to AI service (tiered) | 20-80+20 | T1567.002 | Web |
-| AI-008 | Scripted AI CLI invocation | 32+18 | T1059.004 | Endpoint |
-| AI-009 | First-seen AI provider for user | 15+8 | T1071.001 | Web |
-| AI-010 | Repeated unsanctioned AI access burst | 18+10 | T1071.001 | Web |
+| AI-008 | Scripted AI CLI invocation | 30+20 | T1059.004 | Endpoint |
+| AI-009 | First-seen AI provider for user | 15+10 | T1071.001 | Web |
+| AI-010 | Repeated unsanctioned AI access burst | 20+10 | T1071.001 | Web |
 | AI-011 | Local LLM framework execution | 20+15 | T1204.002 | Endpoint |
-| AI-012 | DNS queries to AI domains | 12 | T1071.004 | DNS |
-| AI-013 | LLM model file download | 30+18 | T1105 | Web |
+| AI-012 | DNS queries to AI domains | 10 | T1071.004 | DNS |
+| AI-013 | LLM model file download | 30+20 | T1105 | Web |
 | AI-014 | Local LLM listening port detected | 30 | T1571 | Network |
-| AI-015 | After-hours AI service usage | 15+8 | T1567.002 | Web |
+| AI-015 | After-hours AI service usage | 15+10 | T1567.002 | Web |
 | AI-016 | Privileged account AI service usage | 40+20 | T1078.004 | Web + Identity |
 | AI-017 | AI usage volume anomaly (z-score) | 35 | T1567.002 | Web |
-| AI-018 | Multiple AI services in single session | 15+8 | T1567.002 | Web |
+| AI-018 | Multiple AI services in single session | 15+10 | T1567.002 | Web |
 | AI-019 | Code assistant network connection | 15 | T1071.001 | Network |
 | AI-020 | DLP violation on AI service upload | 60+30 | T1567.002 | DLP |
-| AI-021 | AI browser extension activity | 12+8 | T1176 | Web |
+| AI-021 | AI browser extension activity | 10+10 | T1176 | Web |
 
 ### Shadow AI & Policy Bypass (AI-022 to AI-028)
 
@@ -121,8 +121,8 @@ Risk column shows `user_score+system_score` for dual-risk detections.
 | AI-022 | AI access via VPN/proxy evasion | 35+20 | T1090.003 | Web |
 | AI-023 | AI access from unmanaged device | 30+25 | T1078.004 | Web + Asset |
 | AI-024 | Browser extension high-volume data transmission | 30+15 | T1176 | Web |
-| AI-025 | Copy-paste correlation to AI service | 25+12 | T1115 | DLP + Web |
-| AI-026 | AI usage from personal account / OAuth mismatch | 28+12 | T1078.004 | Web + Identity |
+| AI-025 | Copy-paste correlation to AI service | 25+10 | T1115 | DLP + Web |
+| AI-026 | AI usage from personal account / OAuth mismatch | 30+10 | T1078.004 | Web + Identity |
 | AI-027 | Personal email to AI service upload correlation | 30+15 | T1048.002 | Web |
 | AI-028 | Unsanctioned AI web access (consolidated) | 15+10 | T1071.001 | Web |
 
