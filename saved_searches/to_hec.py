@@ -20,10 +20,9 @@ from loguru import logger
 from httpx import AsyncHTTPTransport
 
 # Configuration
-API_ENDPOINT = "https://exthec.splunkcloud.io/services/collector/event"
-SPLUNK_HEC_TOKEN = os.environ[
-    "SPLUNK_HEC_TOKEN"
-]  # In production, load from environment variable
+API_ENDPOINT = os.environ["SPLUNK_HEC_URL"]  # e.g. https://<hec-host>/services/collector/event
+SPLUNK_HEC_TOKEN = os.environ["SPLUNK_HEC_TOKEN"]
+HEC_EVENT_HOST = os.environ["HEC_EVENT_HOST"]  # value for the event's host field
 HEADERS = {"Authorization": f"Splunk {SPLUNK_HEC_TOKEN}"}
 
 
@@ -73,7 +72,7 @@ async def process_package(
 
     payload = {
         "time": int(time.time()),
-        "host": "code.hurricanelabs.net",
+        "host": HEC_EVENT_HOST,
         "source": "es_correlation_searches",
         "sourcetype": "hlcp:repo:hec",
         "event": data,
