@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI Time-of-Day Usage Pattern Anomaly
-description: "Detect users whose AI usage time-of-day pattern deviates significantly from their historical pattern using per-user hourly histogram analysis. MITRE: T1567.002"
+package_title: AI Time-of-Day Usage Pattern Anomaly
+description: "Daily. Detects identified users who made sustained interactive AI web use (default 20+ requests in one hour) at an hour of the day that is new for them, measured against their own 14-day hourly histogram (active within an hour of that time on at most 1 of 5+ AI-active baseline days, z-score 3+ on the zero-filled baseline). Needs egress proxy or SSE Web data with a user field. Contextual risk on the user only, no notable."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,7 +11,8 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
-  - macros:ai_unsanctioned_filter
+  - macros:ai_unsanctioned_filter(3)
+  - macros:ai_risk_multiplier
 tags:
   - rba_only
   - web

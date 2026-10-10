@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI API Key Exposure In Code/DLP
-description: "Detect AI provider API keys exposed in code repositories, DLP alerts, or log entries using regex patterns. MITRE: T1552.001"
+package_title: AI API Key Exposure In Code/DLP
+description: "Detects AI provider API keys written in clear text to endpoint command lines (CIM Endpoint.Processes) or to code-repository, DLP and secret-scanner logs. Prefix formats come from the shared ai_api_key_patterns lookup (OpenAI incl. service-account/admin, Anthropic, Gemini with context, Groq, Hugging Face, Replicate, Fireworks, xAI, OpenRouter, Perplexity). Prefix-less keys (Mistral, Azure OpenAI, Cohere, Together, DeepSeek) are detected only next to their API-key label or provider name, using contextual lookup patterns plus package patterns AKX-002..006. Emits risk on the user and host (or repository) only, no notable; the key is never copied into the risk event, only a provider plus last-4 hint and a count of distinct key hashes."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,9 +11,21 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 common_dependencies:
   - macros:ai_api_key_patterns_enabled
-  - macros:ai_unsanctioned_filter
+  - macros:ai_risk_multiplier
 tags:
   - rba_only
+  - endpoint
+  - process
+  - credential_access
+data_prereqs:
+  datamodels:
+    op: AND
+    items:
+    - Endpoint.Processes
+  searches:
+    op: AND
+    items:
+    - '| tstats summariesonly=true allow_old_summaries=true count from datamodel=Endpoint.Processes where Processes.process!=unknown Processes.process!="" Processes.dest!=unknown Processes.dest!="" | where count > 0'
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common

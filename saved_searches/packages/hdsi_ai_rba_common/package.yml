@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
 package_title: HDSI AI RBA Common Macros and Lookups
-description: "Shared macros and lookup definitions used by all AI RBA detection packages. Must be deployed before any AI detection packages."
+description: "Shared macros and lookups for every HDSI AI RBA package: AI provider resolution for domains, DNS answers and SSE/CASB app names (ai_domains_filter), sanctioned-use allowlist (user, system, identity-group and organisation-wide keys), AI process inventory, identity risk multiplier, detection thresholds and pattern libraries. Contains no saved searches. Deploy before any AI detection package."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite

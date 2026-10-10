@@ -1,0 +1,106 @@
+app_name,provider,usage_type,severity_weight,enabled,source_product,notes,last_verified,confidence
+microsoft 365 copilot,Microsoft 365 Copilot,web,0.5,0,netskope,OPT_IN_M365_COPILOT (ships enabled=0): Enterprise M365 Copilot - generic M365 web home after MC1462915,2026-10-09,high
+microsoft copilot studio,Microsoft 365 Copilot,web,0.6,0,netskope,OPT_IN_M365_COPILOT (ships enabled=0): Netskope labels M365-embedded Copilot traffic with this app; seen as a daily ~55-67 MB near-zero-response connection for most users in one tenant. Copilot Studio use is still visible via copilotstudio.microsoft.com and the PAN App-ID ms-copilot-studio,2026-10-09,high
+github copilot,GitHub Copilot,ide,1.0,1,netskope,IDE code assistant,2026-10-09,high
+anthropic,Anthropic,web,1.0,1,netskope,Claude / Anthropic,2026-10-09,high
+google bard,Google Gemini,web,1.0,1,netskope,Netskope app name for Gemini,2026-10-09,high
+amazon q,Amazon Q,web,0.8,1,netskope,AWS generative AI assistant,2026-10-09,high
+casetext,Casetext,web,0.8,1,netskope,Legal AI (CoCounsel),2026-10-09,high
+lovable,Lovable,web,0.8,1,netskope,AI app builder,2026-10-09,high
+wellsaid labs,WellSaid Labs,web,0.8,1,netskope,Voice synthesis,2026-10-09,high
+adobe firefly,Adobe Firefly,web,0.6,1,netskope,Generative image (Adobe),2026-10-09,high
+adobe spark,Adobe Express,web,0.3,0,netskope,Disabled: Adobe Express/Spark is a general design tool that Netskope tags Generative AI,2026-10-09,high
+adobe sensei,Adobe Sensei,web,0.3,0,netskope,Disabled: AI features embedded in ordinary Adobe use,2026-10-09,high
+grammarly,Grammarly,web,0.4,0,netskope,Disabled: ordinary Grammarly use is not AI usage (same decision as ai_provider_domains),2026-10-09,high
+chatgpt,OpenAI,web,1.0,1,netskope;zscaler;umbrella,ChatGPT,2026-10-09,medium
+openai,OpenAI,web,1.0,1,netskope;umbrella,OpenAI,2026-10-09,medium
+claude,Anthropic,web,1.0,1,paloalto;netskope;zscaler;umbrella,Claude (also the PAN App-ID),2026-10-09,high
+google gemini,Google Gemini,web,1.0,1,netskope;zscaler;umbrella,"Gemini (bare ""gemini"" deliberately not listed: collides with the Gemini crypto exchange)",2026-10-09,medium
+microsoft copilot,Microsoft Copilot,web,0.7,1,netskope;zscaler;umbrella,Consumer/web Copilot,2026-10-09,medium
+perplexity ai,Perplexity,web,0.8,1,netskope;zscaler,Perplexity,2026-10-09,medium
+perplexity,Perplexity,web,0.8,1,umbrella;zscaler,Perplexity,2026-10-09,medium
+deepseek,DeepSeek,web,1.0,1,netskope;zscaler;umbrella,DeepSeek chat,2026-10-09,medium
+mistral ai,Mistral,web,0.8,1,netskope;zscaler,Mistral Le Chat,2026-10-09,medium
+grok,xAI,web,0.8,1,netskope;zscaler,xAI Grok,2026-10-09,medium
+meta ai,Meta AI,web,0.8,1,netskope;zscaler,Meta AI,2026-10-09,medium
+hugging face,Model Registry,model_registry,0.9,1,netskope;zscaler,Hugging Face hub,2026-10-09,medium
+midjourney,Midjourney,web,0.8,1,netskope;zscaler,Midjourney,2026-10-09,medium
+elevenlabs,ElevenLabs,web,0.9,1,paloalto;netskope,Voice synthesis/cloning (also the PAN App-ID),2026-10-09,high
+cursor,Cursor,ide,1.0,1,netskope;zscaler,Cursor IDE,2026-10-09,medium
+windsurf,Windsurf,ide,1.0,1,netskope;zscaler,Windsurf IDE,2026-10-09,medium
+openai-chatgpt,OpenAI,web,1.0,1,paloalto,PAN App-ID: OpenAI ChatGPT Web,2026-10-09,high
+openai-api,OpenAI,api,1.2,1,paloalto,PAN App-ID: OpenAI API,2026-10-09,high
+google-gemini,Google Gemini,web,1.0,1,paloalto,PAN App-ID: Google Gemini. Ambient in some tenants (Gemini in Chrome/Workspace; tens of thousands of users a day in one tenant) - threshold or sanction it,2026-10-09,high
+ms-office365-copilot,Microsoft 365 Copilot,web,0.5,0,paloalto,OPT_IN_M365_COPILOT (ships enabled=0): PAN App-ID: Bing AI/Microsoft Copilot - generic M365 web home after MC1462915,2026-10-09,high
+ms-office65-copilot-upload,Microsoft 365 Copilot,web,0.6,0,paloalto,"OPT_IN_M365_COPILOT (ships enabled=0): PAN App-ID as observed (vendor spelling ""office65""); the corrected spelling has its own row - generic M365 web home after MC1462915",2026-10-09,high
+github-copilot,GitHub Copilot,ide,1.0,1,paloalto,PAN App-ID,2026-10-09,high
+github-copilot-business,GitHub Copilot,ide,1.0,1,paloalto,PAN App-ID,2026-10-09,high
+github-copilot-chat,GitHub Copilot,ide,1.0,1,paloalto,PAN App-ID,2026-10-09,high
+github-copilot-chat-business,GitHub Copilot,ide,1.0,1,paloalto,PAN App-ID,2026-10-09,high
+deepseek-chat,DeepSeek,web,1.0,1,paloalto,PAN App-ID,2026-10-09,high
+mistral-ai,Mistral,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+perplexity-ai-base,Perplexity,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+groq-chat,Groq,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+huggingface,Model Registry,model_registry,0.9,1,paloalto,PAN App-ID: Hugging Face API,2026-10-09,high
+huggingface-upload,Model Registry,model_registry,0.9,1,paloalto,PAN App-ID,2026-10-09,high
+poe,Poe,web,0.6,1,paloalto,PAN App-ID,2026-10-09,high
+phind,Phind,web,0.6,1,paloalto,PAN App-ID,2026-10-09,high
+replicate,Replicate,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+runway-app,Runway,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+suno,Suno,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+murf,Murf AI,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+deepgram,Deepgram,api,1.0,1,paloalto,PAN App-ID,2026-10-09,high
+leonardo-ai,Leonardo,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+ideogram,Ideogram,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+z-ai,Zhipu AI,web,1.0,1,paloalto,PAN App-ID: Z.ai,2026-10-09,high
+baidu-yiyan,Baidu ERNIE,web,1.0,1,paloalto,PAN App-ID: ERNIE Bot,2026-10-09,high
+vercel-v0-upload,Vercel v0,web,0.8,1,paloalto,PAN App-ID,2026-10-09,high
+sourcegraph-cody,Sourcegraph,ide,1.0,1,paloalto,PAN App-ID,2026-10-09,high
+dify-ai,Dify,web,0.8,1,paloalto,PAN App-ID: LLM app builder,2026-10-09,high
+gamma,Gamma,web,0.5,1,paloalto,PAN App-ID: AI presentation builder,2026-10-09,high
+venice-ai,Venice AI,web,1.0,1,paloalto,PAN App-ID: uncensored model chat,2026-10-09,high
+claude-base,Anthropic,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+claude-post,Anthropic,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+claude-upload,Anthropic,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+claude-delete,Anthropic,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+anthropic-api,Anthropic,api,1.2,1,paloalto,PAN App-ID: Anthropic API (also used by Claude desktop/IDE agents),2026-10-09,high
+anthropic-api-base,Anthropic,api,1.2,1,paloalto,PAN App-ID seen live: Anthropic API (also used by Claude desktop/IDE agents; integration servers upload GBs/day - sanction them),2026-10-09,high
+anthropic-api-post,Anthropic,api,1.2,1,paloalto,PAN App-ID seen live: Anthropic API (also used by Claude desktop/IDE agents; integration servers upload GBs/day - sanction them),2026-10-09,high
+anthropic-claude,Anthropic,web,1.0,1,fortinet,FortiGate application name,2026-10-09,medium
+openai-base,OpenAI,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+openai-chatgpt-uploading,OpenAI,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+openai-chatgpt-download,OpenAI,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+openai-codex,OpenAI,ide,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+openai-sora,OpenAI,web,0.8,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+google-gemini-posting,Google Gemini,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+google-gemini-uploading,Google Gemini,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+google-gemini-downloading,Google Gemini,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+google-gemini-models,Google Gemini,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+google-bard-base,Google Gemini,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+google-notebooklm,Google Gemini,web,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+google-workspace-duet-ai,Gemini for Workspace,web,0.5,0,paloalto,OPT_IN_WORKSPACE_GEMINI (ships enabled=0): PAN App-ID for Gemini inside Google Workspace; ambient for licensed Workspace tenants,2026-10-09,high
+character-ai-base,Character AI,web,0.6,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+huggingface-base,Model Registry,model_registry,0.9,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+openrouter,OpenRouter,api,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+deepseek-api,DeepSeek,api,1.2,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+deepseek-platform,DeepSeek,api,1.2,1,paloalto,PAN App-ID seen live: DeepSeek developer platform,2026-10-09,high
+xai-grok,xAI,web,0.8,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+elevenlabs-base,ElevenLabs,web,0.9,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+synthesia-base,Synthesia,web,0.9,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+bing-ai-base,Microsoft Copilot,web,0.7,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+deepl-base,DeepL,web,0.5,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+cohere.ai-base,Cohere,web,0.8,1,paloalto,"PAN App-ID seen live (dotted: resolves only with ai_input_type=""app"")",2026-10-09,high
+otter.ai-base,Otter.ai,web,0.6,1,paloalto,"PAN App-ID seen live (dotted: resolves only with ai_input_type=""app"")",2026-10-09,high
+fireflies.ai-base,Fireflies.ai,web,0.6,1,paloalto,"PAN App-ID seen live (dotted: resolves only with ai_input_type=""app"")",2026-10-09,high
+codeium,Windsurf,ide,1.0,1,paloalto,PAN App-ID seen live in validation,2026-10-09,high
+ms-copilot-studio,Microsoft 365 Copilot,web,0.6,1,paloalto,PAN App-ID seen live: Copilot Studio agent builder,2026-10-09,high
+ms-copilot-studio-post,Microsoft 365 Copilot,web,0.6,1,paloalto,PAN App-ID seen live: Copilot Studio agent builder,2026-10-09,high
+ms-office365-copilot-upload,Microsoft 365 Copilot,web,0.6,0,paloalto,OPT_IN_M365_COPILOT (ships enabled=0): corrected spelling of the Copilot upload App-ID - generic M365 web home after MC1462915,2026-10-09,medium
+gemini google,Google Gemini,web,1.0,1,island,Island browser saas_application_name,2026-10-09,medium
+claude ai,Anthropic,web,1.0,1,island,Island browser saas_application_name,2026-10-09,medium
+chatgpt enterprise,OpenAI,web,1.0,1,idp,IdP/SSO application label,2026-10-09,medium
+chatgpt edu,OpenAI,web,1.0,1,idp,IdP/SSO application label,2026-10-09,medium
+openai sso,OpenAI,web,1.0,1,idp,IdP/SSO application label,2026-10-09,medium
+claude enterprise,Anthropic,web,1.0,1,idp,IdP/SSO application label,2026-10-09,medium
+claude for work,Anthropic,web,1.0,1,idp,IdP/SSO application label,2026-10-09,medium
+kaggle,Model Registry,model_registry,0.6,1,netskope,Netskope app name (general data-science platform: lower weight),2026-10-09,medium

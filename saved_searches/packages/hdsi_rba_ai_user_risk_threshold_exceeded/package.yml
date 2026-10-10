@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI RBA AI User Risk Threshold Exceeded
-description: Create a medium notable when user AI risk reaches threshold in 24 hours.
+package_title: RBA AI User Risk Threshold Exceeded
+description: "Risk incident rule over the HDSI AI detections. Creates a medium notable when one person (UPN, DOMAIN\\user and bare account forms merged) collects AI risk from at least two distinct HDSI AI detections in 24 hours and the total is in the medium band: at or above medium_risk_threshold (60) and below high_risk_threshold (90) from ai_detection_config. Totals at or above the high threshold, and users who already have a critical notable in the last 24 hours, are left to hdsi_rba_ai_user_critical_risk_threshold_exceeded, so the two rules never alert on the same total. Placeholder, machine, service and shared accounts are ignored. Notable only, no risk."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,6 +11,11 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 tags:
   - rba_only
+data_prereqs:
+  datamodels:
+    op: AND
+    items:
+    - "Risk.All_Risk"
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common

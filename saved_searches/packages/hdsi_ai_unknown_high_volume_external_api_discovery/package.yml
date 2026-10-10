@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI Unknown High-Volume External API Discovery
-description: Discovery search to identify unknown high-volume external API endpoints that may be undocumented AI services. Not a detection - used for threat intelligence enrichment.
+package_title: AI Unknown High-Volume External API Discovery
+description: "Hunting and discovery search, not a detection: no risk, no notable. Once a day it lists AI-looking services seen in DNS (Network_Resolution.DNS) and outbound Web data that are missing from the common AI provider lookups. A service qualifies when the proxy or SSE vendor classifies it as AI, or when its hostname carries an AI product word or the .ai TLD. Rows are ranked for review so the ai_provider_domains and ai_provider_apps lookups that drive every AI detection stay current. Ad hoc: run or schedule it where an analyst owns the review."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -9,15 +9,18 @@ app_compatibility:
     required_version: '*'
 app_context: HurricaneLabsContentUpdates
 enable_alerting: false
+common_dependencies:
+  - macros:ai_domains_filter
 tags:
-  - rba_only
+  - dns
   - web
   - proxy
 data_prereqs:
   datamodels:
-    op: AND
+    op: OR
     items:
-    - "Web"
-deployment_type: global
+    - Network_Resolution.DNS
+    - Web
+deployment_type: adhoc
 prereq_packages:
   - hdsi_ai_rba_common

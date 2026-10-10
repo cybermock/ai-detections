@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI DNS Queries To AI Domains
-description: "Detect DNS resolution of AI service domains. Broad coverage of all known AI provider, API, IDE, and model registry domains. MITRE: T1071.004"
+package_title: AI DNS Queries To AI Domains
+description: "Daily system risk for hosts whose DNS queries (Network_Resolution) show real use of AI services: chat sites, model APIs, cloud AI endpoints, local LLM and model registries, resolved through the common ai_provider_domains lookup. Excludes browser and OS prefetch lookups, coding assistants (covered by hdsi_ai_code_assistant_network_connection), resolvers, forwarders and other shared DNS clients, and the home-network and egress addresses that roaming DNS-security clients report. One risk event per host per day, no notable."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,7 +11,7 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
-  - macros:ai_unsanctioned_filter
+  - macros:ai_unsanctioned_filter(3)
 tags:
   - rba_only
   - dns

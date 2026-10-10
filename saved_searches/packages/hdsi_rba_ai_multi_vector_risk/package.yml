@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI RBA AI Multi-Vector Risk
-description: "Detect users triggering 3+ distinct AI detection categories within 24 hours, indicating broad and potentially coordinated AI risk behavior."
+package_title: RBA AI Multi-Vector Risk
+description: "Notable when one user (with the hosts attributed only to that user) or one unattributed system accumulates HDSI AI risk across 3 or more of 6 distinct AI risk vectors in 24 hours (at least one of them data exposure, risky access or adversarial AI; ordinary coding-agent work is not high impact). Fires on a rising edge, when an object reaches the threshold or adds a vector. Reads index=risk; writes no risk."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -12,5 +12,10 @@ enable_alerting: false
 tags:
   - rba_only
 deployment_type: global
+data_prereqs:
+  datamodels:
+    op: AND
+    items:
+      - Risk.All_Risk
 prereq_packages:
   - hdsi_ai_rba_common

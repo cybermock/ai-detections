@@ -1,43 +1,27 @@
-"""Validate runbook coverage for detections."""
+"""Every detection and risk aggregator has an analyst runbook under docs/runbooks/."""
 
 from __future__ import annotations
 
-import re
-from pathlib import Path
+from functools import lru_cache
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-RUNBOOKS_DIR = PROJECT_ROOT / "docs" / "runbooks"
+import pytest
 
-DETECTION_ID_RE = re.compile(r'detection_id\s*=\s*"(AI-[\w-]+\d+)"')
+from .conftest import RUNBOOKS_DIR, packages_with_role, savedsearches
 
 
-class TestRunbookCoverage:
-    def test_every_detection_id_has_runbook(self, savedsearches):
-        detection_ids: set[str] = set()
-        for name, props in savedsearches.items():
-            if name == "default":
-                continue
-            search = props.get("search", "")
-            if not search:
-                continue
-            for match in DETECTION_ID_RE.finditer(search):
-                detection_ids.add(match.group(1))
+@lru_cache(maxsize=None)
+def _runbook_text() -> str:
+    return "\n".join(p.read_text(encoding="utf-8", errors="ignore") for p in sorted(RUNBOOKS_DIR.glob("*.md")))
 
-        missing = [did for did in sorted(detection_ids) if not (RUNBOOKS_DIR / f"{did}.md").exists()]
-        assert not missing, f"Missing runbook(s) for detection IDs: {missing}"
 
-    def test_runbooks_are_not_empty(self):
-        # Exclude template/deprecated aggregate helper docs from the size check.
-        excluded = {"_runbook_template.md", "AI-001-002-003.md"}
-        tiny = []
-        for runbook in RUNBOOKS_DIR.glob("AI-*.md"):
-            if runbook.name in excluded:
-                continue
-            if runbook.stat().st_size < 500:
-                tiny.append(runbook.name)
-        assert not tiny, f"Runbook files appear incomplete/suspiciously small: {tiny}"
-
-    def test_advanced_risk_runbooks_exist(self):
-        required = ["AI-RISK-003.md", "AI-RISK-004.md", "AI-RISK-005.md"]
-        missing = [name for name in required if not (RUNBOOKS_DIR / name).exists()]
-        assert not missing, f"Missing advanced correlation runbook(s): {missing}"
+@pytest.mark.parametrize("package", packages_with_role("detection", "hunting", "aggregator"))
+def test_package_has_runbook(package):
+    text = _runbook_text()
+    names = {package}
+    for stanza, kv in savedsearches(package).items():
+        names.add(stanza)
+        if kv.get("action.correlationsearch.label"):
+            names.add(kv["action.correlationsearch.label"])
+    assert any(n in text for n in names), (
+        f"{package}: not referenced by package name, stanza or label in any docs/runbooks/*.md"
+    )

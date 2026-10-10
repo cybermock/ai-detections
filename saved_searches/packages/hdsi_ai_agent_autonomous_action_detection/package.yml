@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI Agent Autonomous Action Detection
-description: "Detect AI agent frameworks spawning child processes indicating autonomous actions such as file operations, git commands, API calls, or system modifications. MITRE: T1059"
+package_title: AI Agent Autonomous Action Detection
+description: "Detects AI coding agents and agent frameworks (Claude Code, OpenAI Codex, GitHub Copilot agent, Gemini CLI, Aider, CrewAI and others) executing commands on an endpoint, identified by the agent binary or package path as parent process. Start-up probes are ignored. Ordinary agent work (routine commands, package installs, git push, downloads, recursive deletes) adds one low-score agent_activity risk event per user and host per day; credential access, persistence and system changes each add their own risk event and are never allow-listed. Risk on the user and host, no notable."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -10,7 +10,8 @@ app_compatibility:
 app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 common_dependencies:
-  - macros:ai_unsanctioned_filter
+  - macros:ai_unsanctioned_filter(3)
+  - macros:ai_risk_multiplier
 tags:
   - rba_only
   - process

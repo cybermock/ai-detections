@@ -1,89 +1,110 @@
-tool,provider,process_name_lc,original_file_name_lc,platform,usage_type,enabled,notes
-codex,OpenAI,codex,codex,linux/macos/windows,cli,1,OpenAI Codex CLI
-codex,OpenAI,codex.exe,codex.exe,windows,cli,1,OpenAI Codex CLI (Windows)
-claude,Anthropic,claude,claude,linux/macos/windows,cli,1,Anthropic Claude Code CLI
-claude,Anthropic,claude.exe,claude.exe,windows,cli,1,Claude Code CLI (Windows)
-claude,Anthropic,claude,claude,macos,desktop_app,1,Claude desktop app (macOS)
-claude,Anthropic,claude.exe,claude.exe,windows,desktop_app,1,Claude desktop app (Windows)
-gemini,Google Gemini,gemini,gemini,linux/macos/windows,cli,1,Google Gemini CLI
-gemini,Google Gemini,gemini.exe,gemini.exe,windows,cli,1,Google Gemini CLI (Windows)
-gh-copilot,Microsoft Copilot,gh-copilot,gh-copilot,linux/macos/windows,cli,1,GitHub Copilot CLI
-gh-copilot,Microsoft Copilot,gh-copilot.exe,gh-copilot.exe,windows,cli,1,GitHub Copilot CLI (Windows)
-aider,Aider,aider,aider,linux/macos/windows,cli,1,Aider AI pair programming CLI
-aider,Aider,aider.exe,aider.exe,windows,cli,1,Aider CLI (Windows)
-sgpt,Shell GPT,sgpt,sgpt,linux/macos/windows,cli,1,Shell-GPT CLI
-sgpt,Shell GPT,sgpt.exe,sgpt.exe,windows,cli,1,Shell-GPT CLI (Windows)
-llm,LLM CLI,llm,llm,linux/macos/windows,cli,1,Simon Willison LLM CLI
-llm,LLM CLI,llm.exe,llm.exe,windows,cli,1,LLM CLI (Windows)
-tgpt,tgpt,tgpt,tgpt,linux/macos/windows,cli,1,tgpt terminal GPT
-tgpt,tgpt,tgpt.exe,tgpt.exe,windows,cli,1,tgpt CLI (Windows)
-mods,Charm,mods,mods,linux/macos/windows,cli,1,Charm Mods AI CLI
-mods,Charm,mods.exe,mods.exe,windows,cli,1,Charm Mods CLI (Windows)
-fabric,Fabric,fabric,fabric,linux/macos/windows,cli,1,Fabric AI CLI
-fabric,Fabric,fabric.exe,fabric.exe,windows,cli,1,Fabric CLI (Windows)
-aichat,aichat,aichat,aichat,linux/macos/windows,cli,1,aichat CLI
-aichat,aichat,aichat.exe,aichat.exe,windows,cli,1,aichat CLI (Windows)
-amazon-q,Amazon,amazon-q,amazon-q,linux/macos/windows,cli,1,Amazon Q CLI
-amazon-q,Amazon,amazon-q.exe,amazon-q.exe,windows,cli,1,Amazon Q CLI (Windows)
-openai,OpenAI,openai,openai,linux/macos/windows,cli,1,OpenAI CLI
-openai,OpenAI,openai.exe,openai.exe,windows,cli,1,OpenAI CLI (Windows)
-cline,Cline,cline,cline,linux/macos/windows,cli,1,Cline AI CLI
-cline,Cline,cline.exe,cline.exe,windows,cli,1,Cline CLI (Windows)
-chatgpt,OpenAI,chatgpt,chatgpt,windows/macos,desktop_app,1,ChatGPT desktop process
-chatgpt,OpenAI,chatgpt.exe,chatgpt.exe,windows,desktop_app,1,ChatGPT Windows executable
-cursor,Cursor,cursor,cursor,macos,desktop_app,1,Cursor IDE (macOS)
-cursor,Cursor,cursor.exe,cursor.exe,windows,desktop_app,1,Cursor IDE (Windows)
-cursor helper,Cursor,cursor helper,cursor helper,macos,desktop_app,1,Cursor Helper process
-windsurf,Codeium,windsurf,windsurf,macos,desktop_app,1,Windsurf IDE (macOS)
-windsurf,Codeium,windsurf.exe,windsurf.exe,windows,desktop_app,1,Windsurf IDE (Windows)
-windsurf helper,Codeium,windsurf helper,windsurf helper,macos,desktop_app,1,Windsurf Helper process
-pieces os,Pieces,pieces os,pieces os,macos,desktop_app,1,Pieces OS (macOS)
-piecesos,Pieces,piecesos,piecesos,macos,desktop_app,1,Pieces OS alternate name
-pieces os,Pieces,pieces os.exe,pieces os.exe,windows,desktop_app,1,Pieces OS (Windows)
-pieces,Pieces,pieces,pieces,macos,desktop_app,1,Pieces short process name (macOS)
-pieces,Pieces,pieces.exe,pieces.exe,windows,desktop_app,1,Pieces short process name (Windows)
-jan,Local LLM,jan,jan,linux/macos/windows,desktop_app,1,Jan desktop local LLM
-jan,Local LLM,jan.exe,jan.exe,windows,desktop_app,1,Jan (Windows)
-jan,Local LLM,jan,jan,linux/macos/windows,local_llm,1,Jan local LLM runtime
-jan,Local LLM,jan.exe,jan.exe,windows,local_llm,1,Jan local LLM runtime (Windows)
-lm studio,Local LLM,lm studio,lm studio,macos,desktop_app,1,LM Studio (macOS)
-lm studio,Local LLM,lm studio.exe,lm studio.exe,windows,desktop_app,1,LM Studio (Windows)
-lmstudio,Local LLM,lmstudio,lmstudio,linux/macos/windows,desktop_app,1,LM Studio runtime
-lmstudio,Local LLM,lmstudio.exe,lmstudio.exe,windows,desktop_app,1,LM Studio (Windows)
-lmstudio,Local LLM,lmstudio,lmstudio,linux/macos/windows,local_llm,1,LM Studio local LLM runtime
-lmstudio,Local LLM,lmstudio.exe,lmstudio.exe,windows,local_llm,1,LM Studio local LLM runtime (Windows)
-continue,Continue,continue,continue,macos,desktop_app,1,Continue IDE extension
-continue,Continue,continue.exe,continue.exe,windows,desktop_app,1,Continue IDE (Windows)
-tabnine,Tabnine,tabnine,tabnine,macos,desktop_app,1,Tabnine (macOS)
-tabnine,Tabnine,tabnine.exe,tabnine.exe,windows,desktop_app,1,Tabnine (Windows)
-trae,ByteDance,trae,trae,macos,desktop_app,1,Trae IDE (macOS)
-trae,ByteDance,trae.exe,trae.exe,windows,desktop_app,1,Trae IDE (Windows)
-zed,Zed,zed,zed,macos,desktop_app,1,Zed editor
-zed,Zed,zed.exe,zed.exe,windows,desktop_app,1,Zed editor (Windows)
-warp,Warp,warp,warp,macos,desktop_app,1,Warp terminal
-warp,Warp,warp.exe,warp.exe,windows,desktop_app,1,Warp terminal (Windows)
-ollama,Local LLM,ollama,ollama,linux/macos/windows,local_llm,1,Ollama runner
-ollama,Local LLM,ollama.exe,ollama.exe,windows,local_llm,1,Ollama (Windows)
-llamafile,Local LLM,llamafile,llamafile,linux/macos/windows,local_llm,1,Llamafile runtime
-llamafile,Local LLM,llamafile.exe,llamafile.exe,windows,local_llm,1,Llamafile (Windows)
-gpt4all,Local LLM,gpt4all,gpt4all,linux/macos/windows,local_llm,1,GPT4All desktop local LLM
-gpt4all,Local LLM,gpt4all.exe,gpt4all.exe,windows,local_llm,1,GPT4All (Windows)
-llama-server,Local LLM,llama-server,llama-server,linux/macos,local_llm,1,llama.cpp server
-llama-server,Local LLM,llama-server.exe,llama-server.exe,windows,local_llm,1,llama.cpp server (Windows)
-llama-run,Local LLM,llama-run,llama-run,linux/macos,local_llm,1,llama.cpp runner
-llama-run,Local LLM,llama-run.exe,llama-run.exe,windows,local_llm,1,llama.cpp runner (Windows)
-llama-cli,Local LLM,llama-cli,llama-cli,linux/macos,local_llm,1,llama.cpp CLI
-llama-cli,Local LLM,llama-cli.exe,llama-cli.exe,windows,local_llm,1,llama.cpp CLI (Windows)
-koboldcpp,Local LLM,koboldcpp,koboldcpp,linux/macos,local_llm,1,KoboldCpp
-koboldcpp,Local LLM,koboldcpp.exe,koboldcpp.exe,windows,local_llm,1,KoboldCpp (Windows)
-localai,Local LLM,localai,localai,linux/macos,local_llm,1,LocalAI
-local-ai,Local LLM,local-ai,local-ai,linux/macos,local_llm,1,LocalAI alternate name
-text-generation-launcher,Local LLM,text-generation-launcher,text-generation-launcher,linux,local_llm,1,HuggingFace TGI server
-vllm,Local LLM,vllm,vllm,linux,local_llm,1,vLLM inference server
-mlx_lm.server,Local LLM,mlx_lm.server,mlx_lm.server,macos,local_llm,1,Apple MLX LM server
-mlx_lm.generate,Local LLM,mlx_lm.generate,mlx_lm.generate,macos,local_llm,1,Apple MLX LM generate
-open-webui,Local LLM,open-webui,open-webui,linux/macos,local_llm,1,Open WebUI for local LLMs
-open-webui,Local LLM,open-webui.exe,open-webui.exe,windows,local_llm,1,Open WebUI (Windows)
-lms,Local LLM,lms,lms,linux/macos,local_llm,1,LM Studio CLI
-lms,Local LLM,lms.exe,lms.exe,windows,local_llm,1,LM Studio CLI (Windows)
-chat,Local LLM,chat.exe,chat.exe,windows,local_llm,1,GPT4All chat executable
+tool,provider,process_name_lc,original_file_name_lc,platform,usage_type,enabled,notes,requires_context,last_verified
+codex,OpenAI,codex,codex,linux/macos/windows,cli,1,OpenAI Codex CLI,0,2026-03-04
+codex,OpenAI,codex.exe,codex.exe,windows,cli,1,OpenAI Codex CLI (Windows),0,2026-03-04
+claude,Anthropic,claude,claude,linux/macos/windows,cli,1,"Anthropic Claude Code CLI (process name shared with the desktop app; disambiguate by process_path; also the Claude desktop app and the Claude Agent SDK binary that IDE agent hosts embed: use process_path/parent to tell CLI, desktop and IDE apart)",0,2026-10-09
+claude,Anthropic,claude.exe,claude.exe,windows,cli,1,"Claude Code CLI (Windows) (process name shared with the desktop app; disambiguate by process_path; also the Claude desktop app and the Claude Agent SDK binary that IDE agent hosts embed: use process_path/parent to tell CLI, desktop and IDE apart)",0,2026-10-09
+gemini,Google Gemini,gemini,gemini,linux/macos/windows,cli,1,Google Gemini CLI,0,2026-03-04
+gemini,Google Gemini,gemini.exe,gemini.exe,windows,cli,1,Google Gemini CLI (Windows),0,2026-03-04
+gh-copilot,Microsoft Copilot,gh-copilot,gh-copilot,linux/macos/windows,cli,1,GitHub Copilot CLI,0,2026-03-04
+gh-copilot,Microsoft Copilot,gh-copilot.exe,gh-copilot.exe,windows,cli,1,GitHub Copilot CLI (Windows),0,2026-03-04
+aider,Aider,aider,aider,linux/macos/windows,cli,1,Aider AI pair programming CLI,0,2026-03-04
+aider,Aider,aider.exe,aider.exe,windows,cli,1,Aider CLI (Windows),0,2026-03-04
+sgpt,Shell GPT,sgpt,sgpt,linux/macos/windows,cli,1,Shell-GPT CLI,0,2026-03-04
+sgpt,Shell GPT,sgpt.exe,sgpt.exe,windows,cli,1,Shell-GPT CLI (Windows),0,2026-03-04
+llm,LLM CLI,llm,llm,linux/macos/windows,cli,1,Simon Willison LLM CLI (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+llm,LLM CLI,llm.exe,llm.exe,windows,cli,1,LLM CLI (Windows) (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+tgpt,tgpt,tgpt,tgpt,linux/macos/windows,cli,1,tgpt terminal GPT,0,2026-03-04
+tgpt,tgpt,tgpt.exe,tgpt.exe,windows,cli,1,tgpt CLI (Windows),0,2026-03-04
+mods,Charm,mods,mods,linux/macos/windows,cli,1,Charm Mods AI CLI (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+mods,Charm,mods.exe,mods.exe,windows,cli,1,Charm Mods CLI (Windows) (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+fabric,Fabric,fabric,fabric,linux/macos/windows,cli,1,Fabric AI CLI (generic name: corroborate with process_path or command line before scoring; collides with other tools named fabric),1,2026-10-09
+fabric,Fabric,fabric.exe,fabric.exe,windows,cli,1,Fabric CLI (Windows) (generic name: corroborate with process_path or command line before scoring; collides with Microsoft Service Fabric Fabric.exe (thousands of events a day in one tenant)),1,2026-10-09
+aichat,aichat,aichat,aichat,linux/macos/windows,cli,1,aichat CLI,0,2026-03-04
+aichat,aichat,aichat.exe,aichat.exe,windows,cli,1,aichat CLI (Windows),0,2026-03-04
+amazon-q,Amazon,amazon-q,amazon-q,linux/macos/windows,cli,1,"Amazon Q CLI (real binaries are q and qchat; qchat has its own row, bare q is too generic to list)",0,2026-10-09
+amazon-q,Amazon,amazon-q.exe,amazon-q.exe,windows,cli,1,"Amazon Q CLI (Windows) (real binaries are q and qchat; qchat has its own row, bare q is too generic to list)",0,2026-10-09
+openai,OpenAI,openai,openai,linux/macos/windows,cli,1,OpenAI CLI,0,2026-03-04
+openai,OpenAI,openai.exe,openai.exe,windows,cli,1,OpenAI CLI (Windows),0,2026-03-04
+cline,Cline,cline,cline,linux/macos/windows,cli,1,Cline AI CLI,0,2026-03-04
+cline,Cline,cline.exe,cline.exe,windows,cli,1,Cline CLI (Windows),0,2026-03-04
+chatgpt,OpenAI,chatgpt,chatgpt,windows/macos,desktop_app,1,ChatGPT desktop process,0,2026-03-04
+chatgpt,OpenAI,chatgpt.exe,chatgpt.exe,windows,desktop_app,1,ChatGPT Windows executable,0,2026-03-04
+cursor,Cursor,cursor,cursor,macos,desktop_app,1,Cursor IDE (macOS),0,2026-03-04
+cursor,Cursor,cursor.exe,cursor.exe,windows,desktop_app,1,Cursor IDE (Windows),0,2026-03-04
+cursor helper,Cursor,cursor helper,cursor helper,macos,desktop_app,1,Cursor Helper process,0,2026-03-04
+windsurf,Codeium,windsurf,windsurf,macos,desktop_app,1,Windsurf IDE (macOS),0,2026-03-04
+windsurf,Codeium,windsurf.exe,windsurf.exe,windows,desktop_app,1,Windsurf IDE (Windows),0,2026-03-04
+windsurf helper,Codeium,windsurf helper,windsurf helper,macos,desktop_app,1,Windsurf Helper process,0,2026-03-04
+pieces os,Pieces,pieces os,pieces os,macos,desktop_app,1,Pieces OS (macOS),0,2026-03-04
+piecesos,Pieces,piecesos,piecesos,macos,desktop_app,1,Pieces OS alternate name,0,2026-03-04
+pieces os,Pieces,pieces os.exe,pieces os.exe,windows,desktop_app,1,Pieces OS (Windows),0,2026-03-04
+pieces,Pieces,pieces,pieces,macos,desktop_app,1,Pieces short process name (macOS) (generic name: corroborate with process_path or command line before scoring; generic word),1,2026-10-09
+pieces,Pieces,pieces.exe,pieces.exe,windows,desktop_app,1,Pieces short process name (Windows) (generic name: corroborate with process_path or command line before scoring; generic word),1,2026-10-09
+jan,Local LLM,jan,jan,linux/macos/windows,local_llm,1,Jan local LLM runtime (also ships a desktop UI; classified as local_llm) (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+jan,Local LLM,jan.exe,jan.exe,windows,local_llm,1,Jan local LLM runtime (Windows) (also ships a desktop UI; classified as local_llm) (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+lm studio,Local LLM,lm studio,lm studio,macos,local_llm,1,LM Studio (macOS) (local LLM desktop runtime; aligned with lmstudio rows),0,2026-10-09
+lm studio,Local LLM,lm studio.exe,lm studio.exe,windows,local_llm,1,LM Studio (Windows) (local LLM desktop runtime; aligned with lmstudio rows),0,2026-10-09
+lmstudio,Local LLM,lmstudio,lmstudio,linux/macos/windows,local_llm,1,LM Studio local LLM runtime (also ships a desktop UI; classified as local_llm),0,2026-03-04
+lmstudio,Local LLM,lmstudio.exe,lmstudio.exe,windows,local_llm,1,LM Studio local LLM runtime (Windows) (also ships a desktop UI; classified as local_llm),0,2026-03-04
+continue,Continue,continue,continue,macos,desktop_app,1,Continue IDE extension (generic name: corroborate with process_path or command line before scoring; generic word),1,2026-10-09
+continue,Continue,continue.exe,continue.exe,windows,desktop_app,1,Continue IDE (Windows) (generic name: corroborate with process_path or command line before scoring; generic word),1,2026-10-09
+tabnine,Tabnine,tabnine,tabnine,macos,desktop_app,1,Tabnine (macOS) (generic name: corroborate with process_path or command line before scoring; IDE plugin helper; ambient where installed),1,2026-10-09
+tabnine,Tabnine,tabnine.exe,tabnine.exe,windows,desktop_app,1,Tabnine (Windows) (generic name: corroborate with process_path or command line before scoring; IDE plugin helper; ambient where installed),1,2026-10-09
+trae,ByteDance,trae,trae,macos,desktop_app,1,Trae IDE (macOS),0,2026-03-04
+trae,ByteDance,trae.exe,trae.exe,windows,desktop_app,1,Trae IDE (Windows),0,2026-03-04
+zed,Zed,zed,zed,macos,desktop_app,1,Zed editor (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+zed,Zed,zed.exe,zed.exe,windows,desktop_app,1,Zed editor (Windows) (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+warp,Warp,warp,warp,macos,desktop_app,1,Warp terminal (generic name: corroborate with process_path or command line before scoring; also Cloudflare WARP client names),1,2026-10-09
+warp,Warp,warp.exe,warp.exe,windows,desktop_app,1,Warp terminal (Windows) (generic name: corroborate with process_path or command line before scoring; also Cloudflare WARP client names),1,2026-10-09
+ollama,Local LLM,ollama,ollama,linux/macos/windows,local_llm,1,Ollama runner,0,2026-03-04
+ollama,Local LLM,ollama.exe,ollama.exe,windows,local_llm,1,Ollama (Windows),0,2026-03-04
+llamafile,Local LLM,llamafile,llamafile,linux/macos/windows,local_llm,1,Llamafile runtime,0,2026-03-04
+llamafile,Local LLM,llamafile.exe,llamafile.exe,windows,local_llm,1,Llamafile (Windows),0,2026-03-04
+gpt4all,Local LLM,gpt4all,gpt4all,linux/macos/windows,local_llm,1,GPT4All desktop local LLM,0,2026-03-04
+gpt4all,Local LLM,gpt4all.exe,gpt4all.exe,windows,local_llm,1,GPT4All (Windows),0,2026-03-04
+llama-server,Local LLM,llama-server,llama-server,linux/macos,local_llm,1,llama.cpp server,0,2026-03-04
+llama-server,Local LLM,llama-server.exe,llama-server.exe,windows,local_llm,1,llama.cpp server (Windows),0,2026-03-04
+llama-run,Local LLM,llama-run,llama-run,linux/macos,local_llm,1,llama.cpp runner,0,2026-03-04
+llama-run,Local LLM,llama-run.exe,llama-run.exe,windows,local_llm,1,llama.cpp runner (Windows),0,2026-03-04
+llama-cli,Local LLM,llama-cli,llama-cli,linux/macos,local_llm,1,llama.cpp CLI,0,2026-03-04
+llama-cli,Local LLM,llama-cli.exe,llama-cli.exe,windows,local_llm,1,llama.cpp CLI (Windows),0,2026-03-04
+koboldcpp,Local LLM,koboldcpp,koboldcpp,linux/macos,local_llm,1,KoboldCpp,0,2026-03-04
+koboldcpp,Local LLM,koboldcpp.exe,koboldcpp.exe,windows,local_llm,1,KoboldCpp (Windows),0,2026-03-04
+localai,Local LLM,localai,localai,linux/macos,local_llm,1,LocalAI,0,2026-03-04
+local-ai,Local LLM,local-ai,local-ai,linux/macos,local_llm,1,LocalAI alternate name,0,2026-03-04
+text-generation-launcher,Local LLM,text-generation-launcher,text-generation-launcher,linux,local_llm,1,HuggingFace TGI server,0,2026-03-04
+vllm,Local LLM,vllm,vllm,linux,local_llm,1,vLLM inference server,0,2026-03-04
+mlx_lm.server,Local LLM,mlx_lm.server,mlx_lm.server,macos,local_llm,1,Apple MLX LM server,0,2026-03-04
+mlx_lm.generate,Local LLM,mlx_lm.generate,mlx_lm.generate,macos,local_llm,1,Apple MLX LM generate,0,2026-03-04
+open-webui,Local LLM,open-webui,open-webui,linux/macos,local_llm,1,Open WebUI for local LLMs,0,2026-03-04
+open-webui,Local LLM,open-webui.exe,open-webui.exe,windows,local_llm,1,Open WebUI (Windows),0,2026-03-04
+lms,Local LLM,lms,lms,linux/macos,local_llm,1,LM Studio CLI (generic name: corroborate with process_path or command line before scoring; generic short name),1,2026-10-09
+lms,Local LLM,lms.exe,lms.exe,windows,local_llm,1,LM Studio CLI (Windows) (generic name: corroborate with process_path or command line before scoring; collides with Intel Management Engine LMS.exe (hundreds of hosts in one tenant)),1,2026-10-09
+gpt4all,Local LLM,chat.exe,chat.exe,windows,local_llm,1,GPT4All chat executable (generic name: corroborate with process_path or command line before scoring; chat.exe is a common name),1,2026-10-09
+copilot,GitHub Copilot,copilot,copilot,linux/macos/windows,cli,1,GitHub Copilot CLI (agentic; runs shell commands),1,2026-10-09
+copilot,GitHub Copilot,copilot.exe,copilot.exe,windows,cli,1,GitHub Copilot CLI (agentic; runs shell commands) (Windows),1,2026-10-09
+qchat,Amazon,qchat,qchat,linux/macos/windows,cli,1,Amazon Q Developer CLI chat (agentic),0,2026-10-09
+qchat,Amazon,qchat.exe,qchat.exe,windows,cli,1,Amazon Q Developer CLI chat (agentic) (Windows),0,2026-10-09
+kiro-cli,Kiro,kiro-cli,kiro-cli,linux/macos/windows,cli,1,Kiro CLI (agentic),0,2026-10-09
+kiro-cli,Kiro,kiro-cli.exe,kiro-cli.exe,windows,cli,1,Kiro CLI (agentic) (Windows),0,2026-10-09
+cursor-agent,Cursor,cursor-agent,cursor-agent,linux/macos/windows,cli,1,Cursor Agent CLI (agentic),0,2026-10-09
+cursor-agent,Cursor,cursor-agent.exe,cursor-agent.exe,windows,cli,1,Cursor Agent CLI (agentic) (Windows),0,2026-10-09
+opencode,OpenCode,opencode,opencode,linux/macos/windows,cli,1,OpenCode CLI (agentic),0,2026-10-09
+opencode,OpenCode,opencode.exe,opencode.exe,windows,cli,1,OpenCode CLI (agentic) (Windows),0,2026-10-09
+goose,Goose,goose,goose,linux/macos/windows,cli,1,Block Goose agent CLI (agentic),1,2026-10-09
+goose,Goose,goose.exe,goose.exe,windows,cli,1,Block Goose agent CLI (agentic) (Windows),1,2026-10-09
+crush,Charm,crush,crush,linux/macos/windows,cli,1,Charm Crush agent CLI (agentic),1,2026-10-09
+crush,Charm,crush.exe,crush.exe,windows,cli,1,Charm Crush agent CLI (agentic) (Windows),1,2026-10-09
+qwen,Alibaba Qwen,qwen,qwen,linux/macos/windows,cli,1,Qwen Code CLI (agentic),0,2026-10-09
+qwen,Alibaba Qwen,qwen.exe,qwen.exe,windows,cli,1,Qwen Code CLI (agentic) (Windows),0,2026-10-09
+amp,Sourcegraph,amp,amp,linux/macos/windows,cli,1,Sourcegraph Amp agent CLI (agentic),1,2026-10-09
+amp,Sourcegraph,amp.exe,amp.exe,windows,cli,1,Sourcegraph Amp agent CLI (agentic) (Windows),1,2026-10-09
+copilot-runtime,GitHub Copilot,copilot-runtime.exe,copilot-runtime.exe,windows,ide,1,VS Code GitHub Copilot agent runtime (executes agent-mode terminal commands),0,2026-10-09
+copilot-language-server,GitHub Copilot,copilot-language-server,copilot-language-server,linux/macos/windows,ide,1,GitHub Copilot language server (runs whenever the IDE extension is active: ambient),0,2026-10-09
+copilot-language-server,GitHub Copilot,copilot-language-server.exe,copilot-language-server.exe,windows,ide,1,GitHub Copilot language server (runs whenever the IDE extension is active: ambient) (Windows),0,2026-10-09
+ollama,Local LLM,ollama app.exe,ollama app.exe,windows,local_llm,1,Ollama Windows tray app,0,2026-10-09
+ollama,Local LLM,ollama_llama_server,ollama_llama_server,linux/macos,local_llm,1,Ollama model runner subprocess,0,2026-10-09
+ollama,Local LLM,ollama_llama_server.exe,ollama_llama_server.exe,windows,local_llm,1,Ollama model runner subprocess (Windows),0,2026-10-09
+lm studio,Local LLM,lm-studio,lm-studio,linux,local_llm,1,LM Studio (Linux AppImage name),0,2026-10-09
+koboldcpp,Local LLM,koboldcpp_cu12.exe,koboldcpp_cu12.exe,windows,local_llm,1,KoboldCpp CUDA 12 build,0,2026-10-09
+koboldcpp,Local LLM,koboldcpp_nocuda.exe,koboldcpp_nocuda.exe,windows,local_llm,1,KoboldCpp CPU build,0,2026-10-09

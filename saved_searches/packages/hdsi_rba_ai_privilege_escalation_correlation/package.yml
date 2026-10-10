@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI RBA AI Privilege Escalation Correlation
-description: "Detect privilege escalation events followed by AI service usage, indicating an attacker leveraging elevated access to exfiltrate via AI."
+package_title: RBA AI Privilege Escalation Correlation
+description: "Notable (no risk) when an account receives risk from a privilege-change rule (admin role or group grant, elevation, token manipulation, exploitation for privilege escalation; matched by ATT&CK technique or rule name) and, in the same 24-hour risk window, AI-RBA risk in the execution, staging, collection, exfiltration or lateral-movement phase whose activity time is at or after the privilege change (fail-closed ordering from firstTime/lastTime and the risk search window). Reads index=risk only and identifies AI events by detection_id and ai_kill_chain_phase. Needs at least one non-AI privilege-change risk rule and the hdsi_ai_* risk rules enabled."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,6 +11,12 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 tags:
   - rba_only
+  - privilege_escalation
+data_prereqs:
+  datamodels:
+    op: AND
+    items:
+    - "Risk.All_Risk"
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common

@@ -1,6 +1,6 @@
 {
   "_metadata": {
-    "datamodel": "Data_Loss_Prevention",
+    "datamodel": "DLP",
     "description": "CIM DLP sample events for testing AI DLP violation detections"
   },
   "_detection_ids_expected": ["AI-020"],

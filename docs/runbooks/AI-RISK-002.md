@@ -1,32 +1,29 @@
-# AI-RISK-002 - User Risk Threshold Exceeded - High
+# AI-RISK-002 - HDSI RBA AI User Critical Risk Threshold Exceeded
 
 > **Detection ID:** AI-RISK-002
-> **Status:** Active
-> **Risk Score:** N/A (this detection generates a notable, not risk)
-> **Notable Severity:** High
-> **MITRE ATT&CK:** N/A (aggregate correlation rule)
-> **Data Source:** risk index
-> **Schedule:** `*/15 * * * *` (every 15 minutes)
-> **Lookback Window:** `-24h@h` to `now`
-> **Kill Chain Phase:** N/A (aggregation layer)
-> **Last Updated:** 2026-02-13
+> **Package:** `hdsi_rba_ai_user_critical_risk_threshold_exceeded` (v1.1.0, `deployment_type: global`)
+> **Correlation search:** `Threat - HDSI RBA AI User Critical Risk Threshold Exceeded - Rule`
+> **Status:** Active (ships with `enable_alerting: false`; enable together with AI-RISK-001 as one separately approved change)
+> **Type:** Risk aggregator. Creates a notable (`action.notable = 1`), writes **no** risk (`action.risk = 0`)
+> **Notable:** severity `high`, security domain `threat`, title `AI User Critical Risk Threshold Exceeded (<user>)`
+> **Risk Score:** N/A. The `_risk` entry (user, 50) is kept for conformance only; nothing is written
+> **MITRE ATT&CK:** T1588.007 Obtain Capabilities: Artificial Intelligence (Resource Development). Contributing techniques per notable in `contributing_mitre_attack`
+> **Data Source:** ES risk index (`index=risk`, macro `..._risk_index`); drilldowns use the `Risk.All_Risk` data model
+> **Schedule:** `12-59/15 * * * *` (every 15 minutes, offset 12)
+> **Lookback Window:** `-24h@m` to `now` (rolling 24 hours)
+> **Suppression:** 24 hours (`86400s`) per `user_key`
+> **Kill Chain Phase:** N/A (aggregation layer; phases listed per notable)
+> **Last Updated:** 2026-10-09
 
 ---
 
 ## Overview
 
-This is the highest-severity aggregate correlation rule in the AI RBA pack. It generates a **high-severity notable event** in Splunk ES when a user's cumulative AI-related risk score exceeds the high threshold (default: 90 points) within a rolling 24-hour window.
+This is the upper band of the HDSI AI user threshold pair. It raises a high notable when one person's HDSI AI risk in a rolling 24 hours reaches the critical threshold: `high_risk_threshold` in the common `ai_detection_config` lookup, default **90**. One detection is enough (`..._min_detections` = 1), so a repeated high-severity detection can reach it on its own.
 
-Unlike individual detections (AI-004 through AI-044) that each contribute risk points, this rule sits at the aggregation layer and evaluates whether the combined weight of all AI detections for a single user has reached a critical level. This is the core principle of Risk-Based Alerting: no single low-confidence detection should generate a notable, but the accumulation of multiple signals creates high-confidence alerts that warrant immediate investigation.
+It reads the user risk events that the HDSI AI detections write and adds a person's UPN, `DOMAIN\account` and bare account forms together, because web and SSE detections score the UPN while endpoint detections score the account name. Placeholder, machine, OS service and unqualified built-in accounts are never totalled: each would merge activity from many hosts into one fleet-wide pseudo-user.
 
-A high-severity notable from AI-RISK-002 means one of two things:
-
-1. **Multiple moderate detections fired for the same user** -- for example, unsanctioned web access (AI-028, 15 pts) + high upload volume (AI-007, 40-80 pts) + after-hours usage (AI-015, 15 pts) = 70-110 points.
-2. **A single high-severity detection fired** -- for example, DLP violation on AI upload (AI-020, 90 pts) immediately crosses the 90-point threshold on its own.
-
-Both scenarios require prompt investigation because they represent either sustained concerning behavior or a single high-confidence data exposure event.
-
-This rule suppresses on the `user` field for 2 hours to prevent alert flooding while ensuring the SOC is re-notified if risk continues to accumulate.
+The notable lists every contributing detection with its points, the AI kill-chain phases and the ATT&CK techniques, so the analyst sees at once why the user crossed the line. AI-RISK-001 (medium) covers the band below, with the same identity key, exclusions and risk index.
 
 ---
 
@@ -34,12 +31,10 @@ This rule suppresses on the `user` field for 2 hours to prevent alert flooding w
 
 | Field | Value |
 |---|---|
-| Technique ID | N/A |
-| Technique Name | N/A (this is a correlation/aggregation rule, not tied to a single technique) |
-| Tactic | N/A |
-| Sub-technique | N/A |
-
-The individual detections contributing to the risk score each have their own MITRE mappings. Review the `detections` field in the notable to identify which techniques are involved.
+| Technique ID | T1588.007 (annotation) |
+| Technique Name | Obtain Capabilities: Artificial Intelligence |
+| Tactic | Resource Development |
+| Sub-technique | N/A. Techniques actually observed are in `contributing_mitre_attack` |
 
 ---
 
@@ -47,142 +42,164 @@ The individual detections contributing to the risk score each have their own MIT
 
 ### Plain English
 
-1. Search the `risk` index for all events generated by AI detections (`search_name="AI RBA - *"`) with `risk_object_type="user"` in the past 24 hours.
-2. Aggregate by `risk_object` (user): sum the total risk score, collect the list of detection names, and capture the first/last event times.
-3. Load the high risk threshold from `ai_detection_config.csv` (default: 90).
-4. Filter to users whose `total_risk >= high_risk_threshold`.
-5. Generate a **high-severity notable event** with the user, total risk, and contributing detections.
+1. Read `index=risk` (macro `..._risk_index`) for `risk_object_type="user"` events whose `source` matches `* - HDSI AI * - Rule` or whose `detection_id` starts with `hdsi_ai_`. The health checks (`* - HDSI AI Health * - Rule`, `hdsi_ai_health_*`) are excluded. `risk_object` must be set and must not be `unknown`, `-` or end in `$`. The tenant filter is applied inline.
+2. Build `user_key` with `..._user_key`: lower-case `risk_object` with any `@domain` and `DOMAIN\` removed. Built-in local accounts (`administrator`, `admin`, `guest`, `defaultaccount`, `wdagutilityaccount`) keep their qualifier, written `host/administrator`, so they never merge across machines.
+3. Drop accounts matched by `..._excluded_accounts`: placeholders and masks, `$` computer accounts, OS service identities (`SYSTEM`, `LOCAL/NETWORK SERVICE`, `NT AUTHORITY\*`, `NT SERVICE\*`, `IIS APPPOOL\*`, `DWM-n`, `UMFD-n`), `root`, `nobody`, `daemon`, `krbtgt`, and bare unqualified built-ins.
+4. Sum `risk_score` per `user_key` and contributing detection, then per user. The notable `user` is the raw risk object that carried the most points.
+5. Look up `high_risk_threshold` in `ai_detection_config` (default 90). Keep users with `total_risk >= high_risk_threshold` and at least `..._min_detections` (1) detections.
 
 ### Key Fields
 
 | Field | Description | Example Value |
 |---|---|---|
-| `user` / `risk_object` | The user who accumulated risk | `jsmith@corp.com` |
-| `total_risk` | Sum of all AI risk scores in 24 hours | `125` |
-| `detections` | List of detection names that contributed | `AI RBA - High Volume Upload..., AI RBA - Privileged Account...` |
-| `firstTime` | Timestamp of the earliest contributing event | `2026-02-13T08:30:00` |
-| `lastTime` | Timestamp of the most recent contributing event | `2026-02-13T14:15:00` |
+| `user` / `risk_object` | Raw identity with the most points | `jdoe@corp.example` |
+| `user_key` | Merged person key; the suppression key, and the key AI-RISK-001 uses for hand-off | `jdoe` |
+| `account` | `user_key` without host or domain; used by the drilldowns to pre-filter | `jdoe` |
+| `risk_objects` | Every merged raw form | `jdoe@corp.example`, `CORP\jdoe` |
+| `total_risk` / `high_risk_threshold` | 24 h total and the threshold it crossed | `105` / `90` |
+| `detection_count` / `risk_event_count` | Distinct detections / risk events | `3` / `5` |
+| `top_detection_risk` | Points from the largest contributor | `45` |
+| `detection_list` | Up to 8 contributors with points, highest first | `HDSI AI High Volume Upload To AI Service (45); ...` |
+| `phase_list` | AI kill-chain phases | `exfiltration, recon` |
+| `contributing_mitre_attack` | Technique IDs of the contributors | `T1567` |
+| `ai_providers` | Up to 10 providers | `OpenAI`, `Anthropic` |
+| `firstTime` / `lastTime` | First and last contributing risk event | `2026-10-09 08:12:00` |
 
 ### Thresholds
 
-| Parameter | Default Value | Config Lookup Key | Notes |
+| Parameter | Default Value | Where | Notes |
 |---|---|---|---|
-| High risk threshold | 90 | `high_risk_threshold` | Total risk points in 24h to trigger a high-severity notable |
-| Suppress period | 2 hours | N/A (configured in savedsearches.conf) | Re-alerts if risk continues after 2h |
+| Critical threshold | `90` | `ai_detection_config` row `high_risk_threshold` (common) | Shared with AI-RISK-001 (upper edge of its band) |
+| Minimum detections | `1` | `..._min_detections` | Raising it leaves single-detection critical totals with no notable from either rule |
+| Suppression | 24 h per `user_key` | savedsearches.conf | One notable per person per day |
+
+Per-event HDSI AI scores are modest (roughly 10 to 80), so 90 normally needs several detections in a day (for example unsanctioned web access + first-seen provider + high-volume upload + after hours), or a repeated high-severity detection such as AI-Assisted Lateral Movement.
 
 ---
 
 ## Triage Steps
 
-> **Estimated triage time:** 20-40 minutes (this is a high-severity notable requiring thorough investigation)
+> **Estimated triage time:** 20-40 minutes
 
-### Step 1: Understand the risk composition
+Use `$user_key$` and `$account$` from the notable.
 
-```spl
-index=risk risk_object="$user$" search_name="AI RBA - *" risk_object_type="user" earliest=-24h
-| stats sum(risk_score) as total_risk values(search_name) as detections dc(search_name) as unique_detections by risk_object
-| eval detections=mvjoin(detections, " | ")
-```
+The `tstats summariesonly=t` evidence searches read accelerated summaries only. In validation the most recent 15-30 minutes were not yet summarised on two tenants, so for very recent activity re-run them later, or with `summariesonly=f` over a short window.
 
-- How many distinct detections contributed? A single high-scoring detection (like AI-020) vs. many low-scoring detections have different implications.
-- What is the total risk score? How far above the 90-point threshold is it?
-
-### Step 2: Review the timeline of risk events
+### Step 1: Validate the notable and the band hand-off
 
 ```spl
-index=risk risk_object="$user$" search_name="AI RBA - *" risk_object_type="user" earliest=-24h
-| table _time search_name risk_score risk_object
-| sort _time
+index=notable source IN ("Threat - HDSI RBA AI User Critical Risk Threshold Exceeded - Rule", "Threat - HDSI RBA AI User Risk Threshold Exceeded - Rule") earliest=-7d
+| search user_key="$user_key$"
+| table _time, source, user, user_key, risk_objects, total_risk, detection_count, detection_list, phase_list, ai_providers
+| sort - _time
 ```
 
-- Are the events clustered in a short window (suggesting a single activity session) or spread across the day (suggesting repeated behavior)?
-- What was the first detection? This often reveals the initial activity that should be investigated first.
+- Confirm `user_key` is one real person. If `risk_objects` mixes two people (same account name in two domains) or a shared account (`kiosk`, `shared_operator`), treat it as a tuning case.
+- A medium notable (AI-RISK-001) earlier the same day followed by this one is an escalation, not a duplicate.
 
-### Step 3: Identify the user
+### Step 2: Understand the risk composition
+
+This is the second drilldown (`Summarize HDSI AI risk by detection`).
+
+```spl
+| from datamodel:"Risk.All_Risk"
+| search risk_object_type="user" risk_object="*$account$*" (source="* - HDSI AI * - Rule" OR detection_id="hdsi_ai_*") NOT source="* - HDSI AI Health * - Rule" NOT detection_id="hdsi_ai_health_*"
+| `hdsi_rba_ai_user_critical_risk_threshold_exceeded_user_key`
+| search user_key="$user_key$"
+| stats count as risk_events sum(risk_score) as total_risk values(ai_kill_chain_phase) as phases values(provider) as providers values(risk_object) as risk_objects min(_time) as firstTime max(_time) as lastTime by source
+| convert ctime(firstTime) ctime(lastTime)
+| sort - total_risk
+```
+
+- One detection supplying most of the total (a repeated lateral-movement or upload event) needs that detection's own runbook first.
+- Several detections across phases (recon, then execution, then exfiltration) is a progression: read Step 3 in time order.
+
+### Step 3: Read the contributing events in time order
+
+This is the first drilldown.
+
+```spl
+| from datamodel:"Risk.All_Risk"
+| search risk_object_type="user" risk_object="*$account$*" (source="* - HDSI AI * - Rule" OR detection_id="hdsi_ai_*") NOT source="* - HDSI AI Health * - Rule" NOT detection_id="hdsi_ai_health_*"
+| `hdsi_rba_ai_user_critical_risk_threshold_exceeded_user_key`
+| search user_key="$user_key$"
+| table _time, source, risk_object, risk_score, ai_kill_chain_phase, provider, risk_message
+| sort 0 _time
+```
+
+### Step 4: Review the raw AI activity
+
+Web and SSE activity (`fillnull_value` keeps rows where only `site` or only `url_domain` is mapped):
+
+```spl
+| tstats summariesonly=t allow_old_summaries=t fillnull_value="unknown" count sum(Web.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url_domain=* OR Web.site=*) Web.user="*$account$*" by Web.user Web.src Web.url_domain Web.site
+| rename Web.* as *
+| eval ai_domain=lower(coalesce(nullif(url_domain,"unknown"), nullif(site,"unknown"))), ai_input_type=if(isnull(nullif(url_domain,"unknown")), "app", "host")
+| `ai_domains_filter`
+| eval mb_out=round(bytes_out/1024/1024, 2)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - mb_out
+| table firstTime, lastTime, user, src, ai_domain, provider, usage_type, count, mb_out
+```
+
+AI tools on endpoints:
+
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.user="*$account$*" by Processes.dest Processes.user Processes.process_name
+| rename Processes.* as *
+| eval process_name_lc=lower(process_name)
+| `ai_process_enrich`
+| where enabled=1
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, dest, user, process_name, tool, provider, count, process
+```
+
+### Step 5: Check all risk on the person (AI and non-AI)
+
+This is the third drilldown.
+
+```spl
+| from datamodel:"Risk.All_Risk"
+| search risk_object_type="user" risk_object="*$account$*"
+| `hdsi_rba_ai_user_critical_risk_threshold_exceeded_user_key`
+| search user_key="$user_key$"
+| eval family=if(match(source, " - HDSI (RBA )?AI "), "HDSI AI", "other")
+| stats count as risk_events sum(risk_score) as total_risk values(risk_object) as risk_objects by family source
+| sort - total_risk
+```
+
+- Non-AI risk (suspicious logins, malware, privilege changes) alongside AI risk changes the case from policy to security incident.
+- Also check AI-RISK-003, AI-RISK-004 and AI-RISK-005 notables for the same person.
+
+### Step 6: Identify the user and check sanctioned status
 
 ```spl
 | inputlookup identity_lookup_expanded
-| search identity="$user$"
-| table identity first_name last_name email managedBy category priority bunit
+| search identity="$account$"
+| table identity, first, last, email, managedBy, bunit, category, priority, watchlist, endDate
 ```
-
-- Determine the user's role, department, and sensitivity level.
-- Is this user privileged? (If AI-016 fired, this is confirmed.)
-- Who is the user's manager for escalation?
-
-### Step 4: Investigate the highest-risk contributing detection
-
-For each detection in the `detections` field, consult its individual runbook and perform the triage steps. Start with the highest-risk detection. Common scenarios:
-
-**If AI-020 (DLP Violation) is present:**
-```spl
-index=risk risk_object="$user$" search_name="*DLP*" earliest=-24h
-| table _time risk_score search_name
-```
-- This is the most critical signal. Follow the AI-020 runbook immediately.
-
-**If AI-007 (High Volume Upload) is present:**
-```spl
-index=risk risk_object="$user$" search_name="*High Volume*" earliest=-24h
-| table _time risk_score search_name
-```
-- Check the upload tier (risk score: 20=low, 40=medium, 60=high, 80=critical).
-
-**If AI-016 (Privileged Account) is present:**
-```spl
-index=risk risk_object="$user$" search_name="*Privileged*" earliest=-24h
-| table _time risk_score search_name
-```
-- Privileged user + other detections = elevated concern.
-
-### Step 5: Check for system-level risk
 
 ```spl
-index=risk risk_object_type="system" earliest=-24h
-| search [| inputlookup identity_lookup_expanded | search identity="$user$" | fields identity | rename identity as _user]
-| stats sum(risk_score) as system_risk values(risk_object) as systems values(search_name) as detections by risk_object
-| sort -system_risk
+| inputlookup ai_sanctioned_entities
+| search entity="*$account$*" OR entity="*"
+| table entity_type, entity, provider, scope, expires, owner, reason, enabled, allow_key
 ```
 
-- Identify which systems the user was operating from.
-- Multiple source systems suggest the user is accessing AI services from different endpoints.
+### Step 7: Make a determination
 
-### Step 6: Look for data exposure indicators
-
-```spl
-| tstats summariesonly=t sum(Web.bytes_out) as bytes_out from datamodel=Web
-  where Web.user="$user$" earliest=-24h
-| rename Web.* as *
-| eval ai_domain=lower(url_domain)
-| lookup ai_provider_domains domain as ai_domain OUTPUTNEW provider enabled
-| where enabled=1
-| stats sum(bytes_out) as total_bytes by provider
-| eval mb_out=round(total_bytes/1024/1024,2)
-| sort -mb_out
-```
-
-- Total data volume uploaded to AI services in the past 24 hours.
-- Which providers received the most data?
-
-### Step 7: Determine overall assessment and response
-
-Based on the contributing detections and investigation findings:
-
-- **Critical (Immediate Response):** AI-020 (DLP) is present, or total_risk > 150, or privileged user with high upload volume. Escalate to Incident Response.
-- **High (Same-Day Response):** Multiple moderate detections indicating persistent unsanctioned usage. Escalate to the user's manager and enforce policy.
-- **Medium (24-Hour Response):** Low-scoring detections accumulated over time. May indicate a user who needs AI policy training. Follow up with user awareness.
+- **True Positive:** sustained unsanctioned AI use with data exposure, risky access or adversarial indicators, or a single high-severity detection that is confirmed.
+- **Benign True Positive:** a heavy but authorised AI user whose tools are not yet in `ai_sanctioned_entities` (the most common case in the first weeks).
+- **False Positive:** two people or a shared account merged under one `user_key`, or a service account that should be excluded.
 
 ---
 
 ## True Positive Indicators
 
-- Multiple distinct detections fired (not just the same detection repeatedly).
-- Total risk score significantly exceeds the threshold (e.g., 150+ vs. the 90 threshold).
-- DLP violations are among the contributing detections.
-- Privileged account involvement.
-- After-hours activity patterns.
-- First-seen provider combined with high upload volumes.
-- User has no documented AI usage approval.
+- `phase_list` includes `exfiltration`, `collection` or `lateral_movement`, not only `recon`.
+- An upload, DLP or model-exfiltration detection is among the top contributors.
+- The providers are unsanctioned or reached with a personal account.
+- The user is departing, on a watchlist, or in a sensitive business unit.
+- There is non-AI risk on the same person in Step 5.
 
 ---
 
@@ -190,71 +207,62 @@ Based on the contributing detections and investigation findings:
 
 | Scenario | Likelihood | Mitigation |
 |---|---|---|
-| Authorized user who is not yet in the allowlist triggers multiple detections | Medium | Add to allowlist promptly after verification |
-| Newly onboarded user exploring approved AI tools triggers first-seen + web access + DNS | Medium | Ensure onboarding process includes allowlist provisioning |
-| Detection overlap inflation: a single browsing session triggers 3-4 low-risk detections | Medium | Review individual detection scores; consider if base scores need adjustment |
-| Shared account (kiosk, lab machine) accumulates risk from multiple actual users | Low | Investigate per-session rather than per-user; consider system-level allowlist |
+| A user's first heavy week with a new AI tool: unsanctioned access, first seen, burst, multiple services, upload and after-hours fire together | High (early weeks) | Load sanctioned tools into `ai_sanctioned_entities` before enabling |
+| Automation or service account running AI agents or CLIs. In an all-rule stress test, service-like keys were 2 of 104 keys at or above 90 on Tenant A and 5 of 19 on Tenant C | Medium | Decide account by account; add a pattern to `..._excluded_accounts` in **both** band rules, e.g. `OR match(user_key, "^svc[_.-]")` |
+| Different people sharing an account name across email domains or forests | Low | Switch `..._user_key` to `eval user_key=lower(trim(risk_object))` in both band rules |
+| Generic shared names not on the exclusion list (`kiosk`, `shared_operator`) | Low | Add them to `..._excluded_accounts` in both rules |
+| A domain built-in scored as both `EXAMPLE\Administrator` and `administrator@example.com` is split across two keys | Low (missed total, not a false alert) | Use the alternative `..._user_key` in the package README, in both rules |
 
 ---
 
 ## Response Actions
 
-### If Critical Assessment
+### If confirmed True Positive
 
-1. **Immediate containment:** Block the user's access to AI services via proxy/firewall.
-2. **Incident declaration:** Open a formal incident in the case management system.
-3. **Stakeholder notification:** CISO, user's VP, Legal (if regulated data), Compliance.
-4. **Full investigation:** Follow runbooks for each contributing detection. Determine data exposure scope.
-5. **Evidence preservation:** Preserve risk events, web logs, DLP logs, and process logs for the investigation.
+1. **Contain:** block the unsanctioned providers for the user, revoke personal OAuth grants, and stop AI agents or local runtimes on the user's hosts.
+2. **Notify:** the user's manager and data governance; incident response if non-AI risk is also present.
+3. **Investigate:** triage each top contributor with its own runbook (Related Detections), and review data that may have been uploaded.
+4. **Remediate:** move the user to sanctioned AI tooling, rotate exposed secrets, enforce DLP on the AI path.
+5. **Document:** attach the composition from Step 2 to the case.
 
-### If High Assessment
+### If Benign True Positive
 
-1. **Same-day response:** Contact the user's manager.
-2. **User interview:** Understand the business justification for AI usage.
-3. **Policy enforcement:** If no justification, enforce AI usage policy and block access.
-4. **Allowlist or block:** Either add to allowlist (if justified) or implement blocking controls.
-
-### If Medium Assessment
-
-1. **User awareness:** Send AI usage policy reminder to the user.
-2. **Manager notification:** Inform the user's manager of the activity.
-3. **Monitor:** Watch for continued accumulation over the next 48 hours.
-4. **Tuning review:** If this scenario is common, consider adjusting base detection scores.
+1. Add the user, group or provider to `ai_sanctioned_entities` with a scope and `expires`, so the contributors stop scoring.
+2. Record the justification.
+3. Close the notable as Benign True Positive.
 
 ---
 
 ## Tuning Guidance
 
-### Adjusting the high risk threshold
+### Reducing false positives
 
-The default threshold of 90 points was chosen so that:
-- A single AI-020 (DLP violation, 90 pts) triggers immediately.
-- AI-016 (privileged, 60 pts) + any other detection crosses the threshold.
-- Three or more low-scoring detections typically don't reach 90, reducing noise.
+- Sanction approved AI use at the source first.
+- Any change to `..._filter`, `..._user_key`, `..._excluded_accounts` or `..._risk_index` must be made identically in AI-RISK-001 (`hdsi_rba_ai_user_risk_threshold_exceeded_*`), or the bands overlap.
+- Keep this stanza name and the `user_key` field in the notable: AI-RISK-001 looks up this rule's notables by `source` and `user_key`. `..._customizations` may filter rows but must not drop or rewrite `user_key`.
+- Suppressed risk events are counted: the rule does not filter `tag="risk_suppression"` (on two validation tenants that filter made the whole search return nothing). Exclude a suppressed user with `..._filter`.
 
-To adjust based on your environment:
+### Adjusting thresholds
 
-```spl
-index=risk search_name="AI RBA - *" risk_object_type="user" earliest=-30d
-| bin _time span=24h
-| stats sum(risk_score) as daily_risk dc(search_name) as unique_detections by risk_object _time
-| stats perc50(daily_risk) as p50 perc90(daily_risk) as p90 perc95(daily_risk) as p95 perc99(daily_risk) as p99 max(daily_risk) as max by risk_object
-| stats avg(p90) as avg_p90 avg(p95) as avg_p95 avg(p99) as avg_p99 avg(max) as avg_max
-```
-
-- If too many notables: raise the threshold. Set it above the p95 of daily user risk scores.
-- If too few notables: lower the threshold. Set it near the p90.
-- Update `lookups/ai_detection_config.csv`: change the `high_risk_threshold` row.
-
-### Reviewing notable frequency
+After two weeks of detection data, profile daily totals with the rule's own filters and set `high_risk_threshold` near the 99th to 99.5th percentile, keeping `medium_risk_threshold` below it. `ge90 / 14` is the expected notables per day:
 
 ```spl
-index=notable rule_name="AI User Risk Threshold Exceeded - High" earliest=-30d
-| timechart span=1d count
-| stats avg(count) as avg_daily median(count) as median_daily max(count) as max_daily
+`hdsi_rba_ai_user_critical_risk_threshold_exceeded_risk_index` risk_object_type="user" source="* - HDSI AI * - Rule" NOT source="* - HDSI AI Health * - Rule"
+| `hdsi_rba_ai_user_critical_risk_threshold_exceeded_user_key`
+| where len(user_key)>0 AND NOT (`hdsi_rba_ai_user_critical_risk_threshold_exceeded_excluded_accounts`)
+| bin _time span=1d
+| stats sum(risk_score) as total_risk dc(source) as detections by _time user_key
+| stats count as user_days perc90(total_risk) as p90 perc99(total_risk) as p99 perc99.5(total_risk) as p995 max(total_risk) as max count(eval(total_risk>=60)) as ge60 count(eval(total_risk>=90)) as ge90
 ```
 
-Target: 1-5 high-severity notables per day. More than 10/day suggests the threshold is too low or allowlist needs expansion.
+Change the value in the common `ai_detection_config` lookup (row `high_risk_threshold`), never in a copy of the search.
+
+### Adding allowlist entries
+
+```
+entity_type,entity,provider,scope,expires,owner,reason,enabled,allow_key
+user,<username>,<provider>,provider,<YYYY-MM-DD>,<your_name>,<justification>,1,<username>|<provider_lowercase>
+```
 
 ---
 
@@ -262,10 +270,11 @@ Target: 1-5 high-severity notables per day. More than 10/day suggests the thresh
 
 | Detection ID | Name | Relationship |
 |---|---|---|
-| AI-RISK-001 | User Risk Threshold Exceeded - Medium | Lower threshold (60 pts); fires first as an early warning |
-| AI-020 | DLP Violation On AI Service Upload | Single firing can trigger AI-RISK-002 on its own |
-| AI-016 | Privileged Account AI Service Usage | Single firing reaches 60 pts; plus one more detection triggers AI-RISK-002 |
-| All active AI detections (AI-004 through AI-044) | Individual detections | All non-aggregate AI detections contribute risk points to this rule |
+| AI-RISK-001 | HDSI RBA AI User Risk Threshold Exceeded (medium) | Lower band of the same total; shares key, exclusions and thresholds |
+| AI-RISK-003 | HDSI RBA AI Data Collection Kill Chain | Ordered collection-to-upload sequence for the same user |
+| AI-RISK-004 | HDSI RBA AI Privilege Escalation Correlation | Privilege change followed by AI activity |
+| AI-RISK-005 | HDSI RBA AI Multi-Vector Risk | Breadth across AI risk vectors |
+| AI-001 to AI-046 | HDSI AI detections that score users | Contributors; triage the top contributor with its own runbook |
 
 ---
 
@@ -273,11 +282,18 @@ Target: 1-5 high-severity notables per day. More than 10/day suggests the thresh
 
 | Requirement | Details |
 |---|---|
-| Data Source | `risk` index (Splunk ES risk framework) |
-| Required Fields | `search_name`, `risk_object`, `risk_object_type`, `risk_score` |
-| Prerequisites | All contributing AI detections (AI-004 through AI-044) must have `action.risk = 1` and must be writing to the risk index |
-| Lookups | `ai_detection_config.csv` (for `high_risk_threshold` value) |
-| Acceleration | N/A (searches the risk index directly) |
+| Data Model | ES risk index (`..._risk_index`, `index=risk`); `Risk.All_Risk` for drilldowns. Change both together if risk is written to another index |
+| Required Fields | `source`, `risk_object`, `risk_object_type`, `risk_score`; context fields `ai_kill_chain_phase`, `annotations.mitre_attack`, `mitre_attack`, `provider`, `provider_list`, `detection_id` |
+| Contributors | HDSI AI detections that score **users**. Host-only detections (DNS Queries To AI Domains, Access From Unmanaged Device, Local LLM Listening Port) never contribute; a DNS-only deployment never reaches this rule |
+| Sourcetype Examples | N/A (reads risk events) |
+| CIM Compliance | Contributors should score a consistent identity; the key merges UPN, `DOMAIN\` and bare forms but not different local parts (`jsmith` vs `john.smith@...`) |
+| Acceleration | Not required for the rule. Triage Step 4 uses `tstats summariesonly=t` |
+| Lookups | `ai_detection_config` (row `high_risk_threshold`). Triage uses `identity_lookup_expanded`, `ai_sanctioned_entities`, `ai_provider_domains`, `ai_tool_processes` |
+| Prerequisite package | `hdsi_ai_rba_common` |
+
+### Validation (2026-10-09)
+
+Read-only runs against 4 production ES tenants (Tenant A-D). The search and all 3 drilldowns parse everywhere; real 24 h and 7 d runs returned 0 rows (no HDSI AI risk deployed) in 1-7 s. A "real-shape" run over each tenant's non-AI user risk, with the AI membership filter removed, found 105 users at or above 90 on Tenant A (none of them a built-in or service pseudo-user after the exclusions), 16 on B, 19 on C and 0 on D. A 13-case synthetic test gave identical, expected results on all four tenants (three identity forms merged to one notable; per-host built-ins kept separate; placeholders, machines, OS service accounts, health checks, aggregators and system objects dropped). Expected volume once user-scoring HDSI AI detections run: Tenant A 0-2 notables a day, Tenant B 0, Tenant C 1-5, Tenant D 0.
 
 ---
 
@@ -286,3 +302,4 @@ Target: 1-5 high-severity notables per day. More than 10/day suggests the thresh
 | Date | Author | Change |
 |---|---|---|
 | 2026-02-13 | Brainstorm SOC | Initial creation |
+| 2026-10-09 | Hurricane Labs | 1.1.0: rewritten for the released package. Stanza renamed to `Threat - HDSI RBA AI User Critical Risk Threshold Exceeded - Rule`. Membership by `source` pattern or `detection_id`, health checks excluded, UPN/`DOMAIN\`/bare forms merged into `user_key`, placeholder/machine/service/unqualified built-in accounts excluded, per-host built-in keys, per-detection breakdown in the notable, risk index as a macro, suppression changed from 2 h on `user` to 24 h on `user_key`, MITRE T1588.007. Band hand-off contract with AI-RISK-001. Notable only, no risk. Triage SPL rebuilt on `Risk.All_Risk` |

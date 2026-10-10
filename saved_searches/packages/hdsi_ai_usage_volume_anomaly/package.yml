@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI Usage Volume Anomaly
-description: "Statistical anomaly detection using z-score analysis against per-user baseline. Flags users whose daily AI request count exceeds configured standard deviations from historical mean. MITRE: T1567.002"
+package_title: AI Usage Volume Anomaly
+description: "Daily per-user anomaly on AI usage: compares each user's AI sessions/requests and MB uploaded on the last complete day with their own baseline over the 14 prior days, measured from firewall App-ID sessions (Network_Traffic) or web request logs (Web: proxy, SSE, URL-filtering or enterprise-browser), and raises risk on the user when the day is far above it (z-score plus absolute floors). Needs user attribution in at least one of the two data models, and data model acceleration covering at least 15 days for a full baseline (shorter ranges are scored on proportionally fewer baseline days). Risk only, no notable."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,15 +11,20 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
-  - macros:ai_unsanctioned_filter
+  - macros:ai_unsanctioned_filter(3)
+  - macros:ai_risk_multiplier
 tags:
   - rba_only
+  - data_exfiltration
+  - network
+  - pan
   - web
   - proxy
 data_prereqs:
   datamodels:
-    op: AND
+    op: OR
     items:
+    - "Network_Traffic"
     - "Web"
 deployment_type: global
 prereq_packages:

@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI Health Data Model Availability
-description: "Hourly verification that required data models (Web, Endpoint.Processes, Network_Traffic, Network_Resolution, Data_Loss_Prevention, Email, Endpoint.Filesystem) contain recent events. Alerts if any model has zero events in the last 2 hours."
+package_title: AI Health Data Model Availability
+description: "Hourly audit health check for the CIM data models that HDSI AI-RBA detections read with summariesonly=t (Web, Network_Resolution, Network_Traffic, Endpoint.Processes, Endpoint.Filesystem, Endpoint.Ports, Email, DLP, Authentication). Compares the last 2 complete hours of accelerated events with the median of the same hours of day over the prior 6 days, flags a model silent for 24 hours or more against its own earlier rate, and classifies each model as OK, DEGRADED, STOPPED, ABSENT or NOT_ACCELERATED. Creates an audit notable only for a model that an enabled AI-RBA detection (or the required_models macro) depends on, so optional models a tenant does not collect never alert. No risk, no email."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,6 +11,19 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 tags:
   - audit
+data_prereqs:
+  datamodels:
+    op: OR
+    items:
+    - "Web"
+    - "Network_Resolution"
+    - "Network_Traffic"
+    - "Endpoint.Processes"
+    - "Endpoint.Filesystem"
+    - "Endpoint.Ports"
+    - "Email"
+    - "DLP.DLP_Incidents"
+    - "Authentication"
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common

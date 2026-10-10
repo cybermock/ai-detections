@@ -1,0 +1,35 @@
+version: 1.1.0
+creation_date: '2026-03-04'
+package_title: AI Usage From Personal Account / OAuth Mismatch
+description: "Detects users who use an AI provider's web or IDE service (OpenAI, Anthropic, Perplexity, Cursor, Mistral) repeatedly in a day (at least 20 proxy/SSE requests or firewall App-ID sessions across at least 2 clock hours) but have no successful sign-in to the organisation's corporate SSO app for that provider in the last 30 days, while other users do. That pattern means a personal account outside corporate retention, DLP and offboarding. Uses user-attributed Web or Network_Traffic (App-ID) data plus Authentication (Okta, Entra ID or Google Workspace SAML sign-ins). Risk on the user only, no notable. Ad hoc: needs both a corporate SSO app for the provider and user-attributed AI traffic in the same tenant."
+author: Hurricane Labs
+app_compatibility:
+  - app_name: SplunkEnterpriseSecuritySuite
+    operator: '*'
+    required_version: '*'
+app_context: HurricaneLabsContentUpdates
+enable_alerting: false
+common_dependencies:
+  - macros:ai_domains_filter
+  - macros:ai_unsanctioned_filter(3)
+  - macros:ai_risk_multiplier
+tags:
+  - rba_only
+  - web
+  - proxy
+  - identity
+  - authentication
+  - network
+data_prereqs:
+  datamodels:
+    op: AND
+    items:
+    - "Authentication"
+  searches:
+    op: AND
+    items:
+    - "| tstats summariesonly=t count from datamodel=Authentication where Authentication.action=success (Authentication.app=\"*openai*\" OR Authentication.app=\"*chatgpt*\" OR Authentication.app=\"*anthropic*\" OR Authentication.app=\"*claude*\" OR Authentication.app=\"*perplexity*\" OR Authentication.app=\"*cursor*\" OR Authentication.app=\"*mistral*\") NOT Authentication.app IN (\"*api*\",\"*azure*\",\"*mcp*\",\"*connector*\",\"*plugin*\",\"*add-in*\",\"* for google*\",\"* for gmail*\",\"* for slack*\",\"* for outlook*\") NOT sourcetype IN (\"gws:reports:token\") earliest=-30d@d | where count > 0"
+    - "| tstats summariesonly=t count from datamodel=Web where (Web.url_domain IN (\"chatgpt.com\",\"*.chatgpt.com\",\"chat.openai.com\",\"openai.com\",\"*.openai.com\",\"oaiusercontent.com\",\"*.oaiusercontent.com\",\"claude.ai\",\"*.claude.ai\",\"claude.com\",\"*.claude.com\",\"anthropic.com\",\"*.anthropic.com\",\"perplexity.ai\",\"*.perplexity.ai\",\"cursor.com\",\"*.cursor.com\",\"cursor.sh\",\"*.cursor.sh\",\"mistral.ai\",\"*.mistral.ai\") OR Web.site IN (\"chatgpt.com\",\"*.chatgpt.com\",\"openai.com\",\"*.openai.com\",\"claude.ai\",\"*.claude.ai\",\"claude.com\",\"*.claude.com\",\"perplexity.ai\",\"*.perplexity.ai\",\"cursor.com\",\"*.cursor.com\",\"mistral.ai\",\"*.mistral.ai\",\"chatgpt\",\"openai\",\"openai-chatgpt\",\"claude\",\"anthropic\",\"perplexity\",\"perplexity ai\",\"cursor\",\"mistral ai\")) NOT Web.user IN (\"unknown\",\"-\",\"\") earliest=-1d | append maxtime=900 [| tstats summariesonly=t count from datamodel=Network_Traffic where All_Traffic.app IN (\"openai-chatgpt*\",\"chatgpt*\",\"claude*\",\"anthropic-claude\",\"anthropic\",\"perplexity*\",\"cursor\",\"mistral*\") NOT All_Traffic.user IN (\"unknown\",\"-\",\"\") earliest=-1d] | stats sum(count) as count | where count > 0"
+deployment_type: adhoc
+prereq_packages:
+  - hdsi_ai_rba_common

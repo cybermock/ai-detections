@@ -4,9 +4,7 @@ from __future__ import annotations
 
 import re
 
-import pytest
-
-from .conftest import LOOKUPS_DIR, load_csv
+from .conftest import COMMON_PACKAGE, lookup_rows, package_macro_stanzas, search_of
 
 
 class TestDomainLookupMatching:
@@ -78,7 +76,7 @@ class TestApiKeyPatternMatching:
     """Verify regex patterns in ai_api_key_patterns.csv match sample keys."""
 
     def _load_patterns(self):
-        rows = load_csv(LOOKUPS_DIR / "ai_api_key_patterns.csv")
+        rows = lookup_rows("ai_api_key_patterns")
         return {row["pattern_id"]: row["regex_pattern"] for row in rows if row.get("enabled") == "1"}
 
     def test_openai_legacy_key_matches(self):
@@ -121,7 +119,10 @@ class TestApiKeyPatternMatching:
         """Random strings should not match non-contextual patterns."""
         patterns = self._load_patterns()
         sample = "this-is-not-an-api-key-at-all-1234567890"
-        non_contextual = ["AK-001", "AK-002", "AK-003", "AK-004", "AK-007", "AK-008", "AK-009", "AK-011", "AK-013", "AK-014", "AK-015", "AK-016", "AK-018"]
+        non_contextual = [
+            "AK-001", "AK-002", "AK-003", "AK-004", "AK-007", "AK-008", "AK-009",
+            "AK-011", "AK-013", "AK-014", "AK-015", "AK-016", "AK-018",
+        ]
         for pid in non_contextual:
             if pid in patterns:
                 assert not re.search(patterns[pid], sample), f"{pid} should NOT match random string"
@@ -131,7 +132,7 @@ class TestPromptInjectionPatterns:
     """Verify prompt injection patterns match sample content."""
 
     def _load_patterns(self):
-        rows = load_csv(LOOKUPS_DIR / "ai_prompt_injection_patterns.csv")
+        rows = lookup_rows("ai_prompt_injection_patterns")
         return {row["pattern_id"]: row["pattern"] for row in rows if row.get("enabled") == "1"}
 
     def test_known_injections_match(self):
@@ -162,14 +163,14 @@ class TestDeepfakeToolMatching:
     """Verify deepfake tool lookup matches expected tools."""
 
     def test_known_tools_present(self):
-        rows = load_csv(LOOKUPS_DIR / "ai_deepfake_tools.csv")
+        rows = lookup_rows("ai_deepfake_tools")
         tool_names = {row["tool_name"] for row in rows if row.get("enabled") == "1"}
         must_have = ["DeepFaceLab", "FaceFusion", "Roop", "RVC", "Wav2Lip"]
         for tool in must_have:
             assert tool in tool_names, f"Deepfake tool '{tool}' not found in lookup"
 
     def test_voice_cloning_tools_present(self):
-        rows = load_csv(LOOKUPS_DIR / "ai_deepfake_tools.csv")
+        rows = lookup_rows("ai_deepfake_tools")
         voice_tools = {
             row["tool_name"]
             for row in rows
@@ -180,7 +181,7 @@ class TestDeepfakeToolMatching:
             assert tool in voice_tools, f"Voice clone tool '{tool}' not found"
 
     def test_categories_valid(self):
-        rows = load_csv(LOOKUPS_DIR / "ai_deepfake_tools.csv")
+        rows = lookup_rows("ai_deepfake_tools")
         valid_categories = {"face_swap", "voice_clone", "lip_sync", "avatar_generation", "image_generation"}
         for row in rows:
             assert row["category"] in valid_categories, (
@@ -192,9 +193,7 @@ class TestCloudProviderRegexMatching:
     """Verify ai_domains_filter macro contains cloud provider regex patterns."""
 
     def _get_macro_definition(self):
-        from .conftest import DEFAULT_DIR, parse_conf
-        macros = parse_conf(DEFAULT_DIR / "macros.conf")
-        return macros.get("ai_domains_filter", {}).get("definition", "")
+        return package_macro_stanzas(COMMON_PACKAGE).get("ai_domains_filter", {}).get("definition", "")
 
     def test_macro_contains_aws_bedrock_regex(self):
         defn = self._get_macro_definition()
@@ -215,7 +214,7 @@ class TestCloudProviderRegexMatching:
     def test_cloud_regex_before_where_enabled(self):
         """Cloud regex must be evaluated before the final where enabled=1 filter."""
         defn = self._get_macro_definition()
-        cloud_pos = defn.find("_cloud_provider")
+        cloud_pos = defn.find("amazonaws")
         where_pos = defn.rfind("where enabled=1")
         assert cloud_pos > 0 and where_pos > cloud_pos, (
             "Cloud regex must appear before final 'where enabled=1'"
@@ -223,7 +222,7 @@ class TestCloudProviderRegexMatching:
 
 
 class TestVoiceCloneDomainCoverage:
-    """Verify voice cloning domains in AI-045 detection."""
+    """Verify voice cloning domains used by hdsi_ai_voice_cloning_api_access."""
 
     def test_voice_clone_domains_in_lookup(self, provider_domains):
         """Major voice cloning domains must exist in ai_provider_domains.csv."""
@@ -232,12 +231,9 @@ class TestVoiceCloneDomainCoverage:
         for domain in must_have:
             assert domain in domain_set, f"Voice clone domain missing from lookup: {domain}"
 
-    def test_voice_clone_detection_is_lookup_driven(self, savedsearches):
-        """AI-045 should resolve providers through ai_domains_filter instead of hardcoded domain IN lists."""
-        for name, props in savedsearches.items():
-            if "AI-045" in name:
-                spl = props.get("search", "")
-                assert "`ai_domains_filter`" in spl, "AI-045 must use ai_domains_filter"
-                assert "provider IN (" in spl, "AI-045 should filter to voice-clone providers after lookup"
-                return
-        pytest.fail("AI-045 detection stanza not found")
+    def test_voice_clone_detection_is_lookup_driven(self):
+        """hdsi_ai_voice_cloning_api_access resolves providers through ai_domains_filter, not a hardcoded IN list."""
+        spl = search_of("hdsi_ai_voice_cloning_api_access")
+        assert spl, "hdsi_ai_voice_cloning_api_access saved search not found"
+        assert "`ai_domains_filter`" in spl, "voice cloning detection must use ai_domains_filter"
+        assert "provider IN (" in spl, "voice cloning detection should filter to voice-clone providers after lookup"

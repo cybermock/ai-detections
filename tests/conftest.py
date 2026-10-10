@@ -1,261 +1,225 @@
-"""
-Shared fixtures and helpers for splunk-es-ai-rba test suite.
+"""Shared helpers for the splunk-es-ai-rba test suite.
 
-Provides:
-- Splunk .conf parser that handles multi-line values, stanza headers, key=value pairs
-- Fixtures for loading savedsearches.conf, macros.conf, transforms.conf
-- Fixtures for loading all CSV lookups
-- Helpers for extracting macro and lookup references from SPL
+The release target is the soc-search-repo style package tree under
+``saved_searches/packages/``. Conf parsing, macro expansion, the prereq closure and
+lookup loading are reused from ``saved_searches/tools/render_live_spl.py`` so the
+tests and the live-render tool agree on what a package means.
+
+Package roles (by name):
+
+- ``hdsi_ai_rba_common``  -- shared macros, transforms and lookups (no saved search)
+- ``hdsi_ai_health_*``    -- platform health checks
+- ``hdsi_rba_ai_*``       -- risk aggregators (raise notables from the risk index)
+- ``hdsi_ai_*`` with ``deployment_type: adhoc`` and ``action.risk = 0`` -- hunting/discovery
+- every other ``hdsi_ai_*`` -- detections (risk-only, no notable)
 """
 
 from __future__ import annotations
 
 import csv
+import importlib.util
+import json
 import re
+import sys
+from functools import lru_cache
 from pathlib import Path
 
 import pytest
-
-# ---------------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------------
+import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_DIR = PROJECT_ROOT / "default"
-LOOKUPS_DIR = PROJECT_ROOT / "lookups"
+SAVED_SEARCHES_DIR = PROJECT_ROOT / "saved_searches"
+PACKAGES_DIR = SAVED_SEARCHES_DIR / "packages"
+TOOLS_DIR = SAVED_SEARCHES_DIR / "tools"
+DOCS_DIR = PROJECT_ROOT / "docs"
+RUNBOOKS_DIR = DOCS_DIR / "runbooks"
+PACKAGE_TAGS_CSV = SAVED_SEARCHES_DIR / "package_tags.csv"
+
+COMMON_PACKAGE = "hdsi_ai_rba_common"
+COMMON_DIR = PACKAGES_DIR / COMMON_PACKAGE
+COMMON_LOOKUPS_DIR = COMMON_DIR / "lookups"
+
+RELEASE_VERSION = "1.1.0"
+
+
+def _load_render_module():
+    spec = importlib.util.spec_from_file_location("render_live_spl", TOOLS_DIR / "render_live_spl.py")
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["render_live_spl"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+rls = _load_render_module()
+read_conf = rls.read_conf
+package_closure = rls.package_closure
+load_macros = rls.load_macros
+load_lookups = rls.load_lookups
+expand_macros = rls.expand_macros
+render = rls.render
+split_args = rls.split_args
+parse_outputs = rls.parse_outputs
+MACRO_RE = rls.MACRO_RE
 
 
 # ---------------------------------------------------------------------------
-# Splunk .conf parser
+# Package discovery and metadata
 # ---------------------------------------------------------------------------
 
 
-def parse_conf(path: Path) -> dict[str, dict[str, str]]:
-    """Parse a Splunk .conf file into {stanza: {key: value}}.
+def all_packages() -> list[str]:
+    return sorted(p.name for p in PACKAGES_DIR.iterdir() if p.is_dir() and (p / "package.yml").exists())
 
-    Handles:
-    - Stanza headers: [stanza_name]
-    - Key=value pairs (first ``=`` is the separator)
-    - Multi-line values via ``\\`` continuation at end of line
-    - Continuation lines that start with leading whitespace (appended to
-      the previous key's value)
-    - Comment lines starting with ``#`` or ``;``
-    - Blank lines (ignored)
-    """
-    stanzas: dict[str, dict[str, str]] = {}
-    current_stanza = "default"
-    stanzas[current_stanza] = {}
-    current_key: str | None = None
 
-    lines = path.read_text(encoding="utf-8").splitlines()
-    i = 0
-    while i < len(lines):
-        raw = lines[i]
-        stripped = raw.strip()
+@lru_cache(maxsize=None)
+def package_meta(package: str) -> dict:
+    data = yaml.safe_load((PACKAGES_DIR / package / "package.yml").read_text(encoding="utf-8"))
+    return data or {}
 
-        # Skip blank and comment lines
-        if not stripped or stripped.startswith("#") or stripped.startswith(";"):
-            current_key = None
-            i += 1
-            continue
 
-        # Stanza header
-        if stripped.startswith("[") and stripped.endswith("]"):
-            current_stanza = stripped[1:-1]
-            stanzas.setdefault(current_stanza, {})
-            current_key = None
-            i += 1
-            continue
+@lru_cache(maxsize=None)
+def savedsearches(package: str) -> dict[str, dict[str, str]]:
+    return read_conf(PACKAGES_DIR / package / "confs" / "savedsearches.conf")
 
-        # Continuation line (starts with whitespace, no ``=`` before content)
-        # Only valid when we already have a current_key
-        if raw[0] in (" ", "\t") and current_key is not None:
-            stanzas[current_stanza][current_key] += " " + stripped
-            i += 1
-            continue
 
-        # Key = value
-        if "=" in stripped:
-            key, _, value = stripped.partition("=")
-            key = key.strip()
-            value = value.strip()
+@lru_cache(maxsize=None)
+def package_macro_stanzas(package: str) -> dict[str, dict[str, str]]:
+    return read_conf(PACKAGES_DIR / package / "confs" / "macros.conf")
 
-            # Handle backslash continuation
-            while value.endswith("\\") and i + 1 < len(lines):
-                value = value[:-1].rstrip()
-                i += 1
-                value += " " + lines[i].strip()
 
-            stanzas[current_stanza][key] = value
-            current_key = key
-            i += 1
-            continue
+@lru_cache(maxsize=None)
+def closure_macros(package: str) -> dict[str, tuple[list[str], str]]:
+    return load_macros(package_closure(package))
 
-        # Anything else — treat as continuation of prior value
-        if current_key is not None:
-            stanzas[current_stanza][current_key] += " " + stripped
 
-        i += 1
+def role(package: str) -> str:
+    """Return common | health | aggregator | hunting | detection."""
+    if package == COMMON_PACKAGE:
+        return "common"
+    if package.startswith("hdsi_ai_health_"):
+        return "health"
+    if package.startswith("hdsi_rba_ai_"):
+        return "aggregator"
+    if package_meta(package).get("deployment_type") == "adhoc" and all(
+        kv.get("action.risk", "0").strip() == "0" for kv in savedsearches(package).values()
+    ):
+        return "hunting"
+    return "detection"
 
-    return stanzas
+
+def packages_with_role(*roles: str) -> list[str]:
+    return [p for p in all_packages() if role(p) in roles]
+
+
+def search_packages() -> list[str]:
+    """Packages that ship a saved search (everything except the common package)."""
+    return [p for p in all_packages() if p != COMMON_PACKAGE]
+
+
+def risk_enabled(kv: dict[str, str]) -> bool:
+    return kv.get("action.risk", "0").strip() == "1"
+
+
+def drilldowns(kv: dict[str, str]) -> list[dict]:
+    """Parsed drilldown searches; raises ValueError/JSONDecodeError on malformed JSON."""
+    raw = kv.get("action.notable.param.drilldown_searches", "").strip()
+    if not raw:
+        return []
+    parsed = json.loads(raw)
+    if not isinstance(parsed, list):
+        raise ValueError("drilldown_searches is not a JSON list")
+    return parsed
+
+
+def drilldown_searches_text(kv: dict[str, str]) -> list[str]:
+    """Drilldown search strings, or [] when the JSON does not parse (covered by its own test)."""
+    try:
+        return [d.get("search", "") for d in drilldowns(kv) if isinstance(d, dict)]
+    except (ValueError, json.JSONDecodeError):
+        return []
+
+
+@lru_cache(maxsize=None)
+def repo_macro_names() -> frozenset[str]:
+    """Every macro name (without arity) defined by any package in the repo."""
+    names = set()
+    for pkg in all_packages():
+        for stanza in package_macro_stanzas(pkg):
+            names.add(re.sub(r"\(\d+\)$", "", stanza))
+    return frozenset(names)
 
 
 # ---------------------------------------------------------------------------
-# CSV loader
+# Lookups (discovered through transforms.conf)
 # ---------------------------------------------------------------------------
 
 
 def load_csv(path: Path) -> list[dict[str, str]]:
-    """Load a CSV lookup file and return list of row dicts."""
     with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        return list(reader)
+        return list(csv.DictReader(f))
 
 
-# ---------------------------------------------------------------------------
-# SPL helpers
-# ---------------------------------------------------------------------------
-
-# Matches backtick-wrapped macro references:  `macro_name`  or  `macro_name(arg1,arg2)`
-_MACRO_RE = re.compile(r"`([a-zA-Z_][a-zA-Z0-9_]*(?:\([^)]*\))?)`")
-
-# Matches ``| lookup <transform_name>`` in SPL (the word after ``lookup``)
-_LOOKUP_RE = re.compile(r"\|\s*lookup\s+([a-zA-Z_][a-zA-Z0-9_]*)")
+def csv_header(path: Path) -> list[str]:
+    with open(path, newline="", encoding="utf-8") as f:
+        return next(csv.reader(f), [])
 
 
-def extract_macro_refs(spl: str) -> list[str]:
-    """Return macro references found in SPL, e.g. ['ai_domains_filter', 'ai_unsanctioned_filter(3)'].
-
-    The returned names include arity notation: ``name`` for 0-arg macros,
-    ``name(N)`` for N-arg macros (matching Splunk's macros.conf stanza naming).
-    """
-    refs = []
-    for m in _MACRO_RE.finditer(spl):
-        raw = m.group(1)
-        if "(" in raw:
-            name_part = raw[: raw.index("(")]
-            args_part = raw[raw.index("(") + 1 : raw.rindex(")")]
-            arg_count = len([a.strip() for a in args_part.split(",") if a.strip()])
-            refs.append(f"{name_part}({arg_count})")
-        else:
-            refs.append(raw)
-    return refs
+@lru_cache(maxsize=None)
+def transforms_csv_lookups() -> tuple[tuple[str, str, Path], ...]:
+    """(package, transforms stanza, CSV path) for every file-based lookup definition."""
+    found = []
+    for pkg in all_packages():
+        for stanza, kv in read_conf(PACKAGES_DIR / pkg / "confs" / "transforms.conf").items():
+            filename = kv.get("filename")
+            if filename:
+                found.append((pkg, stanza, PACKAGES_DIR / pkg / "lookups" / filename))
+    return tuple(found)
 
 
-def extract_lookup_refs(spl: str) -> list[str]:
-    """Return lookup transform names referenced via ``| lookup`` in SPL."""
-    return _LOOKUP_RE.findall(spl)
+def lookup_path(name: str) -> Path:
+    """CSV path for a transforms stanza name, e.g. ``ai_provider_domains``."""
+    for _, stanza, path in transforms_csv_lookups():
+        if stanza == name:
+            return path
+    raise KeyError(f"no transforms.conf stanza named {name!r} with a filename")
 
 
-# ---------------------------------------------------------------------------
-# Detection helpers
-# ---------------------------------------------------------------------------
-
-# Matches detection_id="AI-NNN" or "AI-RISK-NNN" or "AI-DISCOVERY-NNN" in SPL eval statements
-_DETECTION_ID_RE = re.compile(r'detection_id\s*=\s*"(AI-[\w-]+\d+)"')
-
-
-def extract_detection_id(spl: str) -> str | None:
-    """Extract detection_id from SPL (e.g. 'AI-001')."""
-    m = _DETECTION_ID_RE.search(spl)
-    return m.group(1) if m else None
-
-
-def is_detection_stanza(name: str) -> bool:
-    """Return True if stanza name looks like a detection (not a threshold/aggregate/health/discovery search)."""
-    return (
-        name.startswith("AI RBA -")
-        and "Risk Threshold" not in name
-        and "Health -" not in name
-        and "AI-RISK-" not in name
-        and "AI-DISCOVERY-" not in name
-    )
-
-
-def is_threshold_stanza(name: str) -> bool:
-    """Return True if stanza is a risk threshold/notable search."""
-    return name.startswith("AI RBA -") and "Risk Threshold" in name
-
-
-# ---------------------------------------------------------------------------
-# Fixtures — .conf files
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture(scope="session")
-def savedsearches() -> dict[str, dict[str, str]]:
-    return parse_conf(DEFAULT_DIR / "savedsearches.conf")
-
-
-@pytest.fixture(scope="session")
-def macros() -> dict[str, dict[str, str]]:
-    return parse_conf(DEFAULT_DIR / "macros.conf")
-
-
-@pytest.fixture(scope="session")
-def transforms() -> dict[str, dict[str, str]]:
-    return parse_conf(DEFAULT_DIR / "transforms.conf")
-
-
-# ---------------------------------------------------------------------------
-# Fixtures — CSV lookups
-# ---------------------------------------------------------------------------
+def lookup_rows(name: str) -> list[dict[str, str]]:
+    path = lookup_path(name)
+    if not path.exists():
+        pytest.fail(f"transforms.conf stanza [{name}] points at missing file {path.relative_to(PROJECT_ROOT)}")
+    return load_csv(path)
 
 
 @pytest.fixture(scope="session")
 def provider_domains() -> list[dict[str, str]]:
-    return load_csv(LOOKUPS_DIR / "ai_provider_domains.csv")
+    return lookup_rows("ai_provider_domains")
 
 
 @pytest.fixture(scope="session")
 def tool_processes() -> list[dict[str, str]]:
-    return load_csv(LOOKUPS_DIR / "ai_tool_processes.csv")
+    return lookup_rows("ai_tool_processes")
 
 
 @pytest.fixture(scope="session")
 def sanctioned_entities() -> list[dict[str, str]]:
-    return load_csv(LOOKUPS_DIR / "ai_sanctioned_entities.csv")
+    return lookup_rows("ai_sanctioned_entities")
 
 
 @pytest.fixture(scope="session")
 def detection_config() -> list[dict[str, str]]:
-    return load_csv(LOOKUPS_DIR / "ai_detection_config.csv")
+    return lookup_rows("ai_detection_config")
 
 
 @pytest.fixture(scope="session")
 def mitre_mapping() -> list[dict[str, str]]:
-    return load_csv(LOOKUPS_DIR / "ai_mitre_mapping.csv")
+    return lookup_rows("ai_mitre_mapping")
 
 
-@pytest.fixture(scope="session")
-def all_csv_files() -> dict[str, list[dict[str, str]]]:
-    """Load every CSV in the lookups directory, keyed by filename."""
-    result = {}
-    for csv_path in sorted(LOOKUPS_DIR.glob("*.csv")):
-        result[csv_path.name] = load_csv(csv_path)
-    return result
-
-
-# ---------------------------------------------------------------------------
-# Derived fixtures
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture(scope="session")
-def detection_stanzas(savedsearches):
-    """Return {stanza_name: props} for detection searches only (not thresholds)."""
-    return {
-        name: props
-        for name, props in savedsearches.items()
-        if name != "default" and is_detection_stanza(name)
-    }
-
-
-@pytest.fixture(scope="session")
-def threshold_stanzas(savedsearches):
-    """Return {stanza_name: props} for risk threshold searches."""
-    return {
-        name: props
-        for name, props in savedsearches.items()
-        if name != "default" and is_threshold_stanza(name)
-    }
+def search_of(package: str) -> str:
+    """The (single) saved search SPL of a package, or '' if none."""
+    for kv in savedsearches(package).values():
+        if "search" in kv:
+            return kv["search"]
+    return ""

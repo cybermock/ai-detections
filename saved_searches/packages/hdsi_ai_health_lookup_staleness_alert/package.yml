@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI Health Lookup Staleness Alert
-description: Weekly check for AI RBA lookup files that have not been updated in 90+ days. Sends email alert for stale lookups requiring maintenance.
+package_title: AI Health Lookup Staleness Alert
+description: "Daily audit health check for the lookups that HDSI AI-RBA detections read: ai_provider_domains, ai_provider_apps, ai_tool_processes, ai_api_key_patterns and ai_prompt_injection_patterns (curated content that ages as AI products change) plus ai_sanctioned_entities, ai_department_sensitivity and ai_detection_config (configuration). Uses REST (lookup definitions, lookup files, saved searches) and inputlookup only, so it needs no data model. Reports MISSING_DEFINITION or MISSING_FILE (every dependent detection fails with a FATAL lookup error), EMPTY (no enabled rows), INVALID_CONTROLS (the medium_risk_threshold and high_risk_threshold rows that the user risk aggregators read leave the medium band empty or start at zero), MISSING_CONTROLS (one of those rows is missing or not numeric, so the aggregators use their built-in defaults 60 and 90), STALE (newest review date, from the last_verified column or the file modification time, older than 90 days, or most enabled rows unverified for 90 days), and EXPIRED_ENTRIES or EXPIRING_ENTRIES in the sanctioned-use allowlist. Creates one audit notable per lookup and status, suppressed for 6 days, only when at least one HDSI AI-RBA detection is enabled and scheduled (case-sensitive title match on HDSI AI / HDSI RBA AI, filtered after an unfiltered REST read because the REST title wildcard filter returns nothing on Splunk Cloud). No risk, no email."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite

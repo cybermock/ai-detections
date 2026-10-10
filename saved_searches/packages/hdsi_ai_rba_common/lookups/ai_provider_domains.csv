@@ -1,113 +1,201 @@
-provider,domain,usage_type,severity_weight,enabled,notes,source,first_seen,last_verified,confidence
-OpenAI,chatgpt.com,web,1.0,1,ChatGPT primary domain,vendor_docs,2024-01-01,2025-05-01,high
-OpenAI,chat.openai.com,web,1.0,1,Legacy ChatGPT domain,vendor_docs,2022-11-30,2025-05-01,high
-OpenAI,api.openai.com,api,1.2,1,OpenAI API,vendor_docs,2023-03-01,2025-05-01,high
-Anthropic,claude.ai,web,1.0,1,Claude web app,vendor_docs,2023-07-11,2025-05-01,high
-Anthropic,api.anthropic.com,api,1.2,1,Anthropic API,vendor_docs,2023-03-14,2025-05-01,high
-Anthropic,api.claude.ai,api,1.2,1,Claude API alternate endpoint,vendor_docs,2024-06-01,2025-05-01,high
-Google Gemini,gemini.google.com,web,1.0,1,Gemini web app,vendor_docs,2024-02-08,2025-05-01,high
-Google Gemini,bard.google.com,web,0.5,1,Bard (deprecated - redirects to Gemini),vendor_docs,2023-03-21,2025-05-01,medium
-Google Gemini,aistudio.google.com,web,0.8,1,Google AI Studio,vendor_docs,2024-01-01,2025-05-01,high
-Google Gemini,generativelanguage.googleapis.com,api,1.2,1,Gemini API endpoint,vendor_docs,2023-12-01,2025-05-01,high
-Microsoft Copilot,copilot.microsoft.com,web,0.7,1,Copilot web app,vendor_docs,2024-01-01,2025-05-01,high
-Microsoft Copilot,api.githubcopilot.com,api,1.2,1,GitHub Copilot API,vendor_docs,2022-06-01,2025-05-01,high
-Microsoft Copilot,copilot-proxy.githubusercontent.com,api,1.2,1,GitHub Copilot proxy,vendor_docs,2022-06-01,2025-05-01,high
-Microsoft Copilot,openai.azure.com,api,1.2,1,Azure OpenAI endpoint,vendor_docs,2023-01-01,2025-05-01,high
-Perplexity,perplexity.ai,web,0.7,1,Perplexity web app,vendor_docs,2023-01-01,2025-05-01,high
-Perplexity,api.perplexity.ai,api,1.0,1,Perplexity API,vendor_docs,2024-01-01,2025-05-01,high
-DeepSeek,deepseek.com,web,1.0,1,DeepSeek web app,vendor_docs,2024-01-01,2025-05-01,high
-DeepSeek,api.deepseek.com,api,1.2,1,DeepSeek API,vendor_docs,2024-01-01,2025-05-01,high
-Mistral,mistral.ai,web,1.0,1,Mistral web app,vendor_docs,2024-02-01,2025-05-01,high
-Mistral,api.mistral.ai,api,1.2,1,Mistral API,vendor_docs,2024-02-01,2025-05-01,high
-Groq,groq.com,web,0.8,1,Groq web app,vendor_docs,2024-02-01,2025-05-01,high
-Groq,api.groq.com,api,1.0,1,Groq API,vendor_docs,2024-02-01,2025-05-01,high
-Together,together.ai,web,0.8,1,Together web app,vendor_docs,2023-06-01,2025-05-01,high
-Together,api.together.xyz,api,1.0,1,Together API,vendor_docs,2023-06-01,2025-05-01,high
-Replicate,replicate.com,web,0.8,1,Replicate web app,vendor_docs,2023-01-01,2025-05-01,high
-Replicate,api.replicate.com,api,1.0,1,Replicate API,vendor_docs,2023-01-01,2025-05-01,high
-Cohere,cohere.com,web,0.8,1,Cohere web app,vendor_docs,2023-01-01,2025-05-01,high
-Cohere,api.cohere.ai,api,1.0,1,Cohere API,vendor_docs,2023-01-01,2025-05-01,high
-Poe,poe.com,web,0.6,1,Quora Poe,vendor_docs,2023-02-01,2025-05-01,high
-xAI,grok.com,web,0.7,1,Grok web app (grok.com),vendor_docs,2024-11-01,2025-05-01,high
-xAI,grok.x.ai,web,0.7,1,Grok web app (grok.x.ai),vendor_docs,2024-03-01,2025-05-01,high
-xAI,api.x.ai,api,1.0,1,xAI API,vendor_docs,2024-10-01,2025-05-01,high
-Cursor,cursor.sh,ide,1.0,1,Cursor IDE web,vendor_docs,2023-03-01,2025-05-01,high
-Cursor,api.cursor.sh,api,1.2,1,Cursor API,vendor_docs,2023-03-01,2025-05-01,high
-Codeium,codeium.com,ide,1.0,1,Codeium IDE web,vendor_docs,2023-01-01,2025-05-01,high
-Continue,continue.dev,ide,0.8,1,Continue IDE extension,vendor_docs,2023-06-01,2025-05-01,high
-Phind,phind.com,web,0.6,1,Phind web app,vendor_docs,2023-01-01,2025-05-01,high
-You.com,you.com,web,0.6,1,You.com web app,vendor_docs,2023-01-01,2025-05-01,medium
-Character AI,character.ai,web,0.6,1,Character.AI web app,vendor_docs,2023-01-01,2025-05-01,high
-Midjourney,midjourney.com,web,0.8,1,Midjourney image generation,vendor_docs,2023-01-01,2025-05-01,high
-OpenRouter,openrouter.ai,api,1.0,1,OpenRouter API aggregator,vendor_docs,2023-06-01,2025-05-01,high
-Fireworks,fireworks.ai,web,0.8,1,Fireworks AI web,vendor_docs,2023-06-01,2025-05-01,high
-Fireworks,api.fireworks.ai,api,1.0,1,Fireworks AI API,vendor_docs,2023-06-01,2025-05-01,high
-Stability AI,api.stability.ai,api,1.0,1,Stability AI API,vendor_docs,2023-01-01,2025-05-01,high
-Sourcegraph,api.sourcegraph.com,api,1.0,1,Sourcegraph Cody API,vendor_docs,2023-06-01,2025-05-01,high
-Vercel,v0.dev,web,0.7,1,Vercel v0 AI,vendor_docs,2024-01-01,2025-05-01,high
-Aider,aider.chat,cli,0.8,1,Aider CLI tool web,vendor_docs,2023-06-01,2025-05-01,high
-Pieces,pieces.app,ide,0.7,1,Pieces IDE assistant,vendor_docs,2023-06-01,2025-05-01,high
-Local LLM,ollama.com,local_llm,1.1,1,Ollama website,vendor_docs,2023-08-01,2025-05-01,high
-Local LLM,registry.ollama.ai,local_llm,1.1,1,Ollama model registry,vendor_docs,2023-08-01,2025-05-01,high
-Model Registry,huggingface.co,model_registry,0.9,1,Hugging Face model hub,vendor_docs,2023-01-01,2025-05-01,high
-Model Registry,modelscope.cn,model_registry,0.9,1,ModelScope model hub,vendor_docs,2023-01-01,2025-05-01,high
-Baidu ERNIE,ernie.baidu.com,web,1.0,1,Baidu ERNIE Bot web app,threat_intel,2024-01-01,2026-02-22,high
-Baidu ERNIE,yiyan.baidu.com,web,1.0,1,Baidu Yiyan (ERNIE) web app,threat_intel,2024-01-01,2026-02-22,high
-Baidu ERNIE,aip.baidubce.com,api,1.2,1,Baidu AI Platform API,threat_intel,2024-01-01,2026-02-22,high
-Alibaba Tongyi,tongyi.aliyun.com,web,1.0,1,Alibaba Tongyi Qianwen web app,threat_intel,2024-01-01,2026-02-22,high
-Alibaba Tongyi,dashscope.aliyuncs.com,api,1.2,1,Alibaba DashScope API,threat_intel,2024-01-01,2026-02-22,high
-ByteDance Doubao,doubao.com,web,1.0,1,ByteDance Doubao web app,threat_intel,2024-06-01,2026-02-22,high
-Zhipu AI,chatglm.cn,web,1.0,1,Zhipu AI ChatGLM web app,threat_intel,2024-01-01,2026-02-22,high
-Zhipu AI,open.bigmodel.cn,api,1.2,1,Zhipu AI BigModel API,threat_intel,2024-01-01,2026-02-22,high
-MiniMax,minimax.chat,web,1.0,1,MiniMax web app,threat_intel,2024-01-01,2026-02-22,high
-MiniMax,api.minimax.chat,api,1.2,1,MiniMax API,threat_intel,2024-01-01,2026-02-22,high
-01.AI,01.ai,web,1.0,1,01.AI (Yi) web app,threat_intel,2024-01-01,2026-02-22,high
-01.AI,api.lingyiwanwu.com,api,1.2,1,01.AI (Yi) API,threat_intel,2024-01-01,2026-02-22,high
-Moonshot,kimi.moonshot.cn,web,1.0,1,Moonshot Kimi web app,threat_intel,2024-01-01,2026-02-22,high
-Moonshot,api.moonshot.cn,api,1.2,1,Moonshot API,threat_intel,2024-01-01,2026-02-22,high
-AWS Bedrock,bedrock.us-east-1.amazonaws.com,api,1.2,1,AWS Bedrock API endpoint,threat_intel,2024-01-01,2026-02-22,high
-AWS Bedrock,bedrock-runtime.us-east-1.amazonaws.com,api,1.2,1,AWS Bedrock Runtime API endpoint,threat_intel,2024-01-01,2026-02-22,high
-GCP Vertex AI,aiplatform.googleapis.com,api,1.2,1,Google Cloud Vertex AI API,threat_intel,2024-01-01,2026-02-22,high
-Databricks,accounts.cloud.databricks.com,api,1.0,1,Databricks AI platform,threat_intel,2024-01-01,2026-02-22,high
-Snowflake Cortex,app.snowflake.com,web,0.8,1,Snowflake Cortex AI web app,threat_intel,2024-01-01,2026-02-22,high
-Runway,runwayml.com,web,0.8,1,Runway AI video generation,threat_intel,2024-01-01,2026-02-22,high
-Runway,api.runwayml.com,api,1.0,1,Runway API,threat_intel,2024-01-01,2026-02-22,high
-Pika,pika.art,web,0.8,1,Pika AI video generation,threat_intel,2024-01-01,2026-02-22,medium
-Kling,klingai.com,web,0.8,1,Kling AI video generation,threat_intel,2024-06-01,2026-02-22,medium
-Luma,lumalabs.ai,web,0.8,1,Luma AI video/3D generation,threat_intel,2024-01-01,2026-02-22,medium
-ElevenLabs,elevenlabs.io,web,0.8,1,ElevenLabs AI voice synthesis,threat_intel,2024-01-01,2026-02-22,high
-ElevenLabs,api.elevenlabs.io,api,1.0,1,ElevenLabs API,threat_intel,2024-01-01,2026-02-22,high
-PlayHT,play.ht,web,0.8,1,PlayHT voice synthesis web app,threat_intel,2024-01-01,2026-03-04,high
-PlayHT,api.play.ht,api,1.0,1,PlayHT API,threat_intel,2024-01-01,2026-03-04,high
-Resemble AI,resemble.ai,web,0.8,1,Resemble AI voice cloning web app,threat_intel,2024-01-01,2026-03-04,high
-Resemble AI,api.resemble.ai,api,1.0,1,Resemble AI API,threat_intel,2024-01-01,2026-03-04,high
-WellSaid Labs,wellsaidlabs.com,web,0.8,1,WellSaid Labs voice synthesis,threat_intel,2024-01-01,2026-03-04,high
-Murf AI,murf.ai,web,0.8,1,Murf AI voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
-LOVO AI,lovo.ai,web,0.8,1,LOVO AI voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
-Deepgram,api.deepgram.com,api,1.0,1,Deepgram speech API,threat_intel,2024-01-01,2026-03-04,high
-Speechify,speechify.com,web,0.8,1,Speechify AI voice synthesis web app,threat_intel,2024-01-01,2026-03-04,high
-Coqui,coqui.ai,web,0.8,1,Coqui AI voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
-FakeYou,fakeyou.com,web,0.7,1,FakeYou voice cloning platform,threat_intel,2024-01-01,2026-03-04,high
-Uberduck,uberduck.ai,web,0.7,1,Uberduck voice synthesis platform,threat_intel,2024-01-01,2026-03-04,high
-Voicemod,voicemod.net,web,0.7,1,Voicemod voice modulation platform,threat_intel,2024-01-01,2026-03-04,high
-Suno,suno.com,web,0.8,1,Suno AI music generation,threat_intel,2024-01-01,2026-02-22,high
-Suno,studio-api.suno.ai,api,1.0,1,Suno API,threat_intel,2024-01-01,2026-02-22,high
-Leonardo,leonardo.ai,web,0.8,1,Leonardo AI image generation,threat_intel,2024-01-01,2026-02-22,medium
-Leonardo,cloud.leonardo.ai,api,1.0,1,Leonardo AI API,threat_intel,2024-01-01,2026-02-22,medium
-AI21 Labs,ai21.com,web,0.8,1,AI21 Labs web app,threat_intel,2024-01-01,2026-02-22,high
-AI21 Labs,api.ai21.com,api,1.0,1,AI21 Labs API,threat_intel,2024-01-01,2026-02-22,high
-Meta AI,meta.ai,web,0.8,1,Meta AI web app,threat_intel,2024-01-01,2026-02-22,high
-Anyscale,anyscale.com,web,0.8,1,Anyscale AI platform,threat_intel,2024-01-01,2026-02-22,medium
-Anyscale,api.endpoints.anyscale.com,api,1.0,1,Anyscale Endpoints API,threat_intel,2024-01-01,2026-02-22,medium
-Modal,modal.com,web,0.8,1,Modal serverless AI platform,threat_intel,2024-01-01,2026-02-22,medium
-Cerebras,cerebras.ai,web,0.8,1,Cerebras AI web app,threat_intel,2024-01-01,2026-02-22,high
-Cerebras,api.cerebras.ai,api,1.0,1,Cerebras AI API,threat_intel,2024-01-01,2026-02-22,high
-Jasper AI,jasper.ai,web,0.8,1,Jasper AI writing assistant,threat_intel,2024-01-01,2026-02-22,medium
-Writer,writer.com,web,0.8,1,Writer AI writing platform,threat_intel,2024-01-01,2026-02-22,medium
-Writer,api.writer.com,api,1.0,1,Writer API,threat_intel,2024-01-01,2026-02-22,medium
-Notion AI,notion.so,web,0.5,1,Notion AI productivity assistant,threat_intel,2024-01-01,2026-02-22,high
-Grammarly,grammarly.com,web,0.4,1,Grammarly AI writing assistant,threat_intel,2024-01-01,2026-02-22,high
-Windsurf,windsurf.com,web,0.8,1,Windsurf AI IDE web domain,threat_intel,2024-06-01,2026-02-22,high
-Bolt,bolt.new,web,0.8,1,Bolt AI code generation,threat_intel,2024-06-01,2026-02-22,medium
-Lovable,lovable.dev,web,0.8,1,Lovable AI code generation,threat_intel,2024-06-01,2026-02-22,medium
-Replit,replit.com,web,0.6,1,Replit AI-powered coding platform,threat_intel,2024-01-01,2026-02-22,high
+provider,domain,usage_type,severity_weight,enabled,match_subdomains,notes,source,first_seen,last_verified,confidence,traffic_class
+OpenAI,chatgpt.com,web,1.0,1,1,"ChatGPT web/desktop/mobile (incl. ws.chatgpt.com, sora.chatgpt.com)",live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+OpenAI,chat.openai.com,web,1.0,1,0,Legacy ChatGPT host (redirects to chatgpt.com),live_dns;vendor_docs,2022-11-30,2026-10-09,high,interactive
+OpenAI,openai.com,web,0.8,1,1,"OpenAI corporate/platform/auth hosts (platform., auth., cdn., telemetry); api.openai.com has its own row",live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+OpenAI,api.openai.com,api,1.2,1,1,OpenAI API,live_dns;vendor_docs,2023-03-01,2026-10-09,high,interactive
+OpenAI,oaiusercontent.com,web,1.0,1,1,ChatGPT file upload/download storage (vendor says allow *.oaiusercontent.com for uploads),live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+OpenAI,oaistatic.com,web,0.5,1,1,ChatGPT static assets CDN (cdn.oaistatic.com); presence implies ChatGPT page loads,live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+OpenAI,sora.com,web,0.8,1,1,Sora video generation,vendor_docs,2026-10-09,2026-10-09,high,interactive
+Anthropic,claude.ai,web,1.0,1,1,Claude web/desktop app (incl. downloads.claude.ai),live_dns;vendor_docs,2023-07-11,2026-10-09,high,interactive
+Anthropic,claude.com,web,0.8,1,1,Claude product/docs site and platform.claude.com developer console,live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Anthropic,anthropic.com,web,0.8,1,1,"Anthropic corporate and service hosts (console, statsig); api.anthropic.com has its own row",live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Anthropic,api.anthropic.com,api,1.2,1,0,"Anthropic API. Also resolved by the Claude desktop and web apps (most api.anthropic.com sources in Tenant A also used a consumer Claude App-ID), so treat it as programmatic use only with a non-browser/process check",live_dns;vendor_docs,2023-03-14,2026-10-09,high,interactive
+Anthropic,claudeusercontent.com,web,0.8,1,1,Claude artifact preview and Chrome extension bridge hosts (not on an official Anthropic allowlist page; widely documented by third parties),live_dns;third_party,2026-10-09,2026-10-09,high,interactive
+Google Gemini,gemini.google.com,web,1.0,1,1,Gemini web app,live_dns;vendor_docs,2024-02-08,2026-10-09,high,interactive
+Google Gemini,bard.google.com,web,0.5,1,0,Bard (retired; redirects to Gemini),live_dns;vendor_docs,2023-03-21,2026-10-09,medium,interactive
+Google Gemini,aistudio.google.com,web,0.8,1,1,Google AI Studio,live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Google Gemini,generativelanguage.googleapis.com,api,1.2,1,0,Gemini API endpoint,vendor_docs,2023-12-01,2026-10-09,high,interactive
+Google Gemini,notebooklm.google.com,web,1.0,1,1,NotebookLM (document upload and summarisation),live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Google Gemini,notebooklm.google,web,1.0,1,1,NotebookLM landing domain,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+GCP Vertex AI,aiplatform.googleapis.com,api,1.2,1,0,Vertex AI API (regional {region}-aiplatform.googleapis.com is matched by pattern in ai_domains_filter),live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Microsoft Copilot,copilot.microsoft.com,web,0.7,1,1,Consumer/web Copilot (vendor lists copilot.microsoft.com and *.copilot.microsoft.com),live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Microsoft 365 Copilot,copilot.cloud.microsoft,web,0.5,0,1,OPT_IN_M365_COPILOT (ships enabled=0): Microsoft 365 Copilot Chat. Per Microsoft MC1462915 (Sep-Nov 2026) m365.cloud.microsoft redirects every M365 web user here so it becomes the generic Microsoft 365 home - set enabled=1 only to monitor M365 Copilot itself,live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+GitHub Copilot,githubcopilot.com,ide,1.0,1,1,GitHub Copilot service hosts (api.individual./api.business./telemetry.),live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+GitHub Copilot,api.githubcopilot.com,api,1.2,1,0,GitHub Copilot API,live_dns;vendor_docs,2022-06-01,2026-10-09,high,interactive
+GitHub Copilot,copilot-proxy.githubusercontent.com,api,1.2,1,0,GitHub Copilot completions proxy,live_dns;vendor_docs,2022-06-01,2026-10-09,high,interactive
+Azure OpenAI,openai.azure.com,api,1.2,1,1,Azure OpenAI resource endpoints ({resource}.openai.azure.com),live_dns;vendor_docs,2023-01-01,2026-10-09,high,interactive
+Azure AI Foundry,ai.azure.com,web,0.8,1,0,Azure AI Foundry portal ({resource}.services.ai.azure.com matched by pattern),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Perplexity,perplexity.ai,web,0.8,1,1,Perplexity web app,live_dns;vendor_docs,2023-01-01,2026-10-09,high,interactive
+Perplexity,api.perplexity.ai,api,1.0,1,0,Perplexity API,vendor_docs,2024-01-01,2026-10-09,high,interactive
+DeepSeek,deepseek.com,web,1.0,1,1,DeepSeek chat/platform/cdn (PRC-hosted; weight kept at 1.0 web),live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+DeepSeek,api.deepseek.com,api,1.2,1,0,DeepSeek API,live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Mistral,mistral.ai,web,0.8,1,1,Mistral Le Chat (chat.mistral.ai) and console,vendor_docs,2024-02-01,2026-10-09,high,interactive
+Mistral,api.mistral.ai,api,1.2,1,0,Mistral API,vendor_docs,2024-02-01,2026-10-09,high,interactive
+xAI,grok.com,web,0.8,1,1,Grok web app,live_dns;vendor_docs,2024-11-01,2026-10-09,high,interactive
+xAI,grok.x.ai,web,0.8,1,0,Grok legacy host,live_dns;vendor_docs,2024-03-01,2026-10-09,high,interactive
+xAI,x.ai,web,0.8,1,1,xAI corporate/console/accounts hosts; api.x.ai has its own row,live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+xAI,api.x.ai,api,1.0,1,0,xAI API,vendor_docs,2024-10-01,2026-10-09,high,interactive
+Meta AI,meta.ai,web,0.8,1,1,Meta AI web app,live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Moonshot,kimi.com,web,1.0,1,1,Kimi chatbot (international),vendor_docs,2026-10-09,2026-10-09,high,interactive
+Moonshot,kimi.moonshot.cn,web,1.0,1,0,Kimi chatbot (China),threat_intel,2024-01-01,2026-02-22,high,interactive
+Moonshot,moonshot.cn,web,1.0,1,1,Moonshot/Kimi consumer hosts; the API host api.moonshot.cn has its own api row,threat_intel;third_party,2024-01-01,2026-10-09,high,interactive
+Moonshot,moonshot.ai,web,1.0,1,1,Moonshot international site and platform console; the API host api.moonshot.ai has its own api row,vendor_docs,2026-10-09,2026-10-09,high,interactive
+Alibaba Qwen,qwen.ai,web,1.0,1,1,Qwen Chat (chat.qwen.ai),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Alibaba Qwen,tongyi.aliyun.com,web,1.0,1,0,Tongyi Qianwen web app,threat_intel,2024-01-01,2026-02-22,high,interactive
+Alibaba Qwen,dashscope.aliyuncs.com,api,1.2,1,0,DashScope (Qwen) API,threat_intel,2024-01-01,2026-02-22,high,interactive
+Alibaba Qwen,dashscope-intl.aliyuncs.com,api,1.2,1,0,DashScope (Qwen) international API,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Baidu ERNIE,yiyan.baidu.com,web,1.0,1,0,Baidu ERNIE Bot (Yiyan) web app,threat_intel,2024-01-01,2026-02-22,high,interactive
+Baidu ERNIE,ernie.baidu.com,web,1.0,1,0,Baidu ERNIE web app,threat_intel,2024-01-01,2026-02-22,medium,interactive
+Baidu ERNIE,aip.baidubce.com,api,1.2,1,0,Baidu AI Cloud API,threat_intel,2024-01-01,2026-02-22,high,interactive
+ByteDance Doubao,doubao.com,web,1.0,1,1,Doubao web app,threat_intel,2024-06-01,2026-02-22,high,interactive
+Zhipu AI,chatglm.cn,web,1.0,1,1,ChatGLM web app,threat_intel,2024-01-01,2026-02-22,high,interactive
+Zhipu AI,bigmodel.cn,api,1.2,1,1,"Zhipu BigModel API/docs (open.bigmodel.cn, docs.bigmodel.cn)",threat_intel;third_party,2024-01-01,2026-10-09,high,interactive
+Zhipu AI,z.ai,web,1.0,1,1,Zhipu international chat (chat.z.ai) and API,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+MiniMax,minimax.chat,web,1.0,1,1,MiniMax legacy chat and API (api.minimax.chat),threat_intel,2024-01-01,2026-02-22,medium,interactive
+MiniMax,minimax.io,web,1.0,1,1,MiniMax international site and API,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+MiniMax,hailuoai.video,web,0.8,1,1,MiniMax Hailuo video generation,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+01.AI,01.ai,web,1.0,1,1,01.AI (Yi),threat_intel,2024-01-01,2026-02-22,medium,interactive
+01.AI,api.lingyiwanwu.com,api,1.2,1,0,01.AI (Yi) API,threat_intel,2024-01-01,2026-02-22,medium,interactive
+Manus,manus.im,web,1.0,1,1,Manus autonomous agent,live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Character AI,character.ai,web,0.6,1,1,Character.AI,vendor_docs,2023-01-01,2026-10-09,high,interactive
+Poe,poe.com,web,0.6,1,1,Quora Poe multi-model chat,vendor_docs,2023-02-01,2026-10-09,high,interactive
+You.com,you.com,web,0.6,1,1,You.com AI search/chat,live_dns;vendor_docs,2023-01-01,2026-10-09,medium,interactive
+Phind,phind.com,web,0.6,1,1,Phind developer search,vendor_docs,2023-01-01,2026-10-09,high,interactive
+LMArena,lmarena.ai,web,0.8,1,1,LMArena model comparison chat (prompts shared with third-party models),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+OpenRouter,openrouter.ai,api,1.0,1,1,"OpenRouter API (openrouter.ai/api/v1) and its chat UI share this host, so hostname evidence cannot separate programmatic from browser use",live_dns;vendor_docs,2023-06-01,2026-10-09,high,interactive
+Groq,groq.com,web,0.8,1,1,Groq console/web,vendor_docs,2024-02-01,2026-10-09,high,interactive
+Groq,api.groq.com,api,1.0,1,0,Groq API,vendor_docs,2024-02-01,2026-10-09,high,interactive
+Together,together.ai,web,0.8,1,1,Together AI web/console,vendor_docs,2023-06-01,2026-10-09,high,interactive
+Together,api.together.xyz,api,1.0,1,0,Together API,vendor_docs,2023-06-01,2026-10-09,high,interactive
+Replicate,replicate.com,web,0.8,1,1,Replicate web,live_dns;vendor_docs,2023-01-01,2026-10-09,high,interactive
+Replicate,api.replicate.com,api,1.0,1,0,Replicate API,vendor_docs,2023-01-01,2026-10-09,high,interactive
+Replicate,replicate.delivery,api,1.0,1,1,Replicate model output delivery CDN,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Cohere,cohere.com,web,0.8,1,1,Cohere web/dashboard and api.cohere.com,live_dns;vendor_docs,2023-01-01,2026-10-09,high,interactive
+Cohere,cohere.ai,web,0.8,1,1,"Cohere legacy domain (dashboard., api.)",vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Cohere,api.cohere.ai,api,1.0,1,0,Cohere legacy API host,vendor_docs,2023-01-01,2026-10-09,high,interactive
+Fireworks,fireworks.ai,web,0.8,1,1,Fireworks AI web,vendor_docs,2023-06-01,2026-10-09,high,interactive
+Fireworks,api.fireworks.ai,api,1.0,1,0,Fireworks AI API,vendor_docs,2023-06-01,2026-10-09,high,interactive
+Cerebras,cerebras.ai,web,0.8,1,1,Cerebras inference web,vendor_docs,2024-01-01,2026-10-09,high,interactive
+Cerebras,api.cerebras.ai,api,1.0,1,0,Cerebras inference API,vendor_docs,2024-01-01,2026-10-09,high,interactive
+AI21 Labs,ai21.com,web,0.8,1,1,AI21 Labs,vendor_docs,2024-01-01,2026-10-09,high,interactive
+AI21 Labs,api.ai21.com,api,1.0,1,0,AI21 Labs API,vendor_docs,2024-01-01,2026-10-09,high,interactive
+Anyscale,anyscale.com,web,0.6,1,0,Anyscale platform (general Ray compute; exact match only),threat_intel,2024-01-01,2026-02-22,medium,interactive
+Anyscale,api.endpoints.anyscale.com,api,1.0,1,0,Anyscale Endpoints API (retired 2024),threat_intel,2024-01-01,2026-02-22,low,interactive
+Modal,modal.com,web,0.6,1,0,Modal serverless GPU compute (multi-purpose; exact match only so ordinary compute use under subdomains is not flagged),threat_intel,2024-01-01,2026-02-22,medium,interactive
+Stability AI,stability.ai,web,0.8,1,1,Stability AI,vendor_docs,2026-10-09,2026-10-09,high,interactive
+Stability AI,api.stability.ai,api,1.0,1,0,Stability AI API,vendor_docs,2023-01-01,2026-10-09,high,interactive
+AWS Bedrock,bedrock.us-east-1.amazonaws.com,api,1.2,1,0,Bedrock control plane example (ai_domains_filter matches every region by pattern; exact-name tstats pre-filters must add bedrock*.amazonaws.com and *aiplatform.googleapis.com terms themselves),live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+AWS Bedrock,bedrock-runtime.us-east-1.amazonaws.com,api,1.2,1,0,Bedrock runtime example (ai_domains_filter matches every region by pattern; exact-name tstats pre-filters must add bedrock*.amazonaws.com and *aiplatform.googleapis.com terms themselves),live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Databricks,accounts.cloud.databricks.com,api,1.0,0,0,"Disabled: generic Databricks account console, not AI-specific. Enable only if Databricks use itself is in scope",threat_intel,2024-01-01,2026-02-22,low,interactive
+Snowflake Cortex,app.snowflake.com,web,0.8,0,0,"Disabled: generic Snowflake UI, not AI-specific. Enable only if Snowflake use itself is in scope",threat_intel,2024-01-01,2026-02-22,low,interactive
+Model Registry,huggingface.co,model_registry,0.9,1,1,Hugging Face hub (incl. cdn-lfs model downloads),live_dns;vendor_docs,2023-01-01,2026-10-09,high,interactive
+Model Registry,hf.co,model_registry,0.9,1,1,"Hugging Face short/CDN domain (cdn-lfs.hf.co, xet storage)",live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Model Registry,modelscope.cn,model_registry,0.9,1,1,ModelScope model hub,threat_intel,2023-01-01,2025-05-01,high,interactive
+Local LLM,ollama.com,local_llm,1.1,1,1,"Ollama website, model library and app update checks (model pulls go to registry.ollama.ai and its blob storage)",live_dns;vendor_docs,2023-08-01,2026-10-09,high,site
+Local LLM,registry.ollama.ai,local_llm,1.1,1,0,Ollama model registry (model pulls),vendor_docs,2023-08-01,2026-10-09,high,interactive
+Cursor,cursor.sh,ide,1.0,1,1,Cursor IDE backend (api2./api3./repo42./authenticator.),live_dns;vendor_docs,2023-03-01,2026-10-09,high,interactive
+Cursor,api.cursor.sh,api,1.2,1,0,Cursor API host,vendor_docs,2023-03-01,2025-05-01,medium,interactive
+Cursor,cursor.com,ide,0.8,1,1,"Cursor site, dashboard and downloads",live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Cursor,cursorapi.com,ide,1.0,1,1,Cursor extension marketplace/API (vendor allowlist *.cursorapi.com),live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Cursor,cursor-cdn.com,ide,0.6,1,1,Cursor CDN (vendor allowlist *.cursor-cdn.com),live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Windsurf,windsurf.com,ide,1.0,1,1,Windsurf (formerly Codeium) IDE,vendor_docs,2024-06-01,2026-10-09,high,interactive
+Windsurf,codeium.com,ide,1.0,1,1,Codeium/Windsurf backend (server./inference.),vendor_docs,2023-01-01,2026-10-09,high,interactive
+Tabnine,tabnine.com,ide,0.8,1,1,Tabnine code assistant,live_dns;vendor_docs,2026-10-09,2026-10-09,high,interactive
+Continue,continue.dev,ide,0.8,1,1,Continue IDE extension,vendor_docs,2023-06-01,2026-10-09,high,interactive
+Sourcegraph,api.sourcegraph.com,api,1.0,1,0,Sourcegraph Cody API (unverified host),threat_intel,2023-06-01,2025-05-01,low,interactive
+Aider,aider.chat,cli,0.5,1,0,Aider CLI documentation site (not runtime traffic),vendor_docs,2023-06-01,2026-10-09,high,site
+Pieces,pieces.app,ide,0.7,1,0,Pieces developer assistant,threat_intel,2023-06-01,2025-05-01,medium,interactive
+Vercel v0,v0.app,web,0.8,1,1,Vercel v0 AI app builder (renamed from v0.dev Aug 2025),vendor_docs,2026-10-09,2026-10-09,high,interactive
+Vercel v0,v0.dev,web,0.8,1,1,Vercel v0 legacy domain (redirects to v0.app),vendor_docs,2024-01-01,2026-10-09,high,interactive
+Bolt,bolt.new,web,0.8,1,1,Bolt AI app builder,vendor_docs,2024-06-01,2026-10-09,medium,interactive
+Lovable,lovable.dev,web,0.8,1,1,Lovable AI app builder (user-published *.lovable.app sites intentionally NOT listed),live_dns;vendor_docs,2024-06-01,2026-10-09,medium,interactive
+Replit,replit.com,web,0.5,1,0,Replit IDE/Agent (multi-purpose; exact match only),vendor_docs,2024-01-01,2026-10-09,high,interactive
+Jasper AI,jasper.ai,web,0.8,1,1,Jasper AI writing assistant,live_dns;vendor_docs,2024-01-01,2026-10-09,medium,interactive
+Writer,writer.com,web,0.6,1,0,Writer generative AI platform (exact match only),vendor_docs,2024-01-01,2026-10-09,medium,interactive
+Writer,api.writer.com,api,1.0,1,0,Writer API,vendor_docs,2024-01-01,2026-10-09,medium,interactive
+Notion AI,notion.so,web,0.5,0,0,Disabled: ordinary Notion use is not AI usage and Notion AI shares the same hosts. Enable only to treat all Notion use as AI,vendor_docs,2024-01-01,2026-10-09,high,interactive
+Grammarly,grammarly.com,web,0.4,0,0,Disabled: ordinary Grammarly use is not AI usage and GrammarlyGO shares the same hosts. Enable only to treat all Grammarly use as AI,vendor_docs,2024-01-01,2026-10-09,high,interactive
+Otter.ai,otter.ai,web,0.6,1,1,AI meeting transcription (meeting content leaves the tenant),live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Fireflies.ai,fireflies.ai,web,0.6,1,1,AI meeting transcription (meeting content leaves the tenant),live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Midjourney,midjourney.com,web,0.8,1,1,Midjourney image generation,live_dns;vendor_docs,2023-01-01,2026-10-09,high,interactive
+Leonardo,leonardo.ai,web,0.8,1,1,Leonardo AI image generation (incl. cloud.leonardo.ai API),vendor_docs,2024-01-01,2026-10-09,medium,interactive
+Runway,runwayml.com,web,0.8,1,1,Runway video generation (incl. app./api.),live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Pika,pika.art,web,0.8,1,1,Pika video generation,threat_intel,2024-01-01,2026-02-22,medium,interactive
+Kling,klingai.com,web,0.8,1,1,Kling video generation,threat_intel,2024-06-01,2026-02-22,medium,interactive
+Luma,lumalabs.ai,web,0.8,1,1,Luma video/3D generation,threat_intel,2024-01-01,2026-02-22,medium,interactive
+HeyGen,heygen.com,web,0.9,1,1,HeyGen AI avatar/video (synthetic likeness),live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Synthesia,synthesia.io,web,0.9,1,1,Synthesia AI avatar video (synthetic likeness),live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+ElevenLabs,elevenlabs.io,web,0.9,1,1,ElevenLabs voice synthesis/cloning,live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+ElevenLabs,api.elevenlabs.io,api,1.0,1,0,ElevenLabs API,live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+PlayHT,play.ht,web,0.8,1,1,PlayHT voice synthesis,threat_intel,2024-01-01,2026-03-04,high,interactive
+PlayHT,api.play.ht,api,1.0,1,0,PlayHT API,threat_intel,2024-01-01,2026-03-04,high,interactive
+Resemble AI,resemble.ai,web,0.9,1,1,Resemble AI voice cloning,threat_intel,2024-01-01,2026-03-04,high,interactive
+Resemble AI,api.resemble.ai,api,1.0,1,0,Resemble AI API,threat_intel,2024-01-01,2026-03-04,high,interactive
+WellSaid Labs,wellsaidlabs.com,web,0.8,1,1,WellSaid Labs voice synthesis,threat_intel,2024-01-01,2026-03-04,high,interactive
+Murf AI,murf.ai,web,0.8,1,1,Murf AI voice synthesis,threat_intel,2024-01-01,2026-03-04,high,interactive
+LOVO AI,lovo.ai,web,0.8,1,1,LOVO AI voice synthesis,threat_intel,2024-01-01,2026-03-04,high,interactive
+Deepgram,api.deepgram.com,api,1.0,1,0,Deepgram speech API,threat_intel,2024-01-01,2026-03-04,high,interactive
+Speechify,speechify.com,web,0.6,1,1,Speechify text-to-speech,threat_intel,2024-01-01,2026-03-04,high,interactive
+Coqui,coqui.ai,web,0.8,1,1,Coqui voice synthesis (company closed 2024; kept for historical coverage),threat_intel,2024-01-01,2026-03-04,low,interactive
+FakeYou,fakeyou.com,web,0.8,1,1,FakeYou celebrity voice cloning,threat_intel,2024-01-01,2026-03-04,high,interactive
+Uberduck,uberduck.ai,web,0.7,1,1,Uberduck voice synthesis,threat_intel,2024-01-01,2026-03-04,high,interactive
+Voicemod,voicemod.net,web,0.5,1,1,Voicemod real-time voice changer (consumer/gaming; lower weight),threat_intel,2024-01-01,2026-03-04,high,interactive
+Suno,suno.com,web,0.8,1,1,Suno music generation,live_dns;vendor_docs,2024-01-01,2026-10-09,high,interactive
+Suno,suno.ai,web,0.8,1,1,Suno legacy domain and CDN hosts (cdnN.suno.ai embedded audio); the API host studio-api.suno.ai has its own api row,live_dns;threat_intel,2026-10-09,2026-10-09,high,interactive
+Runway,api.runwayml.com,api,1.0,1,0,Runway API,threat_intel,2024-01-01,2026-02-22,high,interactive
+Suno,studio-api.suno.ai,api,1.0,1,0,Suno API,threat_intel,2024-01-01,2026-02-22,high,interactive
+Leonardo,cloud.leonardo.ai,api,1.0,1,0,Leonardo AI API,threat_intel,2024-01-01,2026-02-22,medium,interactive
+MiniMax,api.minimax.chat,api,1.2,1,0,MiniMax API,threat_intel,2024-01-01,2026-02-22,medium,interactive
+Moonshot,api.moonshot.cn,api,1.2,1,0,Moonshot API (China),threat_intel,2024-01-01,2026-02-22,high,interactive
+Zhipu AI,open.bigmodel.cn,api,1.2,1,0,Zhipu BigModel API,threat_intel,2024-01-01,2026-02-22,high,interactive
+Microsoft 365 Copilot,m365copilotapp.svc.cloud.microsoft,web,0.5,0,1,OPT_IN_M365_COPILOT (ships enabled=0): Microsoft 365 Copilot app backend (observed live in 3 tenants); loaded by the M365 Copilot home page after the MC1462915 redirect,live_dns,2026-10-09,2026-10-09,high,interactive
+Microsoft 365 Copilot,copilotstudio.microsoft.com,web,0.6,1,1,Copilot Studio agent builder,live_dns,2026-10-09,2026-10-09,high,interactive
+Microsoft 365 Copilot,copilotforfinance.microsoft.com,web,0.5,1,1,Copilot for Finance,live_dns,2026-10-09,2026-10-09,medium,interactive
+Microsoft Security Copilot,securitycopilot.microsoft.com,web,0.5,1,1,Security Copilot (SOC tooling; usually sanctioned),live_dns,2026-10-09,2026-10-09,high,interactive
+Microsoft Copilot,copilot.com,web,0.7,1,1,"Consumer Copilot entry point (copilot.com, ms-sso.copilot.com)",live_dns;third_party,2026-10-09,2026-10-09,medium,interactive
+GitHub Copilot,copilot-telemetry.githubusercontent.com,ide,0.3,1,0,GitHub Copilot telemetry (IDE extension active),live_dns,2026-10-09,2026-10-09,high,background
+GitHub Copilot,copilot-telemetry-service.githubusercontent.com,ide,0.3,1,0,GitHub Copilot telemetry (IDE extension active),live_dns,2026-10-09,2026-10-09,high,background
+Google Gemini,gemini.gstatic.com,web,0.3,1,0,Gemini static assets (page loads),live_dns,2026-10-09,2026-10-09,high,background
+Google Gemini,geminiweb-pa.googleapis.com,web,1.0,1,0,Gemini web app backend,live_dns,2026-10-09,2026-10-09,high,interactive
+Google Gemini,geminiweb-pa.clients6.google.com,web,1.0,1,0,Gemini web app backend,live_dns,2026-10-09,2026-10-09,high,interactive
+Google Gemini,notebooklm.cloud.google.com,web,1.0,1,0,NotebookLM Enterprise,live_dns,2026-10-09,2026-10-09,medium,interactive
+xAI,grok.x.com,web,0.8,1,0,Grok inside X,live_dns,2026-10-09,2026-10-09,high,interactive
+Cursor,cursorvm.com,ide,1.0,1,1,Cursor hosted agent VMs (listed in Cursor help network troubleshooting page; not in the enterprise network-configuration list),live_dns;vendor_docs,2026-10-09,2026-10-09,medium,interactive
+QuillBot,quillbot.com,web,0.5,1,1,AI paraphrasing/writing (incl. stream. API); browser extension common,live_dns,2026-10-09,2026-10-09,high,interactive
+DeepL,deepl.com,web,0.5,1,1,AI translation (documents/text leave the tenant); tune or disable if sanctioned,live_dns,2026-10-09,2026-10-09,high,interactive
+Blackbox AI,blackbox.ai,ide,0.8,1,1,Blackbox AI code assistant,live_dns,2026-10-09,2026-10-09,medium,interactive
+Gamma,gamma.app,web,0.5,1,1,Gamma AI presentation builder (same product as PAN App-ID gamma in ai_provider_apps),vendor_docs,2026-10-09,2026-10-09,high,interactive
+OpenAI,ws.chatgpt.com,web,1.0,1,0,ChatGPT websocket (live conversation turns); explicit row so exact-name pre-filters include it,live_dns,2026-10-09,2026-10-09,high,interactive
+OpenAI,ab.chatgpt.com,web,0.3,1,0,ChatGPT experimentation/feature-flag endpoint polled by open ChatGPT apps,live_dns,2026-10-09,2026-10-09,high,background
+OpenAI,bzr.openai.com,web,0.3,1,0,OpenAI client telemetry (polled by installed apps),live_dns,2026-10-09,2026-10-09,high,background
+OpenAI,bzrcdn.openai.com,web,0.3,1,0,OpenAI client telemetry CDN,live_dns,2026-10-09,2026-10-09,high,background
+OpenAI,auth.openai.com,web,0.5,1,0,OpenAI sign-in and token refresh (also refreshed by idle apps),live_dns,2026-10-09,2026-10-09,high,background
+Anthropic,downloads.claude.ai,web,0.3,1,0,Claude desktop app updater,live_dns,2026-10-09,2026-10-09,medium,background
+QuillBot,stream.quillbot.com,web,0.3,1,0,QuillBot extension background stream,live_dns,2026-10-09,2026-10-09,medium,background
+QuillBot,sentry-extension.quillbot.com,web,0.3,1,0,QuillBot extension error telemetry,live_dns,2026-10-09,2026-10-09,medium,background
+Local LLM,lmstudio.ai,local_llm,0.8,1,1,LM Studio website and model catalog (model files download from huggingface.co),vendor_docs,2026-10-09,2026-10-09,medium,site
+Local LLM,dd20bb891979d25aebc8bec07b2b3bbc.r2.cloudflarestorage.com,local_llm,1.1,1,0,Ollama model blob storage (redirect target of registry.ollama.ai pulls),live_dns,2026-10-09,2026-10-09,high,interactive
+Model Registry,kaggle.com,model_registry,0.6,1,1,"Kaggle models, datasets and notebooks (general data-science platform: lower weight)",live_dns,2026-10-09,2026-10-09,medium,interactive
+Model Registry,civitai.com,model_registry,0.9,1,1,Civitai image-model hub,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Model Registry,router.huggingface.co,api,1.0,1,0,"Hugging Face Inference Providers router (hosted inference API, not model download)",vendor_docs,2026-10-09,2026-10-09,high,interactive
+Model Registry,api-inference.huggingface.co,api,1.0,1,0,Hugging Face serverless inference API (legacy host),vendor_docs,2026-10-09,2026-10-09,high,interactive
+Replicate,r8.im,model_registry,0.9,1,0,Replicate model container registry (cog push/pull),vendor_docs,2026-10-09,2026-10-09,high,interactive
+Moonshot,api.moonshot.ai,api,1.2,1,0,Moonshot international API,vendor_docs,2026-10-09,2026-10-09,high,interactive
+WellSaid Labs,wellsaid.io,web,0.8,1,1,WellSaid Labs current domain (voice synthesis),live_dns,2026-10-09,2026-10-09,high,interactive
+Descript,descript.com,web,0.6,1,1,Descript editor incl. Overdub voice cloning; also a general audio/video editor (lower weight),live_dns,2026-10-09,2026-10-09,medium,interactive
+Fish Audio,fish.audio,web,0.9,1,1,Fish Audio voice cloning / TTS,live_dns,2026-10-09,2026-10-09,medium,interactive
+Cartesia,cartesia.ai,web,0.9,1,1,Cartesia voice cloning / TTS,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Cartesia,api.cartesia.ai,api,1.0,1,0,Cartesia API,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+ElevenLabs,api.us.elevenlabs.io,api,1.0,1,0,ElevenLabs US data-residency API,vendor_docs,2026-10-09,2026-10-09,high,interactive
+DuckDuckGo AI,duck.ai,web,0.6,1,1,DuckDuckGo AI Chat (proxied third-party models),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Chatbase,chatbase.co,web,0.6,1,1,Chatbase chatbot builder,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+GPT for Work,gptforwork.com,web,0.6,1,1,GPT for Sheets/Docs/Excel add-in backend,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+JetBrains AI,jetbrains.ai,ide,0.8,1,0,JetBrains AI Assistant (exact host only: subdomains such as api.jetbrains.ai are resolved by idle IDEs and are deliberately not matched),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+JetBrains AI,grazie.aws.intellij.net,ide,0.8,1,1,JetBrains AI Assistant inference backend,live_dns,2026-10-09,2026-10-09,medium,interactive
+Amazon Q,q.us-east-1.amazonaws.com,ide,1.0,1,0,Amazon Q Developer API (us-east-1 example; other regions are not matched),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Amazon Q,codewhisperer.us-east-1.amazonaws.com,ide,1.0,1,0,Amazon Q Developer / CodeWhisperer legacy API (us-east-1),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Google Gemini,cloudcode-pa.googleapis.com,ide,1.0,1,0,Gemini Code Assist IDE backend (also used by the Cloud Code plugin),vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Kiro,kiro.dev,ide,1.0,1,1,Kiro agentic IDE (incl. *.desktop.kiro.dev),live_dns,2026-10-09,2026-10-09,medium,interactive
+Sourcegraph,cody-gateway.sourcegraph.com,api,1.0,1,0,Sourcegraph Cody LLM gateway,vendor_docs,2026-10-09,2026-10-09,medium,interactive
+Gemini for Workspace,appsgenaiserver-pa.googleapis.com,web,0.5,0,0,OPT_IN_WORKSPACE_GEMINI (ships enabled=0): Gemini side panel inside Google Workspace apps; ambient for licensed Workspace tenants,live_dns,2026-10-09,2026-10-09,medium,interactive
+Gemini for Workspace,appsgenaiserver-pa.clients6.google.com,web,0.5,0,0,OPT_IN_WORKSPACE_GEMINI (ships enabled=0): Gemini side panel inside Google Workspace apps; ambient for licensed Workspace tenants,live_dns,2026-10-09,2026-10-09,medium,interactive

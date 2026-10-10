@@ -1,22 +1,101 @@
 ## Architect Notes
+---
 **Author:** Trevor Mock, Hurricane Labs LLC. Security Operations Architect
 
----
-### Deepfake Tool Execution/Access
+This rule detects endpoints running open-source deepfake and synthetic-media tooling: face swap (FaceFusion, Deep-Live-Cam, DeepFaceLab, DeepFaceLive, Roop and its `run.py` forks, Rope/VisoMaster, ReActor, Faceswap, SimSwap, Avatarify), voice cloning (RVC/Applio, Coqui XTTS, Tortoise TTS, OpenVoice, GPT-SoVITS/So-VITS-SVC, Fish Speech, CosyVoice, StyleTTS, F5-TTS, WhisperSpeech, VALL-E-X), lip sync and talking-head generation (Wav2Lip, SadTalker, LivePortrait, MuseTalk, LatentSync), and local image generation (Stable Diffusion WebUI, ComfyUI, Fooocus). These tools are what an insider or intruder needs to stage CEO-voice fraud, fake video calls or synthetic identity documents, and they have almost no legitimate use on a corporate workstation. It also catches acquisition, for example `git clone` of a tool repository. The rule creates risk on `user` and `src` (system) and does not create a notable.
 
-**Description:** Detect execution of known deepfake and synthetic media tools on endpoints. MITRE: T1588.005
+Hosted deepfake SaaS (ElevenLabs, PlayHT, Resemble AI and similar) is out of scope here. Those services are detected from DNS/Web data by `hdsi_ai_voice_cloning_api_access`.
 
-**MITRE ATT&CK:** T1588.005
+### Prerequisites
 
-**Data Models:** Endpoint.Processes
+* **`Endpoint.Processes`, accelerated**, ideally with the full command line in `Processes.process`. Windows 4688 needs "Include command line in process creation events" enabled; Sysmon EID 1 and EDR process telemetry carry it by default. The pre-filter and the classifier read `process`, `process_path` **and** `process_name`, and the `tstats` uses `fillnull_value="unknown"`, so a source that leaves any of these fields empty is still searched. In live testing, one tenant's host-monitoring process sourcetype (about half of its process events) had a command line but no `process_path`, and another tenant's EDR sourcetype had no `process_path` at all. Without `fillnull_value`, `tstats` would silently drop every one of those events.
+* Coverage by populated field: with a command line, Python-launched tools are matched by repository, script or model names and by tool-specific arguments. With only `process_name`, the rule matches only tools that ship as their own executable (for example `DeepFaceLive.exe`, `VisoMaster.exe`, `Rope.exe`). Most of these tools run as `python.exe`, so a source without a command line or path gives very little coverage.
+* `Processes.user` and `Processes.dest` populate the risk objects. Machine accounts (`*$`), `SYSTEM`, `LOCAL SERVICE`, `NETWORK SERVICE` and `unknown` users are cleared, so only the system is scored for those rows. Rows with neither a usable user nor a usable host are dropped.
+* Common package `hdsi_ai_rba_common`: `ai_unsanctioned_filter(3)` (allowlist `ai_sanctioned_entities`, provider key `deepfake tool`) and `ai_risk_multiplier` (ES `identity_lookup_expanded` `bunit` mapped through `ai_department_sensitivity`, ×1.25 for privileged identities, capped at 2.0).
+* This rule does not use the common `ai_deepfake_tools` lookup. That lookup matches exact `process_name` values only, and it matched nothing in any validation tenant over 7 days (see Validation).
 
-### Tuning
-- Use `hdsi_ai_deepfake_tool_execution_access_filter` macro for exclusions
-- Use `hdsi_ai_deepfake_tool_execution_access_customizations` macro for post-processing
+### How it works
 
-### Dependencies
-This search depends on shared AI RBA macros and lookups:
-- `ai_domains_filter` - AI provider domain lookup
-- `ai_unsanctioned_filter` - Sanctioned entity allowlist
-- `ai_process_filter` - AI process lookup
-- Various `ai_*.csv` lookup files
+* `tstats` (`fillnull_value="unknown"`) over `Endpoint.Processes` with an inline pre-filter, `hdsi_ai_deepfake_tool_execution_access_tool_terms`, plus the tenant `_filter`. The pre-filter is a set of wildcard substrings on `process`, `process_path` or `process_name`. It also includes tool-specific arguments that survive a plain `python run.py` launch: the `face_swapper` frame processor, `--frame-processor`, `--execution-provider` (Roop and Deep-Live-Cam) and `--driven_audio` (SadTalker). The search groups by user, dest, process name, path, command line and parent. The `unknown` fill value is turned back into null before classification, so it never reaches the output.
+* `hdsi_ai_deepfake_tool_execution_access_classify` assigns `tool_name` and `tool_category` with regexes over the command line, path and process name. Before matching it does two clean-ups:
+  * **User-profile and home-folder masking (all tools).** The folder that follows any `users`, `home`, `homes`, `profile`, `profiles` or `redirect*` path segment, with or without a trailing `$`, is replaced with `~`, as is the folder after `\Documents and Settings\`. This covers local profiles (`C:\Users\<name>\`, `/Users/<name>/`, `/home/<name>/`) and redirected or roaming shares (`\\server\users$\<name>\`, `\\server\homes\<name>\`, `\\server\profiles$\<name>\`, `\\server\redirected\<name>\`, `net use H: \\server\home\<name>`). A user whose profile is named after a tool (for example `C:\Users\roop.example\`) therefore does not match on every program or document in that profile. A tool installed *inside* a profile (`C:\Users\<name>\facefusion\`) still matches.
+  * **Account and share masking (Roop check only).** `roop` is also a personal name, so the Roop check runs on a copy of the command line where, in addition, the server, share and first folder of every UNC path (`\\server\share\<first>\`, where personal home shares put the user name) and any `DOMAIN\name` value after `/user:`, `/u:`, `/ru`, `-u`, `obj=` or `--user` (`runas`, `net use`, `schtasks`, `psexec`, `sc config`) are masked. Other tools are matched on the unmasked UNC path, so `\\server\tools\facefusion\` still matches FaceFusion.
+  * **Clicked links.** When the process is a browser (`chrome`, `msedge`, `firefox`, `brave`, `opera`, `iexplore`, `vivaldi`, `arc`, `safari`), `explorer.exe` or `rundll32.exe`, URLs are removed from its command line. Opening a link to a tool's GitHub page from Outlook or Teams is not tool execution. Downloads by `git`, `curl`, `pip` or PowerShell keep their URLs, so `git clone` of a tool repository still matches.
+* Then the matching rules: short or generic names (`xtts`, `faceswap`, `swapface`, `applio`, `comfyui`, `fooocus`, `f5-tts`) must be bounded by non-alphanumeric characters. `roop` matches only in four shapes: a backslash folder followed by another separator (`\roop\`, `\roop-unleashed\`); a forward-slash path or clone URL (`/roop`, `/roop.git`, end of a `git clone` URL); a drive-rooted path ending in `\roop` (`explorer.exe C:\AI\roop`); or a script or executable name (`roop.py`, `roop.exe`). A backslash `\roop` followed by a space, a quote or the end of the line is not a folder unless the path starts with a drive letter, so `CORP\roop` is never read as a path. The exact guarantee: a bare account value (`roop.example`, `roop.example@example.com`, `--user roop`, `CORP\roop` as a quoted or unquoted argument) and a profile, home or redirected folder named after the user never classify as Roop. A user name that appears as an ordinary deeper folder outside those locations (for example `D:\scratch\roop\` or `\\server\share\dept\roop\`) still matches. `rope` must be followed by `.bat`, `.py`, `.exe` or a fork suffix. `--execution-provider` counts only after `run.py`, and these generic launches are labelled `Roop-family face swapper (generic launch)` (see Limitations). Rows with no tool match are dropped. This step removes the substring noise seen in live testing (see Known false positives), but it cannot remove every coincidental folder name.
+* Users and hosts are normalised as described in Prerequisites. Results are aggregated per `user` + `src` into `tools`, `tool_categories`, `executions`, `process_sample` (the earliest command line in the window, falling back to the image path or process name, 250 chars), `firstTime` and `lastTime`.
+* `ai_unsanctioned_filter(user,src,provider)` removes rows that are allowlisted in `ai_sanctioned_entities`. The keys checked are `<user>|deepfake tool`, `<user>|*`, `<host>|deepfake tool`, `<host>|*`, `<group>|deepfake tool`, `<group>|*` and the organisation-wide `*|deepfake tool`. This rule supplies no group field itself, so `<group>` is the user's ES `identity_lookup_expanded` `bunit`, which the common macro looks up (raw user value first, then the bare name without `DOMAIN\` or `@suffix`). A group key therefore works only for users that resolve in the ES identity lookup. Allowlist a team without identity data by user or host, or exclude it in `_filter`. `ai_risk_multiplier` then adds `risk_multiplier`.
+* **Scoring:** `risk_score = min(80, round(base_score × risk_multiplier))`. `base_score` is 40 when any face_swap or voice_clone tool is present, 30 for lip_sync_avatar, and 15 for image_generation only. `risk_score` applies to both the user and the system risk object. The literal `_risk` scores (40/40) are only the fallback. Suppression is 24 h per `user,src`.
+* MITRE ATT&CK: T1588.007 (Obtain Capabilities: Artificial Intelligence). This was corrected from T1588.005 (Exploits).
+* Schedule: every 15 min (`4-59/15`), window `-20m@m` to `-5m@m`.
+
+### Tuning macros
+
+| Macro | Ships as | Purpose |
+|---|---|---|
+| `hdsi_ai_deepfake_tool_execution_access_filter` | `()` | Exclusions inlined in the tstats `where` (Endpoint.Processes field names), e.g. `NOT Processes.dest IN ("media-lab-*")` for an approved synthetic-media lab. |
+| `hdsi_ai_deepfake_tool_execution_access_tool_terms` | wildcard substring list | Pre-filter on `Processes.process` / `process_path` / `process_name`. Add a new tool here **and** in `_classify`. Never add a bare short word: a bare `*rope*` matched about 35M process events in 7 days on one tenant (`property`, `SystemPropertiesProtection.exe`). |
+| `hdsi_ai_deepfake_tool_execution_access_classify` | boundary-anchored `case(match())` | Maps a command line, path or process name to `tool_name` / `tool_category`. Anything not matched is dropped. |
+| `hdsi_ai_deepfake_tool_execution_access_customizations` | `search *` | Post-aggregation filtering, e.g. `search NOT (tool_categories="image_generation" AND src="design-*")`. |
+| `hdsi_ai_deepfake_tool_execution_access_risk_score` | `search *` | Last pipe. Override `risk_score`, e.g. `eval risk_score=if(tool_categories="image_generation",5,risk_score)`. |
+
+Allowlisting can also be done in `ai_sanctioned_entities`: `allow_key` = `<user or host>|deepfake tool` for one user or host, `<bunit>|deepfake tool` for a whole ES identity business unit (for example an approved media lab), or `*|deepfake tool` to switch the rule off organisation-wide without disabling it. Keys are lowercase. Set `expires` (`YYYY-MM-DD`) for time-boxed approvals.
+
+### Threshold
+
+There is no count threshold. A single execution of one of these tools is the signal, and 24 h suppression bounds the volume. Before enabling, check how much legitimate image-generation use the tenant has (marketing or design teams running ComfyUI or Stable Diffusion):
+
+```text
+| tstats summariesonly=t allow_old_summaries=t fillnull_value="unknown" count from datamodel=Endpoint.Processes
+  where `hdsi_ai_deepfake_tool_execution_access_tool_terms`
+  by Processes.user Processes.dest Processes.process_name Processes.process_path Processes.process
+| rename Processes.* as *
+| `hdsi_ai_deepfake_tool_execution_access_classify`
+| fillnull value="(rejected noise)" tool_category
+| stats sum(count) as raw_matches dc(dest) as hosts dc(user) as users
+        sum(eval(if(isnotnull(tool_name),count,0))) as classified
+        values(tool_name) as tools by tool_category
+```
+
+Run it over `-7d`. `raw_matches` minus `classified` is the noise that the classify step removes. If image_generation is routine on approved hosts, exclude those hosts in `_filter` or lower the score in `_risk_score` rather than removing the tools.
+
+### Known false positives / Limitations
+
+* **Substring noise is real and is handled by classify.** On the largest tenant, the shipped pre-filter matched 54 process events on 17 hosts in 7 days, and 0 of them were deepfake tools. `roop` and `xtts` appeared inside random `csc.exe`/`cvtres.exe` temp folder names (PowerShell `Add-Type` compilation), Java classpaths and base64 command-line arguments. All of them were rejected by the boundary regexes. Do not loosen the regexes in `_classify` to plain substrings.
+* **Legitimate creative use.** ComfyUI, Stable Diffusion WebUI and Fooocus are general image generators and score 15. A sanctioned media or research team should be allowlisted rather than tolerated as noise.
+* **Generic Python launches are only partly covered, and this is the main coverage gap.** Several tools' own documented quick-start commands carry no tool name when they run on system Python from the repository folder. The rule recovers some of them from tool-specific arguments: `python run.py --execution-provider cuda` and `--frame-processor face_swapper` (Roop, Deep-Live-Cam), and `python inference.py --driven_audio` (SadTalker). It still misses these:
+  * LivePortrait `python inference.py -s <img> -d <video>` and `python app.py`.
+  * Wav2Lip without its checkpoint name on the command line.
+  * Gradio `python app.py` / `webui.py` launches of the voice tools.
+  * Any tool copied into an unrelated folder or renamed.
+  
+  Process telemetry that records the working directory would help, but CIM `Endpoint.Processes` has no such field. GPU-heavy `python.exe` loading `onnxruntime` or `torch` from user-profile paths is a possible follow-on hunt, but it is not portable enough to score.
+* **Extensions inside a host tool.** ReActor runs inside ComfyUI or Stable Diffusion WebUI, so its own name usually appears only at install time (`git clone`, `pip install`). After that, the activity looks like the host tool and scores as image generation (15).
+* **Browser and SaaS use is not covered.** Clicked links to tool repositories or tutorials are ignored on purpose (URLs are removed from browser, `explorer.exe` and `rundll32.exe` command lines). Hosted deepfake services are covered by `hdsi_ai_voice_cloning_api_access`. A tool repository downloaded through the browser is therefore detected only when it is later run or unpacked under its own name.
+* **The generic `run.py --execution-provider` launch is labelled as a Roop-family face swapper but is not proof of one.** Roop and Deep-Live-Cam document `python run.py --execution-provider cuda` as their launch, and that is the only trace their default launch leaves. Other ONNX or insightface tools use the same argument shape. For example, `python run.py --execution-provider cuda --model rembg` (a background remover) is scored 40 as face_swap. Check `process_sample` and the drilldown before acting. If a tenant has a known tool that uses this shape, exclude it in `_filter` (for example `NOT Processes.process="*--model rembg*"`).
+* **Coincidental folder names.** Profile, home and redirected-folder names are masked, and for Roop so are the first two levels of any UNC path. A deeper folder that is named exactly like a tool (for example `D:\scratch\roop\` or `\\server\data\dept\roop\`) still matches. Allowlist the host or exclude the path in `_filter`.
+* **Roop at the top of a UNC share is not matched as Roop.** Because the share and first folder of a UNC path are masked for the Roop check, Roop run from `\\server\roop\` or `\\server\tools\roop\` is matched only if its launch carries another trace (`roop.py`, `--execution-provider`, `--frame-processor face_swapper`). A deeper copy (`\\server\tools\ai\roop\`) still matches.
+* **Windows 4688 without command-line auditing** reduces coverage to tools with their own executable name.
+* **Drilldown.** The process drilldown matches the risk event's host **or** user over 7 days, so it also works for the user-only rows the rule emits when the host is unknown.
+* User risk is dropped for machine and service accounts, so tools run by scheduled tasks or services score only the system.
+* **Known Roop edge cases (minor).** A relative path passed after `-u` (`python -u .\roop\run.py`) is masked as an account value and is not classified as Roop; the script name still is when `roop.py` or `run.py` with Roop flags appears elsewhere. A forward-slash UNC personal share (`smbclient //fs01/roop`) is treated like a clone URL and can classify as Roop; exclude such hosts through `hdsi_ai_deepfake_tool_execution_access_filter` if it occurs.
+
+### Validation
+
+Read-only live tests on 2026-10-09 across 4 production ES tenants (Endpoint.Processes, accelerated summaries).
+
+| Tenant | Endpoint.Processes (24h) | Parses (search + 2 drilldowns) | Rule rows, 7d window | Notes |
+|---|---|---|---|---|
+| A | ~174M, Windows Security + small EDR, command line 100% filled on Windows; the EDR sourcetype has no `process_path` (searched via `fillnull_value`) | OK | 0 | Old exact-`process_name` logic: 0 in 7d. Shipped pre-filter: 54 events / 17 hosts in 7d, all temp-folder, classpath or base64 noise, 0 classified. The earlier generic names (`bark`, `rvc`, `webui`) matched tens of thousands of benign processes (cmd, PowerShell, sc, net) per day and were removed. 7d run 94 s; 4 h window 10 s. Added generic-launch argument terms, Rope/VisoMaster/ReActor/`sd.webui` terms and process-name terms: 0 extra raw hits in 7d. |
+| B | ~51k, Windows XML event log (small endpoint footprint) | OK | 0 | No raw pre-filter hits in 7d. |
+| C | ~156M, Windows event log + host monitoring | OK | 0 | The host-monitoring sourcetype has a command line but no `process_path` (about half of all process events in a 15-minute sample). Without `fillnull_value` these events were invisible to `tstats`; they are searched now. No raw pre-filter hits in 7d. 7d run 38 s. |
+| D | ~210k, Windows event log | OK | 0 | No raw pre-filter hits in 7d. |
+
+* **Round 4 (Roop account and redirected-folder fix, 2026-10-10)**, synthetic `makeresults` rows through the shipped classifier on all of Tenants A–D: 24 of 24 correct on every tenant. 14 negatives were rejected: Word and Excel opening documents under `\\fs01\users$\roop\` and `\\fs01\homes\roop\`, `\\fs01\profiles$\roop\` and `\\fs01\redirected\roop\` paths, a personal share `\\fs01\roop\`, `net use H: \\fs01\home\roop`, `runas /user:CORP\roop`, `net use /user:CORP\roop`, `schtasks /ru "CORP\roop"`, `psexec -u CORP\roop`, `sc config obj= "CORP\roop"`, Teams under `C:\Users\roop.x\`, a macOS `/Users/roop/` profile, and an Outlook `roop.example@` address. 10 positives were classified: `python C:\AI\roop\run.py`, `python -u C:\AI\roop-unleashed\run.py`, `git clone https://github.com/s0md3v/roop`, `\\fs01\tools\ai\roop\run.py`, `explorer.exe C:\AI\roop`, `roop.exe` (process name only), FaceFusion and Deep-Live-Cam under `C:\Users\bob\`, FaceFusion on a UNC share, and FaceFusion inside a profile named after Roop.
+* **Round 3 (post-review fixes)**, synthetic `makeresults` rows through the shipped classifier on all of Tenants A–D: 20 of 20 correct on every tenant. 10 negatives were rejected: a Teams install and a `notepad` file under a profile folder named after Roop, a profile name with a space (`Test Roop`), a macOS `/Users/roop/` profile, a `\home$\roop\` home share, an Outlook command line with a `roop.example@` address, Chrome and Edge launched with a URL to Deep-Live-Cam or a ComfyUI tutorial (Edge with no `process_name`), `rundll32 url.dll,FileProtocolHandler` with a FaceFusion URL, and a Java classpath. 10 positives were classified: `git clone` of roop and of Deep-Live-Cam, `python C:\AI\roop\run.py`, `roop-unleashed\run.py` inside a user profile, `roop.exe` (process name only), a PowerShell download of FaceFusion, `facefusion.py` inside a profile named after Roop, `explorer.exe` opening a DeepFaceLab folder, `DeepFaceLive.exe`, and the generic `run.py --execution-provider` launch (labelled generic, see Limitations). Real data, last 24 h: Tenant A 4 raw pre-filter events on 3 hosts, all rejected; B–D 0 raw events.
+* **Positive-path check, round 2** (synthetic `makeresults` rows through the shipped classifier on Tenant A): 9 of 9 classified correctly. The 9 were: `python run.py --execution-provider cuda`; `--frame-processor face_swapper`; `python inference.py --driven_audio`; `Rope.bat`; `Rope.py` under a Rope-Pearl folder; `python launch.py` from an `sd.webui` path; `git clone` of `sd-webui-reactor`; `VisoMaster.exe` and `DeepFaceLive.exe` with only `process_name` populated. 6 of 6 negatives were rejected: `SystemPropertiesProtection.exe`, a Java classpath with `Europe/London` and `reactor-core`, a csc temp folder, a base64 argument, `python run.py --port`, and an all-`unknown` row. An end-to-end pipeline test with `process_path` = `unknown` produced correct user/system rows (scores 40/30/15) and dropped the row with neither user nor host.
+* **Positive-path check, round 1** (synthetic `makeresults` rows through the shipped macros on Tenant A): 8 of 8 tool launches were classified correctly. These were Deep-Live-Cam, `git clone` of FaceFusion, DeepFaceLive.exe, an XTTS v2 model run, Roop, RVC `infer-web.py`, ComfyUI and SadTalker. 4 of 4 negatives modelled on the real noise (csc temp folders, Java classpath, base64) were rejected. In the end-to-end pipeline test, `SYSTEM` was cleared to a system-only risk row, and a row with an `unknown` user and `unknown` host was dropped. Scores came out at 40 (face swap) and 15 (image generation).
+* None of the four tenants ran deepfake tooling during the window, so the expected volume is about 0 risk events per day. Where it occurs, volume is at most 1 event per user and host per day.
+
+### Deployment
+
+The package ships with `enable_alerting: false`. Before enablement, confirm that the tenant's process telemetry carries full command lines. Run the Threshold query over 7 days to measure classified matches and decide how to treat image generation. Allowlist any sanctioned synthetic-media lab. The rule is risk-only, with no notable and no email. Its output feeds the `hdsi_rba_ai_*` aggregators. Enabling this rule and disabling any rule it replaces must be one separately approved change.

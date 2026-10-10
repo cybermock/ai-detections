@@ -21,7 +21,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install -r saved_searches/requirements.txt
+
+      - name: Validate packages
+        working-directory: saved_searches
+        run: python validate.py
 
       - name: Run tests
         run: pytest tests/ -v

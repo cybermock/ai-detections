@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI First Seen Provider For User
-description: "Detect first-seen AI provider usage by a user over a 30-day lookback. MITRE: T1071.001"
+package_title: AI First Seen Provider For User
+description: "Daily risk on a user who uses a rarely used AI provider (used by at most 10 users that day) with no use of that provider in the previous 30 days. Reads Web proxy/SSE data and NGFW App-ID traffic that carries a user. Risk only, no notable."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -11,16 +11,20 @@ app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
-  - macros:ai_unsanctioned_filter
+  - macros:ai_unsanctioned_filter(3)
+  - macros:ai_risk_multiplier
 tags:
   - rba_only
   - web
   - proxy
+  - network
+  - pan
 data_prereqs:
   datamodels:
-    op: AND
+    op: OR
     items:
     - "Web"
+    - "Network_Traffic"
 deployment_type: global
 prereq_packages:
   - hdsi_ai_rba_common

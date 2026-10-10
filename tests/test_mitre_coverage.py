@@ -1,106 +1,40 @@
-"""Validate MITRE ATT&CK coverage and cross-references."""
+"""ai_mitre_mapping.csv is keyed by package name and covers every detection package."""
 
 from __future__ import annotations
 
-import re
+import json
 
-from .conftest import extract_detection_id
+import pytest
 
-MITRE_TECHNIQUE_RE = re.compile(r"^T\d{4}(\.\d{3})?$")
-# Matches mitre_attack="T####.###" or mitre_attack="T####" in SPL eval
-SPL_MITRE_RE = re.compile(r'mitre_attack\s*=\s*"(T\d{4}(?:\.\d{3})?)"')
+from .conftest import all_packages, packages_with_role, savedsearches
 
 
-class TestMitreMappingCoverage:
-    """Every detection must have a MITRE mapping entry."""
-
-    def test_all_detections_have_mitre_entry(self, detection_stanzas, mitre_mapping):
-        mapped_ids = {r["detection_id"] for r in mitre_mapping}
-        errors = []
-        for name, props in detection_stanzas.items():
-            det_id = extract_detection_id(props.get("search", ""))
-            if det_id and det_id not in mapped_ids:
-                errors.append(f"[{name}] detection_id={det_id} has no MITRE mapping")
-        assert not errors, "Detections missing MITRE mapping:\n" + "\n".join(errors)
-
-    def test_no_orphan_mitre_entries(self, detection_stanzas, mitre_mapping):
-        """Every detection_id in the MITRE mapping should correspond to a real detection."""
-        spl_ids = set()
-        for name, props in detection_stanzas.items():
-            det_id = extract_detection_id(props.get("search", ""))
-            if det_id:
-                spl_ids.add(det_id)
-        orphans = []
-        for row in mitre_mapping:
-            if row["detection_id"] not in spl_ids:
-                orphans.append(row["detection_id"])
-        assert not orphans, f"MITRE mapping has entries for non-existent detections: {orphans}"
+def test_mapping_ids_are_existing_packages(mitre_mapping):
+    existing = set(all_packages())
+    unknown = sorted({r["detection_id"] for r in mitre_mapping} - existing)
+    assert not unknown, f"ai_mitre_mapping.csv detection_id values that are not packages: {unknown}"
 
 
-class TestMitreTechniqueFormat:
-    """All MITRE technique IDs must match the ATT&CK format."""
-
-    def test_csv_technique_ids(self, mitre_mapping):
-        errors = []
-        for row in mitre_mapping:
-            tid = row["mitre_technique_id"]
-            if not MITRE_TECHNIQUE_RE.match(tid):
-                errors.append(f"{row['detection_id']}: invalid technique '{tid}'")
-        assert not errors, "Invalid MITRE technique IDs:\n" + "\n".join(errors)
+@pytest.mark.parametrize("package", packages_with_role("detection", "hunting"))
+def test_detection_has_mapping_row(package, mitre_mapping):
+    assert any(r["detection_id"] == package for r in mitre_mapping), (
+        f"{package}: no row in hdsi_ai_rba_common/lookups/ai_mitre_mapping.csv"
+    )
 
 
-class TestMitreCrossValidation:
-    """MITRE technique IDs in SPL eval statements must match the CSV mapping."""
-
-    def test_spl_mitre_matches_csv(self, detection_stanzas, mitre_mapping):
-        # Build lookup: detection_id -> technique_id from CSV
-        csv_map: dict[str, str] = {}
-        for row in mitre_mapping:
-            csv_map[row["detection_id"]] = row["mitre_technique_id"]
-
-        errors = []
-        for name, props in detection_stanzas.items():
-            search = props.get("search", "")
-            det_id = extract_detection_id(search)
-            if not det_id:
-                continue
-            spl_match = SPL_MITRE_RE.search(search)
-            if not spl_match:
-                continue
-            spl_technique = spl_match.group(1)
-            csv_technique = csv_map.get(det_id)
-            if csv_technique and spl_technique != csv_technique:
-                errors.append(
-                    f"[{name}] detection_id={det_id}: SPL has mitre_attack=\"{spl_technique}\" "
-                    f"but CSV has \"{csv_technique}\""
-                )
-        assert not errors, "MITRE cross-validation mismatches:\n" + "\n".join(errors)
-
-
-class TestMitreDescriptionConsistency:
-    """MITRE technique mentioned in detection description should match the mapping."""
-
-    def test_description_technique_matches(self, detection_stanzas, mitre_mapping):
-        csv_map: dict[str, str] = {}
-        for row in mitre_mapping:
-            csv_map[row["detection_id"]] = row["mitre_technique_id"]
-
-        errors = []
-        for name, props in detection_stanzas.items():
-            desc = props.get("description", "")
-            search = props.get("search", "")
-            det_id = extract_detection_id(search)
-            if not det_id:
-                continue
-            # Extract technique from description (e.g. "MITRE: T1071.001")
-            desc_match = re.search(r"MITRE:\s*(T\d{4}(?:\.\d{3})?)", desc)
-            if not desc_match:
-                continue
-            desc_technique = desc_match.group(1)
-            csv_technique = csv_map.get(det_id)
-            if csv_technique and desc_technique != csv_technique:
-                errors.append(
-                    f"[{name}] description says MITRE: {desc_technique} "
-                    f"but CSV maps {det_id} to {csv_technique}"
-                )
-        assert not errors, "Description/CSV MITRE mismatches:\n" + "\n".join(errors)
+@pytest.mark.parametrize("package", packages_with_role("detection", "hunting"))
+def test_mapping_agrees_with_annotations(package, mitre_mapping):
+    """Every technique mapped in the CSV should also be in the search's annotations.mitre_attack."""
+    mapped = {r["mitre_technique_id"] for r in mitre_mapping if r["detection_id"] == package}
+    if not mapped:
+        pytest.skip("no CSV mapping (reported by test_detection_has_mapping_row)")
+    annotated: set[str] = set()
+    for kv in savedsearches(package).values():
+        try:
+            annotated.update(json.loads(kv.get("action.correlationsearch.annotations", "{}")).get("mitre_attack", []))
+        except (json.JSONDecodeError, AttributeError):
+            pytest.skip("annotations unparsable (reported by test_annotations)")
+    missing = sorted(mapped - annotated)
+    assert not missing, (
+        f"{package}: ai_mitre_mapping.csv maps {sorted(mapped)} but annotations.mitre_attack is {sorted(annotated)}"
+    )

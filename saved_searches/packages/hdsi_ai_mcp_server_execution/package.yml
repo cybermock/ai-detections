@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI MCP Server Execution
-description: "Detect execution of Model Context Protocol (MCP) servers that allow AI tools to access local resources, files, databases, and APIs. MCP servers expand AI tool capabilities beyond chat and can be used for unauthorized data access. MITRE: T1059"
+package_title: AI MCP Server Execution
+description: "Detects Model Context Protocol (MCP) servers running on endpoints from Endpoint.Processes: MCP server binaries, official MCP SDK and server packages, AI client and Docker mcp subcommands, and mcp packages, images or scripts in package position for npx/uvx/node/python/docker runners (other processes never match on arguments). Configuration-only commands and IDE-extension-hosted servers score lower and extension auto-registration is ignored. MCP servers give AI agents tool access to local files, databases, source control and SaaS data. Risk only on user and system, no notable."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -10,7 +10,8 @@ app_compatibility:
 app_context: HurricaneLabsContentUpdates
 enable_alerting: false
 common_dependencies:
-  - macros:ai_unsanctioned_filter
+  - macros:ai_unsanctioned_filter(3)
+  - macros:ai_risk_multiplier
 tags:
   - rba_only
   - process

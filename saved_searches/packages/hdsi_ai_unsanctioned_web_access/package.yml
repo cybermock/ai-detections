@@ -1,7 +1,7 @@
-version: 1.0.0
+version: 1.1.0
 creation_date: '2026-03-04'
-package_title: HDSI AI Unsanctioned Web Access
-description: "Consolidated detection for unsanctioned web access to any AI provider. Dynamically uses ai_provider_domains.csv lookup. Replaces deprecated legacy unsanctioned AI web access detections. MITRE: T1071.001"
+package_title: AI Unsanctioned Web Access
+description: "Detects users using AI web apps (chat assistants, AI writing, image, video, voice and app-builder tools) that the organisation has not sanctioned, from proxy, NGFW URL filtering, SSE/CASB and enterprise-browser logs in the CIM Web model. Hosts (from url_domain, or from the url when a source logs only that) and SSE app names are resolved through the common AI provider lookups; inbound web server and WAF traffic is excluded. Risk on the user; system risk on the internal src and host-only rows are opt-in. One event per entity and provider per day. No notable."
 author: Hurricane Labs
 app_compatibility:
   - app_name: SplunkEnterpriseSecuritySuite
@@ -12,7 +12,7 @@ enable_alerting: false
 common_dependencies:
   - macros:ai_domains_filter
   - macros:ai_risk_multiplier
-  - macros:ai_unsanctioned_filter
+  - macros:ai_unsanctioned_filter(3)
 tags:
   - rba_only
   - web
